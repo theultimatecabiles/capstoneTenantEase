@@ -1,0 +1,191 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  userId      Int         @id @default(autoincrement())
+  name        String
+  email       String      @unique
+  password    String
+  phone       String?
+  roleId      Int
+  profilePic  String?
+  dateJoined  DateTime    @default(now())
+  listings    Listing[]
+  reviews     Review[]
+  messagesSent Message[]  @relation("SentMessages")
+  messagesReceived Message[] @relation("ReceivedMessages")
+  bookings    Booking[]
+  favorites   Favorite[]
+  role        Role        @relation(fields: [roleId], references: [roleId])
+}
+
+model Role {
+  roleId    Int    @id @default(autoincrement())
+  roleName  String @unique
+  users     User[]
+}
+
+model Listing {
+  listingId   Int         @id @default(autoincrement())
+  userId      Int
+  title       String
+  description String
+  address     String
+  price       Float
+  placeTypeId Int
+  guestTypeId Int
+  guests      Int
+  bedrooms    Int
+  beds        Int
+  bathrooms   Int
+  latitude    Float
+  longitude   Float
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+  images      Image[]
+  reviews     Review[]
+  bookings    Booking[]
+  messages    Message[]
+  favorites   Favorite[]  // Add this field to point back to Favorite
+  user        User        @relation(fields: [userId], references: [userId])
+  placeType   PlaceType   @relation(fields: [placeTypeId], references: [placeTypeId])
+  guestType   GuestType   @relation(fields: [guestTypeId], references: [guestTypeId])
+  amenities   ListingAmenity[]
+}
+
+
+model PlaceType {
+  placeTypeId   Int    @id @default(autoincrement())
+  placeTypeName String @unique
+  listings      Listing[]
+}
+
+model GuestType {
+  guestTypeId   Int    @id @default(autoincrement())
+  guestTypeName String @unique
+  listings      Listing[]
+}
+
+model Image {
+  imageId     Int         @id @default(autoincrement())
+  listingId   Int
+  imageUrl    String
+  uploadedAt  DateTime    @default(now())
+  listing     Listing     @relation(fields: [listingId], references: [listingId])
+}
+
+model Review {
+  reviewId    Int         @id @default(autoincrement())
+  listingId   Int
+  userId      Int
+  rating      Int
+  review      String
+  createdAt   DateTime    @default(now())
+  listing     Listing     @relation(fields: [listingId], references: [listingId])
+  user        User        @relation(fields: [userId], references: [userId])
+}
+
+model Message {
+  messageId   Int         @id @default(autoincrement())
+  senderId    Int
+  receiverId  Int
+  listingId   Int
+  message     String
+  sentAt      DateTime    @default(now())
+  sender      User        @relation("SentMessages", fields: [senderId], references: [userId])
+  receiver    User        @relation("ReceivedMessages", fields: [receiverId], references: [userId])
+  listing     Listing     @relation(fields: [listingId], references: [listingId])
+}
+
+model Booking {
+  bookingId   Int         @id @default(autoincrement())
+  userId      Int
+  listingId   Int
+  bookingDate DateTime
+  statusId    Int
+  createdAt   DateTime    @default(now())
+  user        User        @relation(fields: [userId], references: [userId])
+  listing     Listing     @relation(fields: [listingId], references: [listingId])
+  payment     Payment?
+  history     BookingHistory[]
+  status      BookingStatus @relation(fields: [statusId], references: [statusId])
+}
+
+model BookingStatus {
+  statusId    Int    @id @default(autoincrement())
+  statusName  String @unique
+  bookings    Booking[]
+  histories   BookingHistory[]
+}
+
+model Payment {
+  paymentId   Int         @id @default(autoincrement())
+  bookingId   Int         @unique
+  amount      Float
+  paymentDate DateTime
+  paymentMethodId Int
+  statusId    Int
+  booking     Booking     @relation(fields: [bookingId], references: [bookingId])
+  paymentMethod PaymentMethod @relation(fields: [paymentMethodId], references: [methodId])
+  status      PaymentStatus   @relation(fields: [statusId], references: [statusId])
+}
+
+model PaymentMethod {
+  methodId    Int    @id @default(autoincrement())
+  methodName  String @unique
+  payments    Payment[]
+}
+
+model PaymentStatus {
+  statusId    Int    @id @default(autoincrement())
+  statusName  String @unique
+  payments    Payment[]
+}
+
+model BookingHistory {
+  historyId   Int         @id @default(autoincrement())
+  bookingId   Int
+  statusId    Int
+  changedAt   DateTime    @default(now())
+  notes       String?
+  booking     Booking     @relation(fields: [bookingId], references: [bookingId])
+  status      BookingStatus @relation(fields: [statusId], references: [statusId])
+}
+
+model Favorite {
+  favoriteId  Int         @id @default(autoincrement())
+  userId      Int
+  listingId   Int
+  addedAt     DateTime    @default(now())
+  user        User        @relation(fields: [userId], references: [userId])
+  listing     Listing     @relation(fields: [listingId], references: [listingId])
+}
+
+model ListingAmenity {
+  listingAmenityId Int @id @default(autoincrement())
+  listingId        Int
+  amenityId        Int
+  listing          Listing @relation(fields: [listingId], references: [listingId])
+  amenity          Amenity @relation(fields: [amenityId], references: [amenityId])
+}
+
+model Amenity {
+  amenityId   Int            @id @default(autoincrement())
+  amenityName String
+  iconClass   String
+  color       String
+  listings    ListingAmenity[]
+}
+
