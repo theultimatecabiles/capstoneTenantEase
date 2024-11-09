@@ -28,7 +28,7 @@
             <div class="flex justify-between mt-4">
               <button 
                 @click.prevent="openUpdateModal(item)"
-                class="btn bg-green-600 text-white hover:bg-green-700 focus:ring-4 focus:ring-green-200 transition duration-200"
+                 class="btn bg-green-600 text-white hover:bg-green-700 focus:ring-4 focus:ring-green-200 transition duration-200"
               >
                 Modify
               </button>
