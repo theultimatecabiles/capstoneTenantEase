@@ -5,8 +5,12 @@ const prisma = new PrismaClient();
 
 export default defineEventHandler(async (event) => {
   try {
-    // Fetch listings with necessary relationships and fields, including userId
-    const listings = await prisma.listing.findMany({
+    // Extract listingId from URL params
+    const listingId = event.context.params.listingId;
+    
+    // Fetch the listing by its ID
+    const listing = await prisma.listing.findUnique({
+      where: { listingId: parseInt(listingId) }, // Ensure listingId is a number
       select: {
         listingId: true,
         title: true,
@@ -21,54 +25,48 @@ export default defineEventHandler(async (event) => {
         longitude: true,
         createdAt: true,
         updatedAt: true,
-        userId: true, // Include userId in the selection
         placeType: {
-          select: {
-            placeTypeName: true,
-          },
+          select: { placeTypeName: true },
         },
         guestType: {
-          select: {
-            guestTypeName: true,
-          },
+          select: { guestTypeName: true },
         },
         images: {
-          select: {
-            imageUrl: true,
-          },
+          select: { imageUrl: true },
         },
         amenities: {
           select: {
             amenity: {
-              select: {
-                amenityName: true,
-                iconClass: true,
-                color: true,
-              },
+              select: { amenityName: true, iconClass: true, color: true },
             },
           },
         },
       },
     });
 
-    // Flatten the nested structure of the response
-    const flattenedListings = listings.map((listing) => ({
+    // If no listing is found, return 404
+    if (!listing) {
+      event.res.statusCode = 404;
+      return { error: 'Listing not found' };
+    }
+
+    // Flatten the structure to simplify the response
+    const flattenedListing = {
       ...listing,
       placeType: listing.placeType?.placeTypeName || 'Unknown',
       guestType: listing.guestType?.guestTypeName || 'Unknown',
+      images: listing.images.map(image => ({ imageUrl: image.imageUrl })) || [],
       amenities: listing.amenities.map((item) => ({
         name: item.amenity.amenityName,
         iconClass: item.amenity.iconClass,
         color: item.amenity.color,
       })) || [],
-    }));
+    };
 
-    console.log('Listings fetched:', flattenedListings); // Debugging
-
-    return flattenedListings;
+    return flattenedListing;
   } catch (error) {
-    console.error('Error fetching listings:', error); // Log error details
+    console.error('Error fetching listing:', error);
     event.res.statusCode = 500;
-    event.res.end(JSON.stringify({ error: 'Error fetching listings' }));
+    return { error: 'Error fetching listing' };
   }
 });

@@ -26,6 +26,8 @@ model User {
   reviews     Review[]
   messagesSent Message[]  @relation("SentMessages")
   messagesReceived Message[] @relation("ReceivedMessages")
+  hostNotifications    Notification[] @relation("HostNotifications")
+  bookerNotifications  Notification[] @relation("BookerNotifications")
   bookings    Booking[]
   favorites   Favorite[]
   role        Role        @relation(fields: [roleId], references: [roleId])
@@ -58,13 +60,13 @@ model Listing {
   reviews     Review[]
   bookings    Booking[]
   messages    Message[]
-  favorites   Favorite[]  // Add this field to point back to Favorite
+  favorites   Favorite[]
+  notifications Notification[]
   user        User        @relation(fields: [userId], references: [userId])
   placeType   PlaceType   @relation(fields: [placeTypeId], references: [placeTypeId])
   guestType   GuestType   @relation(fields: [guestTypeId], references: [guestTypeId])
   amenities   ListingAmenity[]
 }
-
 
 model PlaceType {
   placeTypeId   Int    @id @default(autoincrement())
@@ -188,4 +190,19 @@ model Amenity {
   color       String
   listings    ListingAmenity[]
 }
+
+model Notification {
+  notificationId Int      @id @default(autoincrement())
+  hostId         Int
+  bookerId       Int
+  listingId      Int
+  content        String
+  dateCreated    DateTime @default(now())
+
+  host           User     @relation("HostNotifications", fields: [hostId], references: [userId])
+  booker         User     @relation("BookerNotifications", fields: [bookerId], references: [userId])
+  listing        Listing  @relation(fields: [listingId], references: [listingId])
+}
+
+
 

@@ -56,8 +56,8 @@
             <p class="text-2xl font-semibold text-red-600">₱{{ listing.price }} /Monthly</p>
             <button
               class="reserve-btn bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition duration-300"
-              @click="handleReserve">
-              Reserve
+              @click="handleReserve()">
+              Book
             </button>
           </div>
         </div>
@@ -98,18 +98,24 @@ import { useRoute } from 'vue-router';
 import { Carousel, Slide } from 'vue3-carousel';
 import { Map, TileLayer, Marker } from 'leaflet';
 import 'vue3-carousel/dist/carousel.css'; // Add carousel CSS
-
+import { toast } from 'vue3-toastify'
+import 'vue3-toastify/dist/index.css'
+import axios from 'axios'; // Import Axios for API calls
 // Import headers
 import Header from '@/components/Header.vue';
 import UserHeader from '~/components/userHeader.vue';
 
 const route = useRoute();
+const userId = localStorage.getItem('userId'); // Make sure to get userId from localStorage
 const listingId = route.query.listingId;
+const hostId = route.query.hostid;
 const listing = ref(null);
 const loading = ref(true);
 const currentIndex = ref(0); // To track the current image index
 const carouselRef = ref(null);
 const isLoggedIn = ref(false); // Ref to track login status
+const bookingDate = ref(new Date()); // Initialize booking date with the current date
+
 
 // Function to check if the user is logged in
 function checkLoginStatus() {
@@ -152,7 +158,7 @@ function initializeMap(lat, lng) {
 // Fetch listing details on mount
 onMounted(async () => {
   checkLoginStatus(); // Check login status on mount
-
+  console.log(userId)
   const accessToken = localStorage.getItem('token');
   try {
     const response = await fetch(`/api/listing/${listingId}`, {
@@ -175,10 +181,40 @@ onMounted(async () => {
 });
 
 // Reserve button click handler (implement your own logic)
-function handleReserve() {
-  // Add reservation logic here
-  console.log('Reserve button clicked');
+async function handleReserve() {
+  try {
+    // First, create a notification
+    const notificationResponse = await axios.post('/api/notification', {
+      hostId: parseInt(hostId, 10),
+      bookerId: parseInt(userId, 10),
+      listingId: parseInt(listingId, 10),
+      content: 'You have a new booking request!'
+    });
+
+    // Check if the notification was successfully created
+    if (notificationResponse.status === 200) {
+      // Now, create the booking only if the notification was successful
+      const bookingResponse = await axios.post('/api/booking', {
+        listingId: parseInt(listingId, 10),
+        userId: parseInt(userId, 10),
+        bookingDate: bookingDate.value, // Use the current booking date or allow user input
+        statusId: 1, // Default to status 1 (e.g., confirmed or pending)
+      });
+
+      if (bookingResponse.status === 200) {
+        toast.success("Your booking request has been sent. Please hold on for confirmation.", {
+          autoClose: 2000,
+        });
+      }
+    }
+  } catch (error) {
+    console.error('Error creating booking or notification:', error);
+    toast.error('Error creating booking or notification. Please try again.', {
+      autoClose: 2000,
+    });
+  }
 }
+
 </script>
 
 <style scoped>

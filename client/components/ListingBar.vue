@@ -103,8 +103,9 @@ const showDetails = (listing) => {
 
 // Function to view a listing in the ListingView component
 const viewListing = (listing) => {
-  alert(listing.listingId);
-  router.push({ name: 'ListingView', query: { listingId: listing.listingId } });
+  console.log(listing)
+  alert("Owner id: " + listing.userId + " listing ID: " + listing.listingId)
+  router.push({ name: 'ListingView', query: { listingId: listing.listingId, hostid: listing.userId } });
 };
 
 // Function to handle showing details from the map click event

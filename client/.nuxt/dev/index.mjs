@@ -3,7 +3,7 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { mkdirSync } from 'node:fs';
 import { parentPort, threadId } from 'node:worker_threads';
-import { defineEventHandler, handleCacheHeaders, splitCookiesString, isEvent, createEvent, fetchWithEvent, getRequestHeader, eventHandler, setHeaders, sendRedirect, proxyRequest, createError, setResponseHeader, send, getResponseStatus, setResponseStatus, setResponseHeaders, getRequestHeaders, createApp, createRouter as createRouter$1, toNodeListener, lazyEventHandler, getRouterParam, getQuery as getQuery$1, readBody, getResponseStatusText } from 'file://C:/Users/reyan/OneDrive/Desktop/CAPSTONE/client/node_modules/.pnpm/h3@1.12.0/node_modules/h3/dist/index.mjs';
+import { defineEventHandler, handleCacheHeaders, splitCookiesString, isEvent, createEvent, fetchWithEvent, getRequestHeader, eventHandler, setHeaders, sendRedirect, proxyRequest, createError, setResponseHeader, send, getResponseStatus, setResponseStatus, setResponseHeaders, getRequestHeaders, createApp, createRouter as createRouter$1, toNodeListener, lazyEventHandler, getRouterParam, getQuery as getQuery$1, readBody, getResponseStatusText } from 'file://C:/Users/reyan/OneDrive/Desktop/CAPSTONE/client/node_modules/.pnpm/h3@1.13.0/node_modules/h3/dist/index.mjs';
 import { PrismaClient } from 'file://C:/Users/reyan/OneDrive/Desktop/CAPSTONE/client/node_modules/.pnpm/@prisma+client@5.19.1_prisma@5.19.1/node_modules/@prisma/client/default.js';
 import bcrypt from 'file://C:/Users/reyan/OneDrive/Desktop/CAPSTONE/client/node_modules/.pnpm/bcryptjs@2.4.3/node_modules/bcryptjs/index.js';
 import jwt from 'file://C:/Users/reyan/OneDrive/Desktop/CAPSTONE/client/node_modules/.pnpm/jsonwebtoken@8.5.1/node_modules/jsonwebtoken/index.js';
@@ -848,13 +848,17 @@ const errorHandler = (async function errorhandler(error, event) {
 
 const _lazy_shNhRb = () => Promise.resolve().then(function () { return amenities$1; });
 const _lazy_iGDm3k = () => Promise.resolve().then(function () { return auth$1; });
+const _lazy_eeSsuf = () => Promise.resolve().then(function () { return booking_post$1; });
 const _lazy_Q2n8af = () => Promise.resolve().then(function () { return getUserListings$1; });
 const _lazy_roCLCK = () => Promise.resolve().then(function () { return guestTypes$1; });
+const _lazy_BELuZj = () => Promise.resolve().then(function () { return _listingId__get$3; });
 const _lazy_YUVFdT = () => Promise.resolve().then(function () { return _listingId__get$1; });
 const _lazy_b8Ospo = () => Promise.resolve().then(function () { return listings_get$1; });
 const _lazy_yEOaV6 = () => Promise.resolve().then(function () { return listings_post$1; });
 const _lazy_TK3v0Z = () => Promise.resolve().then(function () { return logout$1; });
 const _lazy_8P8VHu = () => Promise.resolve().then(function () { return multerMiddleware; });
+const _lazy_iqyYiU = () => Promise.resolve().then(function () { return notification_post$1; });
+const _lazy_eIpIK0 = () => Promise.resolve().then(function () { return notifications_get$1; });
 const _lazy_MEH76d = () => Promise.resolve().then(function () { return placeTypes$1; });
 const _lazy_OfIB0i = () => Promise.resolve().then(function () { return _userId__get$1; });
 const _lazy_unyLXl = () => Promise.resolve().then(function () { return renderer$1; });
@@ -862,13 +866,17 @@ const _lazy_unyLXl = () => Promise.resolve().then(function () { return renderer$
 const handlers = [
   { route: '/api/amenities', handler: _lazy_shNhRb, lazy: true, middleware: false, method: undefined },
   { route: '/api/auth', handler: _lazy_iGDm3k, lazy: true, middleware: false, method: undefined },
+  { route: '/api/booking', handler: _lazy_eeSsuf, lazy: true, middleware: false, method: "post" },
   { route: '/api/getUserListings', handler: _lazy_Q2n8af, lazy: true, middleware: false, method: undefined },
   { route: '/api/guestTypes', handler: _lazy_roCLCK, lazy: true, middleware: false, method: undefined },
+  { route: '/api/hostlistingview/:listingId', handler: _lazy_BELuZj, lazy: true, middleware: false, method: "get" },
   { route: '/api/listing/:listingId', handler: _lazy_YUVFdT, lazy: true, middleware: false, method: "get" },
   { route: '/api/listings', handler: _lazy_b8Ospo, lazy: true, middleware: false, method: "get" },
   { route: '/api/listings', handler: _lazy_yEOaV6, lazy: true, middleware: false, method: "post" },
   { route: '/api/logout', handler: _lazy_TK3v0Z, lazy: true, middleware: false, method: undefined },
   { route: '/api/multerMiddleware', handler: _lazy_8P8VHu, lazy: true, middleware: false, method: undefined },
+  { route: '/api/notification', handler: _lazy_iqyYiU, lazy: true, middleware: false, method: "post" },
+  { route: '/api/notifications', handler: _lazy_eIpIK0, lazy: true, middleware: false, method: "get" },
   { route: '/api/placeTypes', handler: _lazy_MEH76d, lazy: true, middleware: false, method: undefined },
   { route: '/api/user/:userId', handler: _lazy_OfIB0i, lazy: true, middleware: false, method: "get" },
   { route: '/__nuxt_error', handler: _lazy_unyLXl, lazy: true, middleware: false, method: undefined },
@@ -1067,10 +1075,10 @@ const errorDev = /*#__PURE__*/Object.freeze({
   template: template$1
 });
 
-const prisma$9 = new PrismaClient();
+const prisma$d = new PrismaClient();
 const amenities = defineEventHandler(async (event) => {
   try {
-    const amenities = await prisma$9.amenity.findMany();
+    const amenities = await prisma$d.amenity.findMany();
     return amenities;
   } catch (error) {
     console.error("Error fetching amenities:", error);
@@ -1084,7 +1092,7 @@ const amenities$1 = /*#__PURE__*/Object.freeze({
   default: amenities
 });
 
-const prisma$8 = new PrismaClient();
+const prisma$c = new PrismaClient();
 const SECRET_KEY = process.env.SECRET_KEY;
 const upload = multer({
   storage: multer.diskStorage({
@@ -1112,7 +1120,7 @@ const auth = defineEventHandler(async (event) => {
           const body = event.req.body;
           const files = event.req.files || [];
           if (body.action === "login") {
-            const user = await prisma$8.user.findUnique({ where: { email: body.email } });
+            const user = await prisma$c.user.findUnique({ where: { email: body.email } });
             if (!user || !await bcrypt.compare(body.password, user.password)) {
               throw new Error("Invalid email or password");
             }
@@ -1123,7 +1131,7 @@ const auth = defineEventHandler(async (event) => {
             if (body.password !== body.confirmPassword) {
               throw new Error("Passwords do not match");
             }
-            const existingUser = await prisma$8.user.findUnique({ where: { email: body.email } });
+            const existingUser = await prisma$c.user.findUnique({ where: { email: body.email } });
             if (existingUser) {
               throw new Error("Email already exists");
             }
@@ -1133,7 +1141,7 @@ const auth = defineEventHandler(async (event) => {
             if (!["1", "2"].includes(body.roleId)) {
               throw new Error("Invalid role");
             }
-            const user = await prisma$8.user.create({
+            const user = await prisma$c.user.create({
               data: {
                 name: body.name,
                 email: body.email,
@@ -1161,7 +1169,40 @@ const auth$1 = /*#__PURE__*/Object.freeze({
   default: auth
 });
 
-const prisma$7 = new PrismaClient();
+const prisma$b = new PrismaClient();
+const booking_post = defineEventHandler(async (event) => {
+  const body = await readBody(event);
+  console.log(body);
+  try {
+    const newBooking = await prisma$b.booking.create({
+      data: {
+        userId: parseInt(body.userId, 10),
+        listingId: parseInt(body.listingId, 10),
+        bookingDate: new Date(body.bookingDate),
+        statusId: parseInt(body.statusId, 10)
+        // Note: createdAt is now handled automatically by Prisma's @default(now())
+      }
+    });
+    await prisma$b.bookingHistory.create({
+      data: {
+        bookingId: newBooking.bookingId,
+        statusId: newBooking.statusId
+        // You might want to add more fields here if necessary
+      }
+    });
+    return { success: true, booking: newBooking };
+  } catch (error) {
+    console.error("Error creating booking:", error);
+    throw createError({ statusCode: 500, message: "Error creating booking" });
+  }
+});
+
+const booking_post$1 = /*#__PURE__*/Object.freeze({
+  __proto__: null,
+  default: booking_post
+});
+
+const prisma$a = new PrismaClient();
 const getUserListings = defineEventHandler(async (event) => {
   const userId = event.req.headers["x-user-id"];
   if (!userId) {
@@ -1171,7 +1212,7 @@ const getUserListings = defineEventHandler(async (event) => {
     };
   }
   try {
-    const listings = await prisma$7.listing.findMany({
+    const listings = await prisma$a.listing.findMany({
       where: { userId: parseInt(userId) },
       include: {
         images: true
@@ -1193,10 +1234,10 @@ const getUserListings$1 = /*#__PURE__*/Object.freeze({
   default: getUserListings
 });
 
-const prisma$6 = new PrismaClient();
+const prisma$9 = new PrismaClient();
 const guestTypes = defineEventHandler(async (event) => {
   try {
-    const guestTypes = await prisma$6.guestType.findMany();
+    const guestTypes = await prisma$9.guestType.findMany();
     return guestTypes;
   } catch (error) {
     console.error("Error fetching guest types:", error);
@@ -1210,12 +1251,12 @@ const guestTypes$1 = /*#__PURE__*/Object.freeze({
   default: guestTypes
 });
 
-const prisma$5 = new PrismaClient();
-const _listingId__get = defineEventHandler(async (event) => {
+const prisma$8 = new PrismaClient();
+const _listingId__get$2 = defineEventHandler(async (event) => {
   var _a, _b;
   try {
     const listingId = event.context.params.listingId;
-    const listing = await prisma$5.listing.findUnique({
+    const listing = await prisma$8.listing.findUnique({
       where: { listingId: parseInt(listingId) },
       // Ensure listingId is a number
       select: {
@@ -1273,18 +1314,78 @@ const _listingId__get = defineEventHandler(async (event) => {
   }
 });
 
+const _listingId__get$3 = /*#__PURE__*/Object.freeze({
+  __proto__: null,
+  default: _listingId__get$2
+});
+
+const prisma$7 = new PrismaClient();
+const _listingId__get = defineEventHandler(async (event) => {
+  var _a, _b;
+  try {
+    const listingId = getRouterParam(event, "listingId");
+    if (!listingId) {
+      return { statusCode: 400, body: { error: "Listing ID is required" } };
+    }
+    const listing = await prisma$7.listing.findUnique({
+      where: { listingId: parseInt(listingId, 10) },
+      include: {
+        user: {
+          select: {
+            userId: true,
+            name: true,
+            email: true,
+            profilePic: true
+          }
+        },
+        placeType: true,
+        guestType: true,
+        images: true,
+        amenities: {
+          include: {
+            amenity: true
+          }
+        }
+      }
+    });
+    if (!listing) {
+      return { statusCode: 404, body: { error: "Listing not found" } };
+    }
+    const flattenedListing = {
+      ...listing,
+      placeType: ((_a = listing.placeType) == null ? void 0 : _a.placeTypeName) || "Unknown",
+      guestType: ((_b = listing.guestType) == null ? void 0 : _b.guestTypeName) || "Unknown",
+      images: listing.images.map((image) => ({ imageUrl: image.imageUrl })),
+      amenities: listing.amenities.map((item) => ({
+        name: item.amenity.amenityName,
+        iconClass: item.amenity.iconClass,
+        color: item.amenity.color
+      })),
+      user: listing.user ? {
+        userId: listing.user.userId,
+        name: listing.user.name,
+        email: listing.user.email,
+        profilePic: listing.user.profilePic
+      } : null
+    };
+    return { statusCode: 200, body: flattenedListing };
+  } catch (error) {
+    console.error("Error fetching listing:", error);
+    return { statusCode: 500, body: { error: "Error fetching listing" } };
+  }
+});
+
 const _listingId__get$1 = /*#__PURE__*/Object.freeze({
   __proto__: null,
   default: _listingId__get
 });
 
-const prisma$4 = new PrismaClient();
+const prisma$6 = new PrismaClient();
 const listings_get = defineEventHandler(async (event) => {
   try {
-    const listings = await prisma$4.listing.findMany({
+    const listings = await prisma$6.listing.findMany({
       select: {
         listingId: true,
-        // Ensure this field matches your Vue components
         title: true,
         description: true,
         price: true,
@@ -1297,22 +1398,21 @@ const listings_get = defineEventHandler(async (event) => {
         longitude: true,
         createdAt: true,
         updatedAt: true,
+        userId: true,
+        // Include userId in the selection
         placeType: {
           select: {
             placeTypeName: true
-            // Ensure this field is used correctly
           }
         },
         guestType: {
           select: {
             guestTypeName: true
-            // Ensure this field is used correctly
           }
         },
         images: {
           select: {
             imageUrl: true
-            // Ensure this field is used correctly
           }
         },
         amenities: {
@@ -1339,7 +1439,6 @@ const listings_get = defineEventHandler(async (event) => {
           iconClass: item.amenity.iconClass,
           color: item.amenity.color
         })) || []
-        // Ensure amenities are an empty array if not available
       };
     });
     console.log("Listings fetched:", flattenedListings);
@@ -1371,7 +1470,7 @@ const multerMiddleware = /*#__PURE__*/Object.freeze({
   default: uploadMiddleware
 });
 
-const prisma$3 = new PrismaClient();
+const prisma$5 = new PrismaClient();
 const listings_post = defineEventHandler(async (event) => {
   await new Promise((resolve, reject) => {
     uploadMiddleware.array("images")(event.req, event.res, (err) => {
@@ -1412,14 +1511,14 @@ const listings_post = defineEventHandler(async (event) => {
       longitude: parseFloat(body.longitude),
       userId: parseInt(body.userId, 10)
     };
-    const newListing = await prisma$3.listing.create({ data: listing });
-    await prisma$3.image.createMany({
+    const newListing = await prisma$5.listing.create({ data: listing });
+    await prisma$5.image.createMany({
       data: imageUrls.map((url) => ({
         listingId: newListing.listingId,
         imageUrl: url.imageUrl
       }))
     });
-    await prisma$3.listingAmenity.createMany({
+    await prisma$5.listingAmenity.createMany({
       data: amenitiesIds.map((amenityId) => ({
         listingId: newListing.listingId,
         amenityId
@@ -1439,13 +1538,13 @@ const listings_post$1 = /*#__PURE__*/Object.freeze({
   default: listings_post
 });
 
-const prisma$2 = new PrismaClient();
+const prisma$4 = new PrismaClient();
 const logout = eventHandler(async (event) => {
   if (event.node.req.method === "POST") {
     try {
       const body = await event.request.json();
       if (body.token) {
-        await prisma$2.blacklistedToken.create({
+        await prisma$4.blacklistedToken.create({
           data: {
             token: body.token
           }
@@ -1474,6 +1573,74 @@ const logout$1 = /*#__PURE__*/Object.freeze({
   default: logout
 });
 
+const prisma$3 = new PrismaClient();
+const notification_post = defineEventHandler(async (event) => {
+  try {
+    const { hostId, bookerId, listingId, content } = await readBody(event);
+    if (!hostId || !bookerId || !listingId || !content) {
+      throw createError({
+        statusCode: 400,
+        message: "Host ID, Booker ID, Listing ID, and content are required"
+      });
+    }
+    const newNotification = await prisma$3.notification.create({
+      data: {
+        hostId: parseInt(hostId, 10),
+        bookerId: parseInt(bookerId, 10),
+        listingId: parseInt(listingId, 10),
+        content
+        // dateCreated is handled automatically by Prisma's @default(now())
+      }
+    });
+    return newNotification;
+  } catch (error) {
+    console.error("Error creating notification:", error);
+    throw createError({
+      statusCode: 500,
+      message: "Error creating notification"
+    });
+  }
+});
+
+const notification_post$1 = /*#__PURE__*/Object.freeze({
+  __proto__: null,
+  default: notification_post
+});
+
+const prisma$2 = new PrismaClient();
+const notifications_get = defineEventHandler(async (event) => {
+  try {
+    const { userId } = getQuery$1(event);
+    const notifications = await prisma$2.notification.findMany({
+      where: {
+        hostId: parseInt(userId, 10)
+        // Ensure userId is an integer
+      },
+      orderBy: {
+        dateCreated: "desc"
+        // Optional: Sort notifications by the creation date
+      },
+      select: {
+        notificationId: true,
+        content: true,
+        dateCreated: true,
+        bookerId: true,
+        listingId: true
+      }
+    });
+    return notifications;
+  } catch (error) {
+    console.error("Error fetching notifications:", error);
+    event.res.statusCode = 500;
+    return { error: "Error fetching notifications" };
+  }
+});
+
+const notifications_get$1 = /*#__PURE__*/Object.freeze({
+  __proto__: null,
+  default: notifications_get
+});
+
 const prisma$1 = new PrismaClient();
 const placeTypes = defineEventHandler(async (event) => {
   try {
@@ -1494,63 +1661,42 @@ const placeTypes$1 = /*#__PURE__*/Object.freeze({
 const prisma = new PrismaClient();
 const _userId__get = defineEventHandler(async (event) => {
   try {
-    const userId = ref(localStorage.getItem("userId"));
-    const listings = await prisma.listing.findMany({
-      where: { userId: parseInt(userId) },
-      // Ensure userId is a number
+    const userId = getRouterParam(event, "userId");
+    if (!userId) {
+      return { statusCode: 400, body: { error: "User ID is required" } };
+    }
+    const user = await prisma.user.findUnique({
+      where: { userId: parseInt(userId, 10) },
       select: {
-        listingId: true,
-        title: true,
-        description: true,
-        price: true,
-        address: true,
-        guests: true,
-        bedrooms: true,
-        beds: true,
-        bathrooms: true,
-        latitude: true,
-        longitude: true,
-        createdAt: true,
-        updatedAt: true,
-        placeType: {
-          select: { placeTypeName: true }
-        },
-        guestType: {
-          select: { guestTypeName: true }
-        },
-        images: {
-          select: { imageUrl: true }
-        },
-        amenities: {
+        userId: true,
+        name: true,
+        email: true,
+        phone: true,
+        roleId: true,
+        profilePic: true,
+        dateJoined: true,
+        role: {
           select: {
-            amenity: {
-              select: { amenityName: true, iconClass: true, color: true }
-            }
+            roleName: true
           }
         }
+        // Exclude sensitive information like password
+        // Include other fields as needed
       }
     });
-    if (!listings || listings.length === 0) {
-      return { listings: [] };
+    if (!user) {
+      return { statusCode: 404, body: { error: "User not found" } };
     }
-    const flattenedListings = listings.map((listing) => {
-      var _a, _b;
-      return {
-        ...listing,
-        placeType: ((_a = listing.placeType) == null ? void 0 : _a.placeTypeName) || "Unknown",
-        guestType: ((_b = listing.guestType) == null ? void 0 : _b.guestTypeName) || "Unknown",
-        amenities: listing.amenities.map((item) => ({
-          name: item.amenity.amenityName,
-          iconClass: item.amenity.iconClass,
-          color: item.amenity.color
-        })) || []
-      };
-    });
-    return flattenedListings;
+    const userResponse = {
+      ...user,
+      roleName: user.role.roleName,
+      role: void 0
+      // Remove the nested role object
+    };
+    return { statusCode: 200, body: userResponse };
   } catch (error) {
-    console.error("Error fetching userlistings:", error);
-    event.res.statusCode = 500;
-    return { error: "Error fetching userlistings" };
+    console.error("Error fetching user:", error);
+    return { statusCode: 500, body: { error: "Error fetching user details" } };
   }
 });
 

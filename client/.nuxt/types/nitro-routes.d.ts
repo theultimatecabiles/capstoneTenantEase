@@ -9,11 +9,17 @@ declare module 'nitropack' {
     '/api/auth': {
       'default': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/auth').default>>>>
     }
+    '/api/booking': {
+      'post': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/booking.post').default>>>>
+    }
     '/api/getUserListings': {
       'default': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/getUserListings').default>>>>
     }
     '/api/guestTypes': {
       'default': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/guestTypes').default>>>>
+    }
+    '/api/hostlistingview/:listingId': {
+      'get': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/hostlistingview/[listingId].get').default>>>>
     }
     '/api/listing/:listingId': {
       'get': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/listing/[listingId].get').default>>>>
@@ -27,6 +33,12 @@ declare module 'nitropack' {
     }
     '/api/multerMiddleware': {
       'default': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/multerMiddleware').default>>>>
+    }
+    '/api/notification': {
+      'post': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/notification.post').default>>>>
+    }
+    '/api/notifications': {
+      'get': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/notifications.get').default>>>>
     }
     '/api/placeTypes': {
       'default': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/placeTypes').default>>>>

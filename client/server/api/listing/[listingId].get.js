@@ -1,44 +1,35 @@
 import { PrismaClient } from '@prisma/client';
-import { defineEventHandler } from 'h3';
+import { defineEventHandler, getRouterParam } from 'h3';
 
 const prisma = new PrismaClient();
 
 export default defineEventHandler(async (event) => {
   try {
     // Extract listingId from URL params
-    const listingId = event.context.params.listingId;
+    const listingId = getRouterParam(event, 'listingId');
     
-    // Fetch the listing by its ID
+    if (!listingId) {
+      return { statusCode: 400, body: { error: 'Listing ID is required' } };
+    }
+
+    // Fetch the listing by its ID, including user details
     const listing = await prisma.listing.findUnique({
-      where: { listingId: parseInt(listingId) }, // Ensure listingId is a number
-      select: {
-        listingId: true,
-        title: true,
-        description: true,
-        price: true,
-        address: true,
-        guests: true,
-        bedrooms: true,
-        beds: true,
-        bathrooms: true,
-        latitude: true,
-        longitude: true,
-        createdAt: true,
-        updatedAt: true,
-        placeType: {
-          select: { placeTypeName: true },
-        },
-        guestType: {
-          select: { guestTypeName: true },
-        },
-        images: {
-          select: { imageUrl: true },
-        },
-        amenities: {
+      where: { listingId: parseInt(listingId, 10) },
+      include: {
+        user: {
           select: {
-            amenity: {
-              select: { amenityName: true, iconClass: true, color: true },
-            },
+            userId: true,
+            name: true,
+            email: true,
+            profilePic: true,
+          },
+        },
+        placeType: true,
+        guestType: true,
+        images: true,
+        amenities: {
+          include: {
+            amenity: true,
           },
         },
       },
@@ -46,8 +37,7 @@ export default defineEventHandler(async (event) => {
 
     // If no listing is found, return 404
     if (!listing) {
-      event.res.statusCode = 404;
-      return { error: 'Listing not found' };
+      return { statusCode: 404, body: { error: 'Listing not found' } };
     }
 
     // Flatten the structure to simplify the response
@@ -55,18 +45,23 @@ export default defineEventHandler(async (event) => {
       ...listing,
       placeType: listing.placeType?.placeTypeName || 'Unknown',
       guestType: listing.guestType?.guestTypeName || 'Unknown',
-      images: listing.images.map(image => ({ imageUrl: image.imageUrl })) || [],
+      images: listing.images.map((image) => ({ imageUrl: image.imageUrl })),
       amenities: listing.amenities.map((item) => ({
         name: item.amenity.amenityName,
         iconClass: item.amenity.iconClass,
         color: item.amenity.color,
-      })) || [],
+      })),
+      user: listing.user ? {
+        userId: listing.user.userId,
+        name: listing.user.name,
+        email: listing.user.email,
+        profilePic: listing.user.profilePic,
+      } : null,
     };
 
-    return flattenedListing;
+    return { statusCode: 200, body: flattenedListing };
   } catch (error) {
     console.error('Error fetching listing:', error);
-    event.res.statusCode = 500;
-    return { error: 'Error fetching listing' };
+    return { statusCode: 500, body: { error: 'Error fetching listing' } };
   }
 });

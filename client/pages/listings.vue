@@ -1,20 +1,27 @@
 <template>
-  <div class="page-wrapper">
+  <div class="page-wrapper bg-gray-50 min-h-screen">
     <!-- dashHeader component -->
     <dashHeader />
 
+    <!-- Page Label Section -->
+    <div class="page-header bg-gradient-to-r from-red-300 to-red-500 text-white py-6 px-8 mb-8">
+      <h1 class="text-3xl font-bold">Your Listings</h1>
+      <p class="text-lg">Manage your apartment listings and make updates.</p>
+    </div>
+
+
     <!-- Listing container -->
-    <div class="listing-container">
+    <div class="listing-container px-6 py-12 mx-auto max-w-7xl">
       <!-- Listing details -->
-      <div v-if="listing && !loading" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-12">
+      <div v-if="listing && !loading" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
         <div
           v-for="item in listing"
           :key="item.listingId"
-          class="listing-card bg-white shadow-xl rounded-lg overflow-hidden transform transition-all duration-300 hover:scale-105"
+          class="listing-card bg-white shadow-lg rounded-lg overflow-hidden transform transition-all duration-300 hover:scale-105 hover:shadow-xl"
           @click="viewListing(item)"  
         >
           <!-- Listing Image -->
-          <img v-if="item.images.length > 0" :src="item.images[0].imageUrl" alt="Listing Image" class="listing-image" />
+          <img v-if="item.images.length > 0" :src="item.images[0].imageUrl" alt="Listing Image" class="w-full h-48 object-cover rounded-t-lg" />
 
           <!-- Listing Content -->
           <div class="p-6 space-y-4">
@@ -22,17 +29,19 @@
             <h2 class="text-2xl font-semibold text-gray-800 mb-2">{{ item.title }}</h2> <!-- Improved typography -->
 
             <!-- Listing Address -->
-            <p class="text-lg text-gray-500">{{ item.address }}</p>
+            <p class="text-lg text-gray-600">{{ item.address }}</p>
 
             <!-- Action buttons -->
             <div class="flex justify-between mt-4">
               <button 
                 @click.prevent="openUpdateModal(item)"
-                 class="btn bg-green-600 text-white hover:bg-green-700 focus:ring-4 focus:ring-green-200 transition duration-200"
+                class="btn bg-green-600 text-white hover:bg-green-700 focus:ring-4 focus:ring-green-200 transition duration-200 px-4 py-2 rounded-lg text-sm"
               >
                 Modify
               </button>
-              <button class="btn bg-red-600 text-white hover:bg-red-700 focus:ring-4 focus:ring-red-200 transition duration-200">Delete</button>
+              <button class="btn bg-red-600 text-white hover:bg-red-700 focus:ring-4 focus:ring-red-200 transition duration-200 px-4 py-2 rounded-lg text-sm">
+                Delete
+              </button>
             </div>
           </div>
         </div>
@@ -56,10 +65,10 @@ const router = useRouter();
 const listing = ref([]);
 const loading = ref(true);
 const error = ref(null);
-const showModal = ref(false);  // Track the modal visibility
-const selectedListing = ref(null);  // Store the selected listing data
+const showModal = ref(false);
+const selectedListing = ref(null);
 
-// Fetch listings when component is mounted
+// Fetch listings and other data when component is mounted
 onMounted(async () => {
   try {
     const userId = localStorage.getItem('userId');
@@ -72,7 +81,7 @@ onMounted(async () => {
     if (!response.ok) throw new Error('Failed to fetch user listings');
     listing.value = await response.json();
   } catch (err) {
-    console.error('Error fetching user listings:', err);
+    console.error('Error fetching data:', err);
     error.value = 'Failed to load your listing details.';
   } finally {
     loading.value = false;
@@ -81,14 +90,26 @@ onMounted(async () => {
 
 // Function to handle viewing a listing
 const viewListing = (item) => {
+  console.log("item");
+  console.log(item);
   router.push({ name: 'hostListingView', query: { listingId: item.listingId } });
 };
 
 // Open the update modal with the selected listing
-const openUpdateModal = (item) => {
-  event.stopPropagation();
-  selectedListing.value = item;
-  showModal.value = true;
+const openUpdateModal = async (item) => {
+  try {
+    event.stopPropagation();
+    const response = await fetch(`/api/hostlistingview/${item.listingId}`);
+    if (!response.ok) throw new Error('Failed to fetch listing details');
+
+    const data = await response.json();
+    console.log('Listing details:', data); // Log the response data
+    selectedListing.value = data;
+    showModal.value = true;
+  } catch (err) {
+    console.error('Error fetching listing details:', err);
+    error.value = 'Failed to load listing details for update.';
+  }
 };
 
 // Close the update modal
@@ -99,100 +120,105 @@ const closeUpdateModal = () => {
 </script>
 
 <style scoped>
-/* Full-page wrapper */
 .page-wrapper {
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
-  width: 100%;
-  background-color: #f8fafc;
+  font-family: 'Inter', sans-serif;
 }
 
-/* Listing container, max width ensures it is centered */
+.page-header {
+  background: linear-gradient(to right, #0f4c75, #00b5e2);
+  color: white;
+  border-radius: 10px;
+  text-align: center;
+}
+
+.page-header h1 {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+
+.page-header p {
+  font-size: 1.1rem;
+}
+
 .listing-container {
-  padding: 40px;
-  flex-grow: 1;
-  max-width: 1400px;
-  margin: auto;
-  background-color: #ffffff;
-  border-radius: 16px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  background-color: #f9fafb;
 }
 
-/* Ensuring dashHeader takes full width and is at the top */
-.dashHeader {
-  width: 100%;
-  position: sticky;
-  top: 0;
-  z-index: 10;
-  background-color: white;
-  box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.1);
-}
-
-/* Styling for each listing card */
 .listing-card {
-  border-radius: 12px;
-  overflow: hidden;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  position: relative;
+  background-color: white;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s, box-shadow 0.3s;
 }
 
 .listing-card:hover {
   transform: translateY(-5px);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
 }
 
-/* Image styles */
-img {
-  height: 240px; /* Adjusted image height */
+.listing-image {
   width: 100%;
+  height: 200px;
   object-fit: cover;
-  border-bottom: 2px solid #eaeaea;
-  transition: opacity 0.3s ease;
-}
-
-img:hover {
-  opacity: 0.9;
-}
-
-/* Button styles */
-.btn {
-  padding: 0.75rem 1.5rem;
-  font-size: 1rem;
-  font-weight: 500;
   border-radius: 8px;
-  transition: background-color 0.3s, transform 0.2s;
+}
+
+h2 {
+  color: #1f2937;
+}
+
+p {
+  color: #6b7280;
+}
+
+.btn {
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-size: 14px;
+  transition: background-color 0.3s, transform 0.3s;
 }
 
 .btn:hover {
   transform: translateY(-2px);
 }
 
-h2 {
-  font-size: 1.5rem;
-  font-weight: 600;
+.bg-green-600 {
+  background-color: #10b981;
 }
 
-p {
-  font-size: 1.125rem;
-  line-height: 1.6;
-  color: #555;
+.bg-red-600 {
+  background-color: #ef4444;
 }
 
-.flex {
-  display: flex;
+.focus\:ring-4:focus {
+  outline: 4px solid rgba(16, 185, 129, 0.5);
 }
 
-.space-x-4 {
-  gap: 1rem;
+.focus\:ring-green-200:focus {
+  outline: 4px solid rgba(34, 197, 94, 0.5);
 }
 
-/* Card Content */
-.space-y-4 {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
+.focus\:ring-red-200:focus {
+  outline: 4px solid rgba(239, 68, 68, 0.5);
 }
-header {
-  z-index: 50;
+
+.text-gray-600 {
+  color: #4b5563;
+}
+
+.text-gray-800 {
+  color: #1f2937;
+}
+
+.space-y-4 > * + * {
+  margin-top: 1rem;
+}
+
+@media (max-width: 640px) {
+  .listing-card {
+    max-width: 100%;
+    margin: 0 auto;
+  }
 }
 </style>

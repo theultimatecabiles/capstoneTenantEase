@@ -1,71 +1,52 @@
 import { PrismaClient } from '@prisma/client';
-import { defineEventHandler } from 'h3';
+import { defineEventHandler, getRouterParam } from 'h3';
 
 const prisma = new PrismaClient();
 
 export default defineEventHandler(async (event) => {
   try {
     // Extract userId from URL params
-    //const userId = event.context.params.userId;
-    const userId = ref(localStorage.getItem('userId'));
-
-    // Fetch listings by userId
-    const listings = await prisma.listing.findMany({
-      where: { userId: parseInt(userId) }, // Ensure userId is a number
-      select: {
-        listingId: true,
-        title: true,
-        description: true,
-        price: true,
-        address: true,
-        guests: true,
-        bedrooms: true,
-        beds: true,
-        bathrooms: true,
-        latitude: true,
-        longitude: true,
-        createdAt: true,
-        updatedAt: true,
-        placeType: {
-          select: { placeTypeName: true },
-        },
-        guestType: {
-          select: { guestTypeName: true },
-        },
-        images: {
-          select: { imageUrl: true },
-        },
-        amenities: {
-          select: {
-            amenity: {
-              select: { amenityName: true, iconClass: true, color: true },
-            },
-          },
-        },
-      },
-    });
-
-    // If no listings are found, return an empty array
-    if (!listings || listings.length === 0) {
-      return { listings: [] }; // Return an empty array if no listings are found
+    const userId = getRouterParam(event, 'userId');
+    
+    if (!userId) {
+      return { statusCode: 400, body: { error: 'User ID is required' } };
     }
 
-    // Flatten the structure for each listing
-    const flattenedListings = listings.map((listing) => ({
-      ...listing,
-      placeType: listing.placeType?.placeTypeName || 'Unknown',
-      guestType: listing.guestType?.guestTypeName || 'Unknown',
-      amenities: listing.amenities.map((item) => ({
-        name: item.amenity.amenityName,
-        iconClass: item.amenity.iconClass,
-        color: item.amenity.color,
-      })) || [],
-    }));
+    // Fetch the user by ID
+    const user = await prisma.user.findUnique({
+      where: { userId: parseInt(userId, 10) },
+      select: {
+        userId: true,
+        name: true,
+        email: true,
+        phone: true,
+        roleId: true,
+        profilePic: true,
+        dateJoined: true,
+        role: {
+          select: {
+            roleName: true
+          }
+        },
+        // Exclude sensitive information like password
+        // Include other fields as needed
+      }
+    });
 
-    return flattenedListings; // Return the flattened listings
+    if (!user) {
+      return { statusCode: 404, body: { error: 'User not found' } };
+    }
+
+    // Transform the user data if needed
+    const userResponse = {
+      ...user,
+      roleName: user.role.roleName,
+      role: undefined // Remove the nested role object
+    };
+
+    return { statusCode: 200, body: userResponse };
   } catch (error) {
-    console.error('Error fetching userlistings:', error);
-    event.res.statusCode = 500;
-    return { error: 'Error fetching userlistings' };
+    console.error('Error fetching user:', error);
+    return { statusCode: 500, body: { error: 'Error fetching user details' } };
   }
 });
