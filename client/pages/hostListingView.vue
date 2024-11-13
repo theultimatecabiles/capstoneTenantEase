@@ -1,6 +1,6 @@
 <template>
   <div>
-    <!-- Conditionally Render Header or dashHeader based on authentication status -->
+    <!-- Conditionally Render Header or DashHeader based on authentication status -->
     <Header v-if="!isLoggedIn" />
     <DashHeader v-else />
 
@@ -15,7 +15,7 @@
       <div v-if="listing && !loading" class="listing-details">
         <!-- Title Section -->
         <div class="listing-header mb-4">
-          <h1 class="text-3xl font-bold text-blue-500 mb-2">{{ listing.title }}</h1>
+          <h1 class="text-3xl font-bold text-red-500 mb-2">{{ listing.title }}</h1>
           <p class="text-gray-600">{{ listing.address }}</p>
         </div>
 
@@ -47,13 +47,12 @@
         <!-- Summary Section -->
         <div class="listing-summary mt-6 space-y-4">
           <div class="place-details text-lg text-gray-700">
-            <p>Entire {{ listing.placeType }} · {{ listing.guests }} guests · {{ listing.bedrooms }} bedrooms · {{
-              listing.bathrooms }} bathrooms</p>
+            <p>Entire {{ listing.placeType }} · {{ listing.guests }} guests · {{ listing.bedrooms }} bedrooms · {{ listing.bathrooms }} bathrooms</p>
           </div>
 
           <!-- Price Section (Host's View) -->
           <div class="price-section flex justify-between items-center">
-            <p class="text-2xl font-semibold text-blue-600">₱{{ listing.price }} /Monthly</p>
+            <p class="text-2xl font-semibold text-red-600">₱{{ listing.price }} /Monthly</p>
             <span class="text-lg text-gray-500">Listing Active</span> <!-- Indicating the listing is active for the host -->
           </div>
         </div>
@@ -84,7 +83,7 @@
         <!-- Host Action Section -->
         <div class="host-actions mt-8 flex justify-between">
           <button
-            class="edit-btn bg-yellow-500 text-white px-4 py-2 rounded-lg hover:bg-yellow-600 transition duration-300"
+            class="edit-btn bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 transition duration-300"
             @click="handleEditListing">
             Edit Listing
           </button>
@@ -148,15 +147,17 @@ function resetAutoplay() {
 
 // Initialize Leaflet map
 function initializeMap(lat, lng) {
-  nextTick(() => {
-    const map = new Map('map').setView([lat, lng], 14);
+  if (process.client) {
+    nextTick(() => {
+      const map = new Map('map').setView([lat, lng], 14);
 
-    new TileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      attribution: '&copy; OpenStreetMap contributors',
-    }).addTo(map);
+      new TileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; OpenStreetMap contributors',
+      }).addTo(map);
 
-    new Marker([lat, lng]).addTo(map);
-  });
+      new Marker([lat, lng]).addTo(map);
+    });
+  }
 }
 
 // Fetch listing details on mount
@@ -174,9 +175,7 @@ onMounted(async () => {
     listing.value = await response.json();
 
     // Initialize the map after loading the listing data
-    if (process.client) {
-      initializeMap(listing.value.latitude, listing.value.longitude);
-    }
+    initializeMap(listing.value.latitude, listing.value.longitude);
   } catch (err) {
     console.error('Error fetching listing:', err);
   } finally {
@@ -195,6 +194,7 @@ function handleDeleteListing() {
   // Logic for deleting the listing
   console.log('Delete listing button clicked');
 }
+
 </script>
 
 <style scoped>
@@ -240,5 +240,11 @@ function handleDeleteListing() {
 .host-actions {
   display: flex;
   justify-content: space-between;
+  margin-top: 32px;
 }
+
+.map {
+  height: 400px;
+}
+
 </style>

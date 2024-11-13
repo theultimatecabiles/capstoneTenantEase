@@ -143,6 +143,10 @@ const selectedAmenities = ref([]);
 const guestType = ref('');
 const placeType = ref('');
 
+const closeModal = () => {
+  emit('close');
+};
+
 const availableAmenities = ref([
   { name: 'Wi-Fi', iconClass: 'fas fa-wifi', color: '#4CAF50' },
   { name: 'TV', iconClass: 'fas fa-tv', color: '#FFC107' },

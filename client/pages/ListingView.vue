@@ -35,7 +35,6 @@
             </Slide>
           </Carousel>
 
-
           <!-- Navigation Buttons -->
           <button
             class="carousel-button absolute left-0 top-1/2 transform -translate-y-1/2 bg-gray-800 text-white p-2 rounded-full shadow-lg"
@@ -97,56 +96,49 @@ import { ref, onMounted, nextTick } from 'vue';
 import { useRoute } from 'vue-router';
 import { Carousel, Slide } from 'vue3-carousel';
 import { Map, TileLayer, Marker } from 'leaflet';
-import 'vue3-carousel/dist/carousel.css'; // Add carousel CSS
-import { toast } from 'vue3-toastify'
-import 'vue3-toastify/dist/index.css'
-import axios from 'axios'; // Import Axios for API calls
-// Import headers
+import 'vue3-carousel/dist/carousel.css';
+import { toast } from 'vue3-toastify';
+import 'vue3-toastify/dist/index.css';
+import axios from 'axios';
+
 import Header from '@/components/Header.vue';
 import UserHeader from '~/components/userHeader.vue';
 
 const route = useRoute();
-const userId = localStorage.getItem('userId'); // Make sure to get userId from localStorage
+const userId = localStorage.getItem('userId');
 const listingId = route.query.listingId;
 const hostId = route.query.hostid;
 const listing = ref(null);
 const loading = ref(true);
-const currentIndex = ref(0); // To track the current image index
+const currentIndex = ref(0);
 const carouselRef = ref(null);
-const isLoggedIn = ref(false); // Ref to track login status
-const bookingDate = ref(new Date()); // Initialize booking date with the current date
+const isLoggedIn = ref(false);
+const bookingDate = ref(new Date());
 
-
-// Function to check if the user is logged in
 function checkLoginStatus() {
   const token = localStorage.getItem('token');
   isLoggedIn.value = !!token;
 }
 
-// Function to go to the previous image and restart autoplay
 function prevImage() {
   currentIndex.value = (currentIndex.value - 1 + listing.value.images.length) % listing.value.images.length;
   resetAutoplay();
 }
 
-// Function to go to the next image and restart autoplay
 function nextImage() {
   currentIndex.value = (currentIndex.value + 1) % listing.value.images.length;
   resetAutoplay();
 }
 
-// Reset the autoplay after manually navigating images
 function resetAutoplay() {
   if (carouselRef.value) {
     carouselRef.value.resetAutoplay();
   }
 }
 
-// Initialize Leaflet map
 function initializeMap(lat, lng) {
   nextTick(() => {
     const map = new Map('map').setView([lat, lng], 14);
-
     new TileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       attribution: '&copy; OpenStreetMap contributors',
     }).addTo(map);
@@ -155,10 +147,8 @@ function initializeMap(lat, lng) {
   });
 }
 
-// Fetch listing details on mount
 onMounted(async () => {
   checkLoginStatus(); // Check login status on mount
-  console.log(userId)
   const accessToken = localStorage.getItem('token');
   try {
     const response = await fetch(`/api/listing/${listingId}`, {
@@ -166,11 +156,15 @@ onMounted(async () => {
         Authorization: `Bearer ${accessToken}`,
       },
     });
+
     if (!response.ok) throw new Error('Failed to fetch listing');
-    listing.value = await response.json();
+    
+    // Access the listing object from the response
+    const data = await response.json();
+    listing.value = data.body.listing;
 
     // Initialize the map after loading the listing data
-    if (process.client) {
+    if (listing.value.latitude && listing.value.longitude) {
       initializeMap(listing.value.latitude, listing.value.longitude);
     }
   } catch (err) {
@@ -180,10 +174,8 @@ onMounted(async () => {
   }
 });
 
-// Reserve button click handler (implement your own logic)
 async function handleReserve() {
   try {
-    // First, create a notification
     const notificationResponse = await axios.post('/api/notification', {
       hostId: parseInt(hostId, 10),
       bookerId: parseInt(userId, 10),
@@ -191,14 +183,12 @@ async function handleReserve() {
       content: 'You have a new booking request!'
     });
 
-    // Check if the notification was successfully created
     if (notificationResponse.status === 200) {
-      // Now, create the booking only if the notification was successful
       const bookingResponse = await axios.post('/api/booking', {
         listingId: parseInt(listingId, 10),
         userId: parseInt(userId, 10),
-        bookingDate: bookingDate.value, // Use the current booking date or allow user input
-        statusId: 1, // Default to status 1 (e.g., confirmed or pending)
+        bookingDate: bookingDate.value,
+        statusId: 1,
       });
 
       if (bookingResponse.status === 200) {
@@ -214,7 +204,6 @@ async function handleReserve() {
     });
   }
 }
-
 </script>
 
 <style scoped>
@@ -248,7 +237,25 @@ async function handleReserve() {
 }
 
 /* Add shadow and spacing to image container */
-.carousel-wrapper .shadow-lg {
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+.carousel-wrapper div {
+  margin-bottom: 16px;
+  padding: 8px;
+}
+
+.listing-details {
+  margin-top: 16px;
+}
+
+/* Styling for amenities and location */
+.listing-amenities {
+  margin-top: 32px;
+}
+
+.listing-map {
+  margin-top: 32px;
+}
+
+.map {
+  height: 400px;
 }
 </style>

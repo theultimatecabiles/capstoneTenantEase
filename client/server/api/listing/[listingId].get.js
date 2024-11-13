@@ -12,7 +12,7 @@ export default defineEventHandler(async (event) => {
       return { statusCode: 400, body: { error: 'Listing ID is required' } };
     }
 
-    // Fetch the listing by its ID, including user details
+    // Fetch the listing by its ID, including related user and other details
     const listing = await prisma.listing.findUnique({
       where: { listingId: parseInt(listingId, 10) },
       include: {
@@ -26,10 +26,20 @@ export default defineEventHandler(async (event) => {
         },
         placeType: true,
         guestType: true,
-        images: true,
+        images: {
+          select: {
+            imageUrl: true,
+          },
+        },
         amenities: {
           include: {
-            amenity: true,
+            amenity: {
+              select: {
+                amenityName: true,
+                iconClass: true,
+                color: true,
+              },
+            },
           },
         },
       },
@@ -42,8 +52,18 @@ export default defineEventHandler(async (event) => {
 
     // Flatten the structure to simplify the response
     const flattenedListing = {
-      ...listing,
-      placeType: listing.placeType?.placeTypeName || 'Unknown',
+    id: listing.id,
+    title: listing.title,
+    address: listing.address,
+    description: listing.description,
+    price: listing.price,
+    guests: listing.guests,
+    bedrooms: listing.bedrooms,
+    beds: listing.beds,
+    bathrooms: listing.bathrooms,
+    latitude: listing.latitude,
+    longitude: listing.longitude,
+    placeType: listing.placeType?.placeTypeName || 'Unknown',
       guestType: listing.guestType?.guestTypeName || 'Unknown',
       images: listing.images.map((image) => ({ imageUrl: image.imageUrl })),
       amenities: listing.amenities.map((item) => ({
@@ -59,7 +79,9 @@ export default defineEventHandler(async (event) => {
       } : null,
     };
 
-    return { statusCode: 200, body: flattenedListing };
+  
+
+    return { statusCode: 200, body: { listing: flattenedListing } };
   } catch (error) {
     console.error('Error fetching listing:', error);
     return { statusCode: 500, body: { error: 'Error fetching listing' } };

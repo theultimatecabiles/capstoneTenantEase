@@ -63,7 +63,7 @@ export default defineEventHandler(async (event) => {
       })) || [],
     }));
 
-    console.log('Listings fetched:', flattenedListings); // Debugging
+  
 
     return flattenedListings;
   } catch (error) {

@@ -14,24 +14,28 @@ datasource db {
 }
 
 model User {
-  userId      Int         @id @default(autoincrement())
-  name        String
-  email       String      @unique
-  password    String
-  phone       String?
-  roleId      Int
-  profilePic  String?
-  dateJoined  DateTime    @default(now())
-  listings    Listing[]
-  reviews     Review[]
-  messagesSent Message[]  @relation("SentMessages")
-  messagesReceived Message[] @relation("ReceivedMessages")
-  hostNotifications    Notification[] @relation("HostNotifications")
-  bookerNotifications  Notification[] @relation("BookerNotifications")
-  bookings    Booking[]
-  favorites   Favorite[]
-  role        Role        @relation(fields: [roleId], references: [roleId])
+  userId             Int           @id @default(autoincrement())
+  name               String
+  email              String        @unique
+  password           String
+  phone              String?
+  roleId             Int
+  profilePic         String?
+  document           String?
+  dateJoined         DateTime      @default(now())
+  verified           Boolean       @default(false)
+  verificationToken  String?
+  listings           Listing[]
+  reviews            Review[]
+  messagesSent       Message[]     @relation("SentMessages")
+  messagesReceived   Message[]     @relation("ReceivedMessages")
+  hostNotifications  Notification[] @relation("HostNotifications")
+  bookerNotifications Notification[] @relation("BookerNotifications")
+  bookings           Booking[]
+  favorites          Favorite[]
+  role               Role          @relation(fields: [roleId], references: [roleId])
 }
+
 
 model Role {
   roleId    Int    @id @default(autoincrement())

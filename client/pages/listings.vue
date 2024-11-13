@@ -4,11 +4,10 @@
     <dashHeader />
 
     <!-- Page Label Section -->
-    <div class="page-header bg-gradient-to-r from-red-300 to-red-500 text-white py-6 px-8 mb-8">
+    <div class="page-header bg-gradient-to-r from-red-400 to-red-800 text-white py-6 px-8 mb-8">
       <h1 class="text-3xl font-bold">Your Listings</h1>
       <p class="text-lg">Manage your apartment listings and make updates.</p>
     </div>
-
 
     <!-- Listing container -->
     <div class="listing-container px-6 py-12 mx-auto max-w-7xl">
@@ -21,26 +20,34 @@
           @click="viewListing(item)"  
         >
           <!-- Listing Image -->
-          <img v-if="item.images.length > 0" :src="item.images[0].imageUrl" alt="Listing Image" class="w-full h-48 object-cover rounded-t-lg" />
+          <img v-if="item.images && item.images.length > 0" :src="item.images[0].imageUrl" alt="Listing Image" class="w-full h-48 object-cover rounded-t-lg" />
 
           <!-- Listing Content -->
           <div class="p-6 space-y-4">
             <!-- Listing Title -->
-            <h2 class="text-2xl font-semibold text-gray-800 mb-2">{{ item.title }}</h2> <!-- Improved typography -->
+            <div class="flex items-center mb-2">
+              <i class="fas fa-building text-red-600 mr-2"></i> <!-- Font Awesome icon for title -->
+              <h2 class="text-2xl font-semibold text-gray-800">{{ item.title }}</h2>
+            </div>
 
-            <!-- Listing Address -->
-            <p class="text-lg text-gray-600">{{ item.address }}</p>
+            <!-- Listing Address with Icon -->
+            <div class="flex items-center">
+              <i class="fas fa-map-marker-alt text-red-600 mr-2"></i> <!-- Font Awesome icon for address -->
+              <p class="text-lg text-gray-600">{{ item.address }}</p>
+            </div>
 
             <!-- Action buttons -->
-            <div class="flex justify-between mt-4">
+            <div class="flex justify-center space-x-2 mt-4">
               <button 
                 @click.prevent="openUpdateModal(item)"
                 class="btn bg-green-600 text-white hover:bg-green-700 focus:ring-4 focus:ring-green-200 transition duration-200 px-4 py-2 rounded-lg text-sm"
               >
-                Modify
+                <i class="fas fa-edit"></i>
               </button>
-              <button class="btn bg-red-600 text-white hover:bg-red-700 focus:ring-4 focus:ring-red-200 transition duration-200 px-4 py-2 rounded-lg text-sm">
-                Delete
+              <button 
+                class="btn bg-red-600 text-white hover:bg-red-700 focus:ring-4 focus:ring-red-200 transition duration-200 px-4 py-2 rounded-lg text-sm"
+              >
+                <i class="fas fa-trash"></i>
               </button>
             </div>
           </div>
@@ -72,6 +79,8 @@ const selectedListing = ref(null);
 onMounted(async () => {
   try {
     const userId = localStorage.getItem('userId');
+    if (!userId) throw new Error('User not logged in');
+
     const response = await fetch('/api/getUserListings', {
       headers: {
         'x-user-id': userId,
@@ -90,20 +99,18 @@ onMounted(async () => {
 
 // Function to handle viewing a listing
 const viewListing = (item) => {
-  console.log("item");
-  console.log(item);
   router.push({ name: 'hostListingView', query: { listingId: item.listingId } });
 };
 
 // Open the update modal with the selected listing
-const openUpdateModal = async (item) => {
+const openUpdateModal = async (item, event) => {
   try {
-    event.stopPropagation();
+    event.stopPropagation();  // Stop the event propagation
+
     const response = await fetch(`/api/hostlistingview/${item.listingId}`);
     if (!response.ok) throw new Error('Failed to fetch listing details');
 
     const data = await response.json();
-    console.log('Listing details:', data); // Log the response data
     selectedListing.value = data;
     showModal.value = true;
   } catch (err) {
@@ -125,9 +132,7 @@ const closeUpdateModal = () => {
 }
 
 .page-header {
-  background: linear-gradient(to right, #0f4c75, #00b5e2);
   color: white;
-  border-radius: 10px;
   text-align: center;
 }
 
@@ -139,6 +144,7 @@ const closeUpdateModal = () => {
 
 .page-header p {
   font-size: 1.1rem;
+  color: white;
 }
 
 .listing-container {

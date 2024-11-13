@@ -1,0 +1,35 @@
+INSERT INTO bookingstatus (statusId, statusName) VALUES (1, 'Pending'), (2, 'Booked');
+
+INSERT INTO placetype (placeTypeid, placeTypeName) VALUES
+(1, 'House'),
+(2, 'Apartment'),
+(3, 'Boarding House'),
+(4, 'Studio Type'),
+(5, 'Room with Owner');
+
+INSERT INTO guesttype (guestTypeId, guestTypeName) VALUES
+(1, 'The entire place'),
+(2, 'Only a room'),
+(3, 'Shared room');
+
+INSERT INTO amenity (amenityId, amenityName, color, iconClass) VALUES
+(1, 'Wi-Fi', '#4CAF50', 'fas fa-wifi'),
+(2, 'TV', '#FFC107', 'fas fa-tv'),
+(3, 'Kitchen', '#FF5722', 'fas fa-utensils'),
+(4, 'Washer', '#607D8B', 'fas fa-tachometer-alt'),
+(5, 'Parking Lot', '#2196F3', 'fas fa-parking'),
+(6, 'Paid Parking', '#9C27B0', 'fas fa-money-bill-wave'),
+(7, 'Air Conditioning', '#00BCD4', 'fas fa-snowflake'),
+(8, 'Own Workspace', '#FF9800', 'fas fa-laptop');
+
+INSERT INTO role (roleId, roleName) VALUES
+(1, 'User'),
+(2, 'Host');
+
+
+forsendgrid
+JM7KUJ9816Y9ZY7J2NKCZEQ2
+
+code for outlook
+
+SXAUW-6L3MH-X9MKN-BJEAV-DEE9G

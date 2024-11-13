@@ -1,3 +1,4 @@
+// Server-side code to fetch notifications with listing info
 import { PrismaClient } from '@prisma/client';
 import { defineEventHandler, getQuery } from 'h3';
 
@@ -5,16 +6,14 @@ const prisma = new PrismaClient();
 
 export default defineEventHandler(async (event) => {
   try {
-    // Get userId from query parameters
     const { userId } = getQuery(event);
 
-    // Fetch notifications for the specified userId
     const notifications = await prisma.notification.findMany({
       where: {
         hostId: parseInt(userId, 10), // Ensure userId is an integer
       },
       orderBy: {
-        dateCreated: 'desc', // Optional: Sort notifications by the creation date
+        dateCreated: 'desc',
       },
       select: {
         notificationId: true,
@@ -22,6 +21,14 @@ export default defineEventHandler(async (event) => {
         dateCreated: true,
         bookerId: true,
         listingId: true,
+        // Fetch listing details
+        listing: {
+          select: {
+            title: true,
+            address: true,
+            description: true,
+          }
+        },
       },
     });
 

@@ -1,40 +1,685 @@
-import process from 'node:process';globalThis._importMeta_={url:import.meta.url,env:process.env};import { Server } from 'node:http';
+import process from 'node:process';globalThis._importMeta_={url:import.meta.url,env:process.env};import { mkdirSync } from 'node:fs';
+import { Server } from 'node:http';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
-import { mkdirSync } from 'node:fs';
 import { parentPort, threadId } from 'node:worker_threads';
-import { defineEventHandler, handleCacheHeaders, splitCookiesString, isEvent, createEvent, fetchWithEvent, getRequestHeader, eventHandler, setHeaders, sendRedirect, proxyRequest, createError, setResponseHeader, send, getResponseStatus, setResponseStatus, setResponseHeaders, getRequestHeaders, createApp, createRouter as createRouter$1, toNodeListener, lazyEventHandler, getRouterParam, getQuery as getQuery$1, readBody, getResponseStatusText } from 'file://C:/Users/reyan/OneDrive/Desktop/CAPSTONE/client/node_modules/.pnpm/h3@1.13.0/node_modules/h3/dist/index.mjs';
-import { PrismaClient } from 'file://C:/Users/reyan/OneDrive/Desktop/CAPSTONE/client/node_modules/.pnpm/@prisma+client@5.19.1_prisma@5.19.1/node_modules/@prisma/client/default.js';
+import { getRequestHeader, splitCookiesString, setResponseStatus, setResponseHeader, send, getRequestHeaders, defineEventHandler, handleCacheHeaders, createEvent, fetchWithEvent, isEvent, eventHandler, setHeaders, sendRedirect, proxyRequest, createApp, createRouter as createRouter$1, toNodeListener, lazyEventHandler, getResponseStatus, setResponseHeaders, createError, getRouterParam, getQuery as getQuery$1, readBody, getResponseStatusText } from 'file://C:/Users/reyan/OneDrive/Desktop/CAPSTONE/client/node_modules/.pnpm/h3@1.13.0/node_modules/h3/dist/index.mjs';
+import { PrismaClient } from 'file://C:/Users/reyan/OneDrive/Desktop/CAPSTONE/client/node_modules/.pnpm/@prisma+client@5.19.1_prisma@5.22.0/node_modules/@prisma/client/default.js';
 import bcrypt from 'file://C:/Users/reyan/OneDrive/Desktop/CAPSTONE/client/node_modules/.pnpm/bcryptjs@2.4.3/node_modules/bcryptjs/index.js';
 import jwt from 'file://C:/Users/reyan/OneDrive/Desktop/CAPSTONE/client/node_modules/.pnpm/jsonwebtoken@8.5.1/node_modules/jsonwebtoken/index.js';
 import multer from 'file://C:/Users/reyan/OneDrive/Desktop/CAPSTONE/client/node_modules/.pnpm/multer@1.4.5-lts.1/node_modules/multer/index.js';
 import path from 'path';
 import fs from 'fs';
-import { getRequestDependencies, getPreloadLinks, getPrefetchLinks, createRenderer } from 'file://C:/Users/reyan/OneDrive/Desktop/CAPSTONE/client/node_modules/.pnpm/vue-bundle-renderer@2.1.0/node_modules/vue-bundle-renderer/dist/runtime.mjs';
-import { stringify, uneval } from 'file://C:/Users/reyan/OneDrive/Desktop/CAPSTONE/client/node_modules/.pnpm/devalue@5.0.0/node_modules/devalue/index.js';
+import nodemailer from 'file://C:/Users/reyan/OneDrive/Desktop/CAPSTONE/client/node_modules/.pnpm/nodemailer@6.9.16/node_modules/nodemailer/lib/nodemailer.js';
+import { getRequestDependencies, getPreloadLinks, getPrefetchLinks, createRenderer } from 'file://C:/Users/reyan/OneDrive/Desktop/CAPSTONE/client/node_modules/.pnpm/vue-bundle-renderer@2.1.1/node_modules/vue-bundle-renderer/dist/runtime.mjs';
+import { stringify, uneval } from 'file://C:/Users/reyan/OneDrive/Desktop/CAPSTONE/client/node_modules/.pnpm/devalue@5.1.1/node_modules/devalue/index.js';
 import destr from 'file://C:/Users/reyan/OneDrive/Desktop/CAPSTONE/client/node_modules/.pnpm/destr@2.0.3/node_modules/destr/dist/index.mjs';
-import { parseURL, withoutBase, joinURL, getQuery, withQuery, withTrailingSlash, joinRelativeURL } from 'file://C:/Users/reyan/OneDrive/Desktop/CAPSTONE/client/node_modules/.pnpm/ufo@1.5.4/node_modules/ufo/dist/index.mjs';
-import { renderToString } from 'file://C:/Users/reyan/OneDrive/Desktop/CAPSTONE/client/node_modules/.pnpm/vue@3.5.2/node_modules/vue/server-renderer/index.mjs';
-import { propsToString, renderSSRHead } from 'file://C:/Users/reyan/OneDrive/Desktop/CAPSTONE/client/node_modules/.pnpm/@unhead+ssr@1.10.4/node_modules/@unhead/ssr/dist/index.mjs';
-import { createFetch as createFetch$1, Headers as Headers$1 } from 'file://C:/Users/reyan/OneDrive/Desktop/CAPSTONE/client/node_modules/.pnpm/ofetch@1.3.4/node_modules/ofetch/dist/node.mjs';
-import { createCall, createFetch } from 'file://C:/Users/reyan/OneDrive/Desktop/CAPSTONE/client/node_modules/.pnpm/unenv@1.10.0/node_modules/unenv/runtime/fetch/index.mjs';
-import { createHooks } from 'file://C:/Users/reyan/OneDrive/Desktop/CAPSTONE/client/node_modules/.pnpm/hookable@5.5.3/node_modules/hookable/dist/index.mjs';
+import { withQuery, joinURL, withTrailingSlash, parseURL, withoutBase, getQuery, joinRelativeURL } from 'file://C:/Users/reyan/OneDrive/Desktop/CAPSTONE/client/node_modules/.pnpm/ufo@1.5.4/node_modules/ufo/dist/index.mjs';
+import { renderToString } from 'file://C:/Users/reyan/OneDrive/Desktop/CAPSTONE/client/node_modules/.pnpm/vue@3.5.12_typescript@5.6.3/node_modules/vue/server-renderer/index.mjs';
+import { propsToString, renderSSRHead } from 'file://C:/Users/reyan/OneDrive/Desktop/CAPSTONE/client/node_modules/.pnpm/@unhead+ssr@1.11.11/node_modules/@unhead/ssr/dist/index.mjs';
+import { createServerHead as createServerHead$1, CapoPlugin } from 'file://C:/Users/reyan/OneDrive/Desktop/CAPSTONE/client/node_modules/.pnpm/unhead@1.11.11/node_modules/unhead/dist/index.mjs';
 import { klona } from 'file://C:/Users/reyan/OneDrive/Desktop/CAPSTONE/client/node_modules/.pnpm/klona@2.0.6/node_modules/klona/dist/index.mjs';
-import { snakeCase } from 'file://C:/Users/reyan/OneDrive/Desktop/CAPSTONE/client/node_modules/.pnpm/scule@1.3.0/node_modules/scule/dist/index.mjs';
 import defu, { defuFn } from 'file://C:/Users/reyan/OneDrive/Desktop/CAPSTONE/client/node_modules/.pnpm/defu@6.1.4/node_modules/defu/dist/defu.mjs';
-import { hash } from 'file://C:/Users/reyan/OneDrive/Desktop/CAPSTONE/client/node_modules/.pnpm/ohash@1.1.3/node_modules/ohash/dist/index.mjs';
-import { createStorage, prefixStorage } from 'file://C:/Users/reyan/OneDrive/Desktop/CAPSTONE/client/node_modules/.pnpm/unstorage@1.11.1_ioredis@5.4.1/node_modules/unstorage/dist/index.mjs';
-import unstorage_47drivers_47fs from 'file://C:/Users/reyan/OneDrive/Desktop/CAPSTONE/client/node_modules/.pnpm/unstorage@1.11.1_ioredis@5.4.1/node_modules/unstorage/drivers/fs.mjs';
-import { toRouteMatcher, createRouter } from 'file://C:/Users/reyan/OneDrive/Desktop/CAPSTONE/client/node_modules/.pnpm/radix3@1.1.2/node_modules/radix3/dist/index.mjs';
+import { snakeCase } from 'file://C:/Users/reyan/OneDrive/Desktop/CAPSTONE/client/node_modules/.pnpm/scule@1.3.0/node_modules/scule/dist/index.mjs';
+import { createHooks } from 'file://C:/Users/reyan/OneDrive/Desktop/CAPSTONE/client/node_modules/.pnpm/hookable@5.5.3/node_modules/hookable/dist/index.mjs';
+import { createFetch as createFetch$1, Headers as Headers$1 } from 'file://C:/Users/reyan/OneDrive/Desktop/CAPSTONE/client/node_modules/.pnpm/ofetch@1.4.1/node_modules/ofetch/dist/node.mjs';
+import { createCall, createFetch } from 'file://C:/Users/reyan/OneDrive/Desktop/CAPSTONE/client/node_modules/.pnpm/unenv@1.10.0/node_modules/unenv/runtime/fetch/index.mjs';
 import { AsyncLocalStorage } from 'node:async_hooks';
 import { consola } from 'file://C:/Users/reyan/OneDrive/Desktop/CAPSTONE/client/node_modules/.pnpm/consola@3.2.3/node_modules/consola/dist/index.mjs';
 import { getContext } from 'file://C:/Users/reyan/OneDrive/Desktop/CAPSTONE/client/node_modules/.pnpm/unctx@2.3.1_webpack-sources@3.2.3/node_modules/unctx/dist/index.mjs';
 import { captureRawStackTrace, parseRawStackTrace } from 'file://C:/Users/reyan/OneDrive/Desktop/CAPSTONE/client/node_modules/.pnpm/errx@0.1.0/node_modules/errx/dist/index.js';
-import { isVNode, version, unref } from 'file://C:/Users/reyan/OneDrive/Desktop/CAPSTONE/client/node_modules/.pnpm/vue@3.5.2/node_modules/vue/index.mjs';
-import { createServerHead as createServerHead$1, CapoPlugin } from 'file://C:/Users/reyan/OneDrive/Desktop/CAPSTONE/client/node_modules/.pnpm/unhead@1.10.4/node_modules/unhead/dist/index.mjs';
-import { defineHeadPlugin } from 'file://C:/Users/reyan/OneDrive/Desktop/CAPSTONE/client/node_modules/.pnpm/@unhead+shared@1.10.4/node_modules/@unhead/shared/dist/index.mjs';
+import { isVNode, version, unref } from 'file://C:/Users/reyan/OneDrive/Desktop/CAPSTONE/client/node_modules/.pnpm/vue@3.5.12_typescript@5.6.3/node_modules/vue/index.mjs';
+import { hash } from 'file://C:/Users/reyan/OneDrive/Desktop/CAPSTONE/client/node_modules/.pnpm/ohash@1.1.4/node_modules/ohash/dist/index.mjs';
+import { createStorage, prefixStorage } from 'file://C:/Users/reyan/OneDrive/Desktop/CAPSTONE/client/node_modules/.pnpm/unstorage@1.13.1_ioredis@5.4.1/node_modules/unstorage/dist/index.mjs';
+import unstorage_47drivers_47fs from 'file://C:/Users/reyan/OneDrive/Desktop/CAPSTONE/client/node_modules/.pnpm/unstorage@1.13.1_ioredis@5.4.1/node_modules/unstorage/drivers/fs.mjs';
+import { toRouteMatcher, createRouter } from 'file://C:/Users/reyan/OneDrive/Desktop/CAPSTONE/client/node_modules/.pnpm/radix3@1.1.2/node_modules/radix3/dist/index.mjs';
+import { defineHeadPlugin } from 'file://C:/Users/reyan/OneDrive/Desktop/CAPSTONE/client/node_modules/.pnpm/@unhead+shared@1.11.11/node_modules/@unhead/shared/dist/index.mjs';
 
-const r=Object.create(null),E=e=>globalThis.process?.env||globalThis._importMeta_.env||globalThis.Deno?.env.toObject()||globalThis.__env__||(e?r:globalThis),s=new Proxy(r,{get(e,o){return E()[o]??r[o]},has(e,o){const i=E();return o in i||o in r},set(e,o,i){const g=E(!0);return g[o]=i,!0},deleteProperty(e,o){if(!o)return !1;const i=E(!0);return delete i[o],!0},ownKeys(){const e=E(!0);return Object.keys(e)}}),t=typeof process<"u"&&process.env&&"development"||"",p=[["APPVEYOR"],["AWS_AMPLIFY","AWS_APP_ID",{ci:!0}],["AZURE_PIPELINES","SYSTEM_TEAMFOUNDATIONCOLLECTIONURI"],["AZURE_STATIC","INPUT_AZURE_STATIC_WEB_APPS_API_TOKEN"],["APPCIRCLE","AC_APPCIRCLE"],["BAMBOO","bamboo_planKey"],["BITBUCKET","BITBUCKET_COMMIT"],["BITRISE","BITRISE_IO"],["BUDDY","BUDDY_WORKSPACE_ID"],["BUILDKITE"],["CIRCLE","CIRCLECI"],["CIRRUS","CIRRUS_CI"],["CLOUDFLARE_PAGES","CF_PAGES",{ci:!0}],["CODEBUILD","CODEBUILD_BUILD_ARN"],["CODEFRESH","CF_BUILD_ID"],["DRONE"],["DRONE","DRONE_BUILD_EVENT"],["DSARI"],["GITHUB_ACTIONS"],["GITLAB","GITLAB_CI"],["GITLAB","CI_MERGE_REQUEST_ID"],["GOCD","GO_PIPELINE_LABEL"],["LAYERCI"],["HUDSON","HUDSON_URL"],["JENKINS","JENKINS_URL"],["MAGNUM"],["NETLIFY"],["NETLIFY","NETLIFY_LOCAL",{ci:!1}],["NEVERCODE"],["RENDER"],["SAIL","SAILCI"],["SEMAPHORE"],["SCREWDRIVER"],["SHIPPABLE"],["SOLANO","TDDIUM"],["STRIDER"],["TEAMCITY","TEAMCITY_VERSION"],["TRAVIS"],["VERCEL","NOW_BUILDER"],["VERCEL","VERCEL",{ci:!1}],["VERCEL","VERCEL_ENV",{ci:!1}],["APPCENTER","APPCENTER_BUILD_ID"],["CODESANDBOX","CODESANDBOX_SSE",{ci:!1}],["STACKBLITZ"],["STORMKIT"],["CLEAVR"],["ZEABUR"],["CODESPHERE","CODESPHERE_APP_ID",{ci:!0}],["RAILWAY","RAILWAY_PROJECT_ID"],["RAILWAY","RAILWAY_SERVICE_ID"]];function B(){if(globalThis.process?.env)for(const e of p){const o=e[1]||e[0];if(globalThis.process?.env[o])return {name:e[0].toLowerCase(),...e[2]}}return globalThis.process?.env?.SHELL==="/bin/jsh"&&globalThis.process?.versions?.webcontainer?{name:"stackblitz",ci:!1}:{name:"",ci:!1}}const l=B(),d=l.name;function n(e){return e?e!=="false":!1}const I=globalThis.process?.platform||"",T=n(s.CI)||l.ci!==!1,R=n(globalThis.process?.stdout&&globalThis.process?.stdout.isTTY);n(s.DEBUG);const C=t==="test"||n(s.TEST);n(s.MINIMAL)||T||C||!R;const a=/^win/i.test(I);!n(s.NO_COLOR)&&(n(s.FORCE_COLOR)||(R||a)&&s.TERM!=="dumb"||T);const _=(globalThis.process?.versions?.node||"").replace(/^v/,"")||null;Number(_?.split(".")[0])||null;const W=globalThis.process||Object.create(null),c={versions:{}};new Proxy(W,{get(e,o){if(o==="env")return s;if(o in e)return e[o];if(o in c)return c[o]}});const A=globalThis.process?.release?.name==="node",L=!!globalThis.Bun||!!globalThis.process?.versions?.bun,D=!!globalThis.Deno,O=!!globalThis.fastly,S=!!globalThis.Netlify,N=!!globalThis.EdgeRuntime,u=globalThis.navigator?.userAgent==="Cloudflare-Workers",b=!!globalThis.__lagon__,F=[[S,"netlify"],[N,"edge-light"],[u,"workerd"],[O,"fastly"],[D,"deno"],[L,"bun"],[A,"node"],[b,"lagon"]];function G(){const e=F.find(o=>o[0]);if(e)return {name:e[1]}}const P=G();P?.name||"";
+function hasReqHeader(event, name, includes) {
+  const value = getRequestHeader(event, name);
+  return value && typeof value === "string" && value.toLowerCase().includes(includes);
+}
+function isJsonRequest(event) {
+  if (hasReqHeader(event, "accept", "text/html")) {
+    return false;
+  }
+  return hasReqHeader(event, "accept", "application/json") || hasReqHeader(event, "user-agent", "curl/") || hasReqHeader(event, "user-agent", "httpie/") || hasReqHeader(event, "sec-fetch-mode", "cors") || event.path.startsWith("/api/") || event.path.endsWith(".json");
+}
+function normalizeError(error, isDev) {
+  const cwd = typeof process.cwd === "function" ? process.cwd() : "/";
+  const stack = (error.unhandled || error.fatal) ? [] : (error.stack || "").split("\n").splice(1).filter((line) => line.includes("at ")).map((line) => {
+    const text = line.replace(cwd + "/", "./").replace("webpack:/", "").replace("file://", "").trim();
+    return {
+      text,
+      internal: line.includes("node_modules") && !line.includes(".cache") || line.includes("internal") || line.includes("new Promise")
+    };
+  });
+  const statusCode = error.statusCode || 500;
+  const statusMessage = error.statusMessage ?? (statusCode === 404 ? "Not Found" : "");
+  const message = error.unhandled ? "internal server error" : error.message || error.toString();
+  return {
+    stack,
+    statusCode,
+    statusMessage,
+    message
+  };
+}
+function _captureError(error, type) {
+  console.error(`[nitro] [${type}]`, error);
+  useNitroApp().captureError(error, { tags: [type] });
+}
+function trapUnhandledNodeErrors() {
+  process.on(
+    "unhandledRejection",
+    (error) => _captureError(error, "unhandledRejection")
+  );
+  process.on(
+    "uncaughtException",
+    (error) => _captureError(error, "uncaughtException")
+  );
+}
+function joinHeaders(value) {
+  return Array.isArray(value) ? value.join(", ") : String(value);
+}
+function normalizeFetchResponse(response) {
+  if (!response.headers.has("set-cookie")) {
+    return response;
+  }
+  return new Response(response.body, {
+    status: response.status,
+    statusText: response.statusText,
+    headers: normalizeCookieHeaders(response.headers)
+  });
+}
+function normalizeCookieHeader(header = "") {
+  return splitCookiesString(joinHeaders(header));
+}
+function normalizeCookieHeaders(headers) {
+  const outgoingHeaders = new Headers();
+  for (const [name, header] of headers) {
+    if (name === "set-cookie") {
+      for (const cookie of normalizeCookieHeader(header)) {
+        outgoingHeaders.append("set-cookie", cookie);
+      }
+    } else {
+      outgoingHeaders.set(name, joinHeaders(header));
+    }
+  }
+  return outgoingHeaders;
+}
+
+const errorHandler = (async function errorhandler(error, event) {
+  const { stack, statusCode, statusMessage, message } = normalizeError(error);
+  const errorObject = {
+    url: event.path,
+    statusCode,
+    statusMessage,
+    message,
+    stack: statusCode !== 404 ? `<pre>${stack.map((i) => `<span class="stack${i.internal ? " internal" : ""}">${i.text}</span>`).join("\n")}</pre>` : "",
+    // TODO: check and validate error.data for serialisation into query
+    data: error.data
+  };
+  if (error.unhandled || error.fatal) {
+    const tags = [
+      "[nuxt]",
+      "[request error]",
+      error.unhandled && "[unhandled]",
+      error.fatal && "[fatal]",
+      Number(errorObject.statusCode) !== 200 && `[${errorObject.statusCode}]`
+    ].filter(Boolean).join(" ");
+    console.error(tags, (error.message || error.toString() || "internal server error") + "\n" + stack.map((l) => "  " + l.text).join("  \n"));
+  }
+  if (event.handled) {
+    return;
+  }
+  setResponseStatus(event, errorObject.statusCode !== 200 && errorObject.statusCode || 500, errorObject.statusMessage);
+  if (isJsonRequest(event)) {
+    setResponseHeader(event, "Content-Type", "application/json");
+    return send(event, JSON.stringify(errorObject));
+  }
+  const reqHeaders = getRequestHeaders(event);
+  const isRenderingError = event.path.startsWith("/__nuxt_error") || !!reqHeaders["x-nuxt-error"];
+  const res = isRenderingError ? null : await useNitroApp().localFetch(
+    withQuery(joinURL(useRuntimeConfig(event).app.baseURL, "/__nuxt_error"), errorObject),
+    {
+      headers: { ...reqHeaders, "x-nuxt-error": "true" },
+      redirect: "manual"
+    }
+  ).catch(() => null);
+  if (!res) {
+    const { template } = await Promise.resolve().then(function () { return errorDev; }) ;
+    {
+      errorObject.description = errorObject.message;
+    }
+    if (event.handled) {
+      return;
+    }
+    setResponseHeader(event, "Content-Type", "text/html;charset=UTF-8");
+    return send(event, template(errorObject));
+  }
+  const html = await res.text();
+  if (event.handled) {
+    return;
+  }
+  for (const [header, value] of res.headers.entries()) {
+    setResponseHeader(event, header, value);
+  }
+  setResponseStatus(event, res.status && res.status !== 200 ? res.status : void 0, res.statusText);
+  return send(event, html);
+});
+
+const script = `
+if (!window.__NUXT_DEVTOOLS_TIME_METRIC__) {
+  Object.defineProperty(window, '__NUXT_DEVTOOLS_TIME_METRIC__', {
+    value: {},
+    enumerable: false,
+    configurable: true,
+  })
+}
+window.__NUXT_DEVTOOLS_TIME_METRIC__.appInit = Date.now()
+`;
+
+const _5UW7gMBVwq = (function(nitro) {
+  nitro.hooks.hook("render:html", (htmlContext) => {
+    htmlContext.head.push(`<script>${script}<\/script>`);
+  });
+});
+
+const rootDir = "C:/Users/reyan/OneDrive/Desktop/CAPSTONE/client";
+
+const appHead = {"meta":[{"name":"viewport","content":"width=device-width, initial-scale=1"},{"charset":"utf-8"}],"link":[],"style":[],"script":[],"noscript":[]};
+
+const appRootTag = "div";
+
+const appRootAttrs = {"id":"__nuxt"};
+
+const appTeleportTag = "div";
+
+const appTeleportAttrs = {"id":"teleports"};
+
+const appId = "nuxt-app";
+
+const devReducers = {
+  VNode: (data) => isVNode(data) ? { type: data.type, props: data.props } : void 0,
+  URL: (data) => data instanceof URL ? data.toString() : void 0
+};
+const asyncContext = getContext("nuxt-dev", { asyncContext: true, AsyncLocalStorage });
+const _ygmi3TgKHI = (nitroApp) => {
+  const handler = nitroApp.h3App.handler;
+  nitroApp.h3App.handler = (event) => {
+    return asyncContext.callAsync({ logs: [], event }, () => handler(event));
+  };
+  onConsoleLog((_log) => {
+    const ctx = asyncContext.tryUse();
+    if (!ctx) {
+      return;
+    }
+    const rawStack = captureRawStackTrace();
+    if (!rawStack || rawStack.includes("runtime/vite-node.mjs")) {
+      return;
+    }
+    const trace = [];
+    let filename = "";
+    for (const entry of parseRawStackTrace(rawStack)) {
+      if (entry.source === globalThis._importMeta_.url) {
+        continue;
+      }
+      if (EXCLUDE_TRACE_RE.test(entry.source)) {
+        continue;
+      }
+      filename ||= entry.source.replace(withTrailingSlash(rootDir), "");
+      trace.push({
+        ...entry,
+        source: entry.source.startsWith("file://") ? entry.source.replace("file://", "") : entry.source
+      });
+    }
+    const log = {
+      ..._log,
+      // Pass along filename to allow the client to display more info about where log comes from
+      filename,
+      // Clean up file names in stack trace
+      stack: trace
+    };
+    ctx.logs.push(log);
+  });
+  nitroApp.hooks.hook("afterResponse", () => {
+    const ctx = asyncContext.tryUse();
+    if (!ctx) {
+      return;
+    }
+    return nitroApp.hooks.callHook("dev:ssr-logs", { logs: ctx.logs, path: ctx.event.path });
+  });
+  nitroApp.hooks.hook("render:html", (htmlContext) => {
+    const ctx = asyncContext.tryUse();
+    if (!ctx) {
+      return;
+    }
+    try {
+      const reducers = Object.assign(/* @__PURE__ */ Object.create(null), devReducers, ctx.event.context._payloadReducers);
+      htmlContext.bodyAppend.unshift(`<script type="application/json" data-nuxt-logs="${appId}">${stringify(ctx.logs, reducers)}<\/script>`);
+    } catch (e) {
+      const shortError = e instanceof Error && "toString" in e ? ` Received \`${e.toString()}\`.` : "";
+      console.warn(`[nuxt] Failed to stringify dev server logs.${shortError} You can define your own reducer/reviver for rich types following the instructions in https://nuxt.com/docs/api/composables/use-nuxt-app#payload.`);
+    }
+  });
+};
+const EXCLUDE_TRACE_RE = /\/node_modules\/(?:.*\/)?(?:nuxt|nuxt-nightly|nuxt-edge|nuxt3|consola|@vue)\/|core\/runtime\/nitro/;
+function onConsoleLog(callback) {
+  consola.addReporter({
+    log(logObj) {
+      callback(logObj);
+    }
+  });
+  consola.wrapConsole();
+}
+
+const plugins = [
+  _5UW7gMBVwq,
+_ygmi3TgKHI
+];
+
+const _lazy_shNhRb = () => Promise.resolve().then(function () { return amenities$1; });
+const _lazy_iGDm3k = () => Promise.resolve().then(function () { return auth$1; });
+const _lazy_eeSsuf = () => Promise.resolve().then(function () { return booking_post$1; });
+const _lazy_Q2n8af = () => Promise.resolve().then(function () { return getUserListings$1; });
+const _lazy_roCLCK = () => Promise.resolve().then(function () { return guestTypes$1; });
+const _lazy_BELuZj = () => Promise.resolve().then(function () { return _listingId__get$3; });
+const _lazy_YUVFdT = () => Promise.resolve().then(function () { return _listingId__get$1; });
+const _lazy_b8Ospo = () => Promise.resolve().then(function () { return listings_get$1; });
+const _lazy_yEOaV6 = () => Promise.resolve().then(function () { return listings_post$1; });
+const _lazy_TK3v0Z = () => Promise.resolve().then(function () { return logout$1; });
+const _lazy_8P8VHu = () => Promise.resolve().then(function () { return multerMiddleware; });
+const _lazy_iqyYiU = () => Promise.resolve().then(function () { return notification_post$1; });
+const _lazy_eIpIK0 = () => Promise.resolve().then(function () { return notifications_get$1; });
+const _lazy_MEH76d = () => Promise.resolve().then(function () { return placeTypes$1; });
+const _lazy_OfIB0i = () => Promise.resolve().then(function () { return _userId__get$1; });
+const _lazy_N60n4A = () => Promise.resolve().then(function () { return verifyEmail$1; });
+const _lazy_1IjeCj = () => Promise.resolve().then(function () { return renderer$1; });
+
+const handlers = [
+  { route: '/api/amenities', handler: _lazy_shNhRb, lazy: true, middleware: false, method: undefined },
+  { route: '/api/auth', handler: _lazy_iGDm3k, lazy: true, middleware: false, method: undefined },
+  { route: '/api/booking', handler: _lazy_eeSsuf, lazy: true, middleware: false, method: "post" },
+  { route: '/api/getUserListings', handler: _lazy_Q2n8af, lazy: true, middleware: false, method: undefined },
+  { route: '/api/guestTypes', handler: _lazy_roCLCK, lazy: true, middleware: false, method: undefined },
+  { route: '/api/hostlistingview/:listingId', handler: _lazy_BELuZj, lazy: true, middleware: false, method: "get" },
+  { route: '/api/listing/:listingId', handler: _lazy_YUVFdT, lazy: true, middleware: false, method: "get" },
+  { route: '/api/listings', handler: _lazy_b8Ospo, lazy: true, middleware: false, method: "get" },
+  { route: '/api/listings', handler: _lazy_yEOaV6, lazy: true, middleware: false, method: "post" },
+  { route: '/api/logout', handler: _lazy_TK3v0Z, lazy: true, middleware: false, method: undefined },
+  { route: '/api/multerMiddleware', handler: _lazy_8P8VHu, lazy: true, middleware: false, method: undefined },
+  { route: '/api/notification', handler: _lazy_iqyYiU, lazy: true, middleware: false, method: "post" },
+  { route: '/api/notifications', handler: _lazy_eIpIK0, lazy: true, middleware: false, method: "get" },
+  { route: '/api/placeTypes', handler: _lazy_MEH76d, lazy: true, middleware: false, method: undefined },
+  { route: '/api/user/:userId', handler: _lazy_OfIB0i, lazy: true, middleware: false, method: "get" },
+  { route: '/api/verifyEmail', handler: _lazy_N60n4A, lazy: true, middleware: false, method: undefined },
+  { route: '/__nuxt_error', handler: _lazy_1IjeCj, lazy: true, middleware: false, method: undefined },
+  { route: '/**', handler: _lazy_1IjeCj, lazy: true, middleware: false, method: undefined }
+];
+
+const serverAssets = [{"baseName":"server","dir":"C:/Users/reyan/OneDrive/Desktop/CAPSTONE/client/server/assets"}];
+
+const assets = createStorage();
+
+for (const asset of serverAssets) {
+  assets.mount(asset.baseName, unstorage_47drivers_47fs({ base: asset.dir, ignore: (asset?.ignore || []) }));
+}
+
+const storage$1 = createStorage({});
+
+storage$1.mount('/assets', assets);
+
+storage$1.mount('root', unstorage_47drivers_47fs({"driver":"fs","readOnly":true,"base":"C:\\Users\\reyan\\OneDrive\\Desktop\\CAPSTONE\\client","ignore":["**/node_modules/**","**/.git/**"]}));
+storage$1.mount('src', unstorage_47drivers_47fs({"driver":"fs","readOnly":true,"base":"C:\\Users\\reyan\\OneDrive\\Desktop\\CAPSTONE\\client\\server","ignore":["**/node_modules/**","**/.git/**"]}));
+storage$1.mount('build', unstorage_47drivers_47fs({"driver":"fs","readOnly":false,"base":"C:\\Users\\reyan\\OneDrive\\Desktop\\CAPSTONE\\client\\.nuxt","ignore":["**/node_modules/**","**/.git/**"]}));
+storage$1.mount('cache', unstorage_47drivers_47fs({"driver":"fs","readOnly":false,"base":"C:\\Users\\reyan\\OneDrive\\Desktop\\CAPSTONE\\client\\.nuxt\\cache","ignore":["**/node_modules/**","**/.git/**"]}));
+storage$1.mount('data', unstorage_47drivers_47fs({"driver":"fs","base":"C:\\Users\\reyan\\OneDrive\\Desktop\\CAPSTONE\\client\\.data\\kv","ignore":["**/node_modules/**","**/.git/**"]}));
+
+function useStorage(base = "") {
+  return base ? prefixStorage(storage$1, base) : storage$1;
+}
+
+function defaultCacheOptions() {
+  return {
+    name: "_",
+    base: "/cache",
+    swr: true,
+    maxAge: 1
+  };
+}
+function defineCachedFunction(fn, opts = {}) {
+  opts = { ...defaultCacheOptions(), ...opts };
+  const pending = {};
+  const group = opts.group || "nitro/functions";
+  const name = opts.name || fn.name || "_";
+  const integrity = opts.integrity || hash([fn, opts]);
+  const validate = opts.validate || ((entry) => entry.value !== void 0);
+  async function get(key, resolver, shouldInvalidateCache, event) {
+    const cacheKey = [opts.base, group, name, key + ".json"].filter(Boolean).join(":").replace(/:\/$/, ":index");
+    let entry = await useStorage().getItem(cacheKey).catch((error) => {
+      console.error(`[nitro] [cache] Cache read error.`, error);
+      useNitroApp().captureError(error, { event, tags: ["cache"] });
+    }) || {};
+    if (typeof entry !== "object") {
+      entry = {};
+      const error = new Error("Malformed data read from cache.");
+      console.error("[nitro] [cache]", error);
+      useNitroApp().captureError(error, { event, tags: ["cache"] });
+    }
+    const ttl = (opts.maxAge ?? 0) * 1e3;
+    if (ttl) {
+      entry.expires = Date.now() + ttl;
+    }
+    const expired = shouldInvalidateCache || entry.integrity !== integrity || ttl && Date.now() - (entry.mtime || 0) > ttl || validate(entry) === false;
+    const _resolve = async () => {
+      const isPending = pending[key];
+      if (!isPending) {
+        if (entry.value !== void 0 && (opts.staleMaxAge || 0) >= 0 && opts.swr === false) {
+          entry.value = void 0;
+          entry.integrity = void 0;
+          entry.mtime = void 0;
+          entry.expires = void 0;
+        }
+        pending[key] = Promise.resolve(resolver());
+      }
+      try {
+        entry.value = await pending[key];
+      } catch (error) {
+        if (!isPending) {
+          delete pending[key];
+        }
+        throw error;
+      }
+      if (!isPending) {
+        entry.mtime = Date.now();
+        entry.integrity = integrity;
+        delete pending[key];
+        if (validate(entry) !== false) {
+          let setOpts;
+          if (opts.maxAge && !opts.swr) {
+            setOpts = { ttl: opts.maxAge };
+          }
+          const promise = useStorage().setItem(cacheKey, entry, setOpts).catch((error) => {
+            console.error(`[nitro] [cache] Cache write error.`, error);
+            useNitroApp().captureError(error, { event, tags: ["cache"] });
+          });
+          if (event?.waitUntil) {
+            event.waitUntil(promise);
+          }
+        }
+      }
+    };
+    const _resolvePromise = expired ? _resolve() : Promise.resolve();
+    if (entry.value === void 0) {
+      await _resolvePromise;
+    } else if (expired && event && event.waitUntil) {
+      event.waitUntil(_resolvePromise);
+    }
+    if (opts.swr && validate(entry) !== false) {
+      _resolvePromise.catch((error) => {
+        console.error(`[nitro] [cache] SWR handler error.`, error);
+        useNitroApp().captureError(error, { event, tags: ["cache"] });
+      });
+      return entry;
+    }
+    return _resolvePromise.then(() => entry);
+  }
+  return async (...args) => {
+    const shouldBypassCache = await opts.shouldBypassCache?.(...args);
+    if (shouldBypassCache) {
+      return fn(...args);
+    }
+    const key = await (opts.getKey || getKey)(...args);
+    const shouldInvalidateCache = await opts.shouldInvalidateCache?.(...args);
+    const entry = await get(
+      key,
+      () => fn(...args),
+      shouldInvalidateCache,
+      args[0] && isEvent(args[0]) ? args[0] : void 0
+    );
+    let value = entry.value;
+    if (opts.transform) {
+      value = await opts.transform(entry, ...args) || value;
+    }
+    return value;
+  };
+}
+function cachedFunction(fn, opts = {}) {
+  return defineCachedFunction(fn, opts);
+}
+function getKey(...args) {
+  return args.length > 0 ? hash(args, {}) : "";
+}
+function escapeKey(key) {
+  return String(key).replace(/\W/g, "");
+}
+function defineCachedEventHandler(handler, opts = defaultCacheOptions()) {
+  const variableHeaderNames = (opts.varies || []).filter(Boolean).map((h) => h.toLowerCase()).sort();
+  const _opts = {
+    ...opts,
+    getKey: async (event) => {
+      const customKey = await opts.getKey?.(event);
+      if (customKey) {
+        return escapeKey(customKey);
+      }
+      const _path = event.node.req.originalUrl || event.node.req.url || event.path;
+      let _pathname;
+      try {
+        _pathname = escapeKey(decodeURI(parseURL(_path).pathname)).slice(0, 16) || "index";
+      } catch {
+        _pathname = "-";
+      }
+      const _hashedPath = `${_pathname}.${hash(_path)}`;
+      const _headers = variableHeaderNames.map((header) => [header, event.node.req.headers[header]]).map(([name, value]) => `${escapeKey(name)}.${hash(value)}`);
+      return [_hashedPath, ..._headers].join(":");
+    },
+    validate: (entry) => {
+      if (!entry.value) {
+        return false;
+      }
+      if (entry.value.code >= 400) {
+        return false;
+      }
+      if (entry.value.body === void 0) {
+        return false;
+      }
+      if (entry.value.headers.etag === "undefined" || entry.value.headers["last-modified"] === "undefined") {
+        return false;
+      }
+      return true;
+    },
+    group: opts.group || "nitro/handlers",
+    integrity: opts.integrity || hash([handler, opts])
+  };
+  const _cachedHandler = cachedFunction(
+    async (incomingEvent) => {
+      const variableHeaders = {};
+      for (const header of variableHeaderNames) {
+        const value = incomingEvent.node.req.headers[header];
+        if (value !== void 0) {
+          variableHeaders[header] = value;
+        }
+      }
+      const reqProxy = cloneWithProxy(incomingEvent.node.req, {
+        headers: variableHeaders
+      });
+      const resHeaders = {};
+      let _resSendBody;
+      const resProxy = cloneWithProxy(incomingEvent.node.res, {
+        statusCode: 200,
+        writableEnded: false,
+        writableFinished: false,
+        headersSent: false,
+        closed: false,
+        getHeader(name) {
+          return resHeaders[name];
+        },
+        setHeader(name, value) {
+          resHeaders[name] = value;
+          return this;
+        },
+        getHeaderNames() {
+          return Object.keys(resHeaders);
+        },
+        hasHeader(name) {
+          return name in resHeaders;
+        },
+        removeHeader(name) {
+          delete resHeaders[name];
+        },
+        getHeaders() {
+          return resHeaders;
+        },
+        end(chunk, arg2, arg3) {
+          if (typeof chunk === "string") {
+            _resSendBody = chunk;
+          }
+          if (typeof arg2 === "function") {
+            arg2();
+          }
+          if (typeof arg3 === "function") {
+            arg3();
+          }
+          return this;
+        },
+        write(chunk, arg2, arg3) {
+          if (typeof chunk === "string") {
+            _resSendBody = chunk;
+          }
+          if (typeof arg2 === "function") {
+            arg2(void 0);
+          }
+          if (typeof arg3 === "function") {
+            arg3();
+          }
+          return true;
+        },
+        writeHead(statusCode, headers2) {
+          this.statusCode = statusCode;
+          if (headers2) {
+            if (Array.isArray(headers2) || typeof headers2 === "string") {
+              throw new TypeError("Raw headers  is not supported.");
+            }
+            for (const header in headers2) {
+              const value = headers2[header];
+              if (value !== void 0) {
+                this.setHeader(
+                  header,
+                  value
+                );
+              }
+            }
+          }
+          return this;
+        }
+      });
+      const event = createEvent(reqProxy, resProxy);
+      event.fetch = (url, fetchOptions) => fetchWithEvent(event, url, fetchOptions, {
+        fetch: useNitroApp().localFetch
+      });
+      event.$fetch = (url, fetchOptions) => fetchWithEvent(event, url, fetchOptions, {
+        fetch: globalThis.$fetch
+      });
+      event.context = incomingEvent.context;
+      event.context.cache = {
+        options: _opts
+      };
+      const body = await handler(event) || _resSendBody;
+      const headers = event.node.res.getHeaders();
+      headers.etag = String(
+        headers.Etag || headers.etag || `W/"${hash(body)}"`
+      );
+      headers["last-modified"] = String(
+        headers["Last-Modified"] || headers["last-modified"] || (/* @__PURE__ */ new Date()).toUTCString()
+      );
+      const cacheControl = [];
+      if (opts.swr) {
+        if (opts.maxAge) {
+          cacheControl.push(`s-maxage=${opts.maxAge}`);
+        }
+        if (opts.staleMaxAge) {
+          cacheControl.push(`stale-while-revalidate=${opts.staleMaxAge}`);
+        } else {
+          cacheControl.push("stale-while-revalidate");
+        }
+      } else if (opts.maxAge) {
+        cacheControl.push(`max-age=${opts.maxAge}`);
+      }
+      if (cacheControl.length > 0) {
+        headers["cache-control"] = cacheControl.join(", ");
+      }
+      const cacheEntry = {
+        code: event.node.res.statusCode,
+        headers,
+        body
+      };
+      return cacheEntry;
+    },
+    _opts
+  );
+  return defineEventHandler(async (event) => {
+    if (opts.headersOnly) {
+      if (handleCacheHeaders(event, { maxAge: opts.maxAge })) {
+        return;
+      }
+      return handler(event);
+    }
+    const response = await _cachedHandler(
+      event
+    );
+    if (event.node.res.headersSent || event.node.res.writableEnded) {
+      return response.body;
+    }
+    if (handleCacheHeaders(event, {
+      modifiedTime: new Date(response.headers["last-modified"]),
+      etag: response.headers.etag,
+      maxAge: opts.maxAge
+    })) {
+      return;
+    }
+    event.node.res.statusCode = response.code;
+    for (const name in response.headers) {
+      const value = response.headers[name];
+      if (name === "set-cookie") {
+        event.node.res.appendHeader(
+          name,
+          splitCookiesString(value)
+        );
+      } else {
+        if (value !== void 0) {
+          event.node.res.setHeader(name, value);
+        }
+      }
+    }
+    return response.body;
+  });
+}
+function cloneWithProxy(obj, overrides) {
+  return new Proxy(obj, {
+    get(target, property, receiver) {
+      if (property in overrides) {
+        return overrides[property];
+      }
+      return Reflect.get(target, property, receiver);
+    },
+    set(target, property, value, receiver) {
+      if (property in overrides) {
+        overrides[property] = value;
+        return true;
+      }
+      return Reflect.set(target, property, value, receiver);
+    }
+  });
+}
+const cachedEventHandler = defineCachedEventHandler;
+
+const inlineAppConfig = {
+  "nuxt": {}
+};
+
+
+
+const appConfig = defuFn(inlineAppConfig);
 
 function getEnv(key, opts) {
   const envKey = snakeCase(key).toUpperCase();
@@ -73,14 +718,6 @@ function _expandFromEnv(value) {
     return process.env[key] || match;
   });
 }
-
-const inlineAppConfig = {
-  "nuxt": {}
-};
-
-
-
-const appConfig = defuFn(inlineAppConfig);
 
 const _inlineRuntimeConfig = {
   "app": {
@@ -153,403 +790,6 @@ new Proxy(/* @__PURE__ */ Object.create(null), {
   }
 });
 
-const serverAssets = [{"baseName":"server","dir":"C:/Users/reyan/OneDrive/Desktop/CAPSTONE/client/server/assets"}];
-
-const assets = createStorage();
-
-for (const asset of serverAssets) {
-  assets.mount(asset.baseName, unstorage_47drivers_47fs({ base: asset.dir }));
-}
-
-const storage$1 = createStorage({});
-
-storage$1.mount('/assets', assets);
-
-storage$1.mount('root', unstorage_47drivers_47fs({"driver":"fs","readOnly":true,"base":"C:\\Users\\reyan\\OneDrive\\Desktop\\CAPSTONE\\client","ignore":["**/node_modules/**","**/.git/**"]}));
-storage$1.mount('src', unstorage_47drivers_47fs({"driver":"fs","readOnly":true,"base":"C:\\Users\\reyan\\OneDrive\\Desktop\\CAPSTONE\\client\\server","ignore":["**/node_modules/**","**/.git/**"]}));
-storage$1.mount('build', unstorage_47drivers_47fs({"driver":"fs","readOnly":false,"base":"C:\\Users\\reyan\\OneDrive\\Desktop\\CAPSTONE\\client\\.nuxt","ignore":["**/node_modules/**","**/.git/**"]}));
-storage$1.mount('cache', unstorage_47drivers_47fs({"driver":"fs","readOnly":false,"base":"C:\\Users\\reyan\\OneDrive\\Desktop\\CAPSTONE\\client\\.nuxt\\cache","ignore":["**/node_modules/**","**/.git/**"]}));
-storage$1.mount('data', unstorage_47drivers_47fs({"driver":"fs","base":"C:\\Users\\reyan\\OneDrive\\Desktop\\CAPSTONE\\client\\.data\\kv","ignore":["**/node_modules/**","**/.git/**"]}));
-
-function useStorage(base = "") {
-  return base ? prefixStorage(storage$1, base) : storage$1;
-}
-
-const defaultCacheOptions = {
-  name: "_",
-  base: "/cache",
-  swr: true,
-  maxAge: 1
-};
-function defineCachedFunction(fn, opts = {}) {
-  opts = { ...defaultCacheOptions, ...opts };
-  const pending = {};
-  const group = opts.group || "nitro/functions";
-  const name = opts.name || fn.name || "_";
-  const integrity = opts.integrity || hash([fn, opts]);
-  const validate = opts.validate || ((entry) => entry.value !== void 0);
-  async function get(key, resolver, shouldInvalidateCache, event) {
-    const cacheKey = [opts.base, group, name, key + ".json"].filter(Boolean).join(":").replace(/:\/$/, ":index");
-    let entry = await useStorage().getItem(cacheKey) || {};
-    if (typeof entry !== "object") {
-      entry = {};
-      const error = new Error("Malformed data read from cache.");
-      console.error("[nitro] [cache]", error);
-      useNitroApp().captureError(error, { event, tags: ["cache"] });
-    }
-    const ttl = (opts.maxAge ?? opts.maxAge ?? 0) * 1e3;
-    if (ttl) {
-      entry.expires = Date.now() + ttl;
-    }
-    const expired = shouldInvalidateCache || entry.integrity !== integrity || ttl && Date.now() - (entry.mtime || 0) > ttl || validate(entry) === false;
-    const _resolve = async () => {
-      const isPending = pending[key];
-      if (!isPending) {
-        if (entry.value !== void 0 && (opts.staleMaxAge || 0) >= 0 && opts.swr === false) {
-          entry.value = void 0;
-          entry.integrity = void 0;
-          entry.mtime = void 0;
-          entry.expires = void 0;
-        }
-        pending[key] = Promise.resolve(resolver());
-      }
-      try {
-        entry.value = await pending[key];
-      } catch (error) {
-        if (!isPending) {
-          delete pending[key];
-        }
-        throw error;
-      }
-      if (!isPending) {
-        entry.mtime = Date.now();
-        entry.integrity = integrity;
-        delete pending[key];
-        if (validate(entry) !== false) {
-          const promise = useStorage().setItem(cacheKey, entry).catch((error) => {
-            console.error(`[nitro] [cache] Cache write error.`, error);
-            useNitroApp().captureError(error, { event, tags: ["cache"] });
-          });
-          if (event && event.waitUntil) {
-            event.waitUntil(promise);
-          }
-        }
-      }
-    };
-    const _resolvePromise = expired ? _resolve() : Promise.resolve();
-    if (entry.value === void 0) {
-      await _resolvePromise;
-    } else if (expired && event && event.waitUntil) {
-      event.waitUntil(_resolvePromise);
-    }
-    if (opts.swr && validate(entry) !== false) {
-      _resolvePromise.catch((error) => {
-        console.error(`[nitro] [cache] SWR handler error.`, error);
-        useNitroApp().captureError(error, { event, tags: ["cache"] });
-      });
-      return entry;
-    }
-    return _resolvePromise.then(() => entry);
-  }
-  return async (...args) => {
-    const shouldBypassCache = await opts.shouldBypassCache?.(...args);
-    if (shouldBypassCache) {
-      return fn(...args);
-    }
-    const key = await (opts.getKey || getKey)(...args);
-    const shouldInvalidateCache = await opts.shouldInvalidateCache?.(...args);
-    const entry = await get(
-      key,
-      () => fn(...args),
-      shouldInvalidateCache,
-      args[0] && isEvent(args[0]) ? args[0] : void 0
-    );
-    let value = entry.value;
-    if (opts.transform) {
-      value = await opts.transform(entry, ...args) || value;
-    }
-    return value;
-  };
-}
-const cachedFunction = defineCachedFunction;
-function getKey(...args) {
-  return args.length > 0 ? hash(args, {}) : "";
-}
-function escapeKey(key) {
-  return String(key).replace(/\W/g, "");
-}
-function defineCachedEventHandler(handler, opts = defaultCacheOptions) {
-  const variableHeaderNames = (opts.varies || []).filter(Boolean).map((h) => h.toLowerCase()).sort();
-  const _opts = {
-    ...opts,
-    getKey: async (event) => {
-      const customKey = await opts.getKey?.(event);
-      if (customKey) {
-        return escapeKey(customKey);
-      }
-      const _path = event.node.req.originalUrl || event.node.req.url || event.path;
-      const _pathname = escapeKey(decodeURI(parseURL(_path).pathname)).slice(0, 16) || "index";
-      const _hashedPath = `${_pathname}.${hash(_path)}`;
-      const _headers = variableHeaderNames.map((header) => [header, event.node.req.headers[header]]).map(([name, value]) => `${escapeKey(name)}.${hash(value)}`);
-      return [_hashedPath, ..._headers].join(":");
-    },
-    validate: (entry) => {
-      if (!entry.value) {
-        return false;
-      }
-      if (entry.value.code >= 400) {
-        return false;
-      }
-      if (entry.value.body === void 0) {
-        return false;
-      }
-      if (entry.value.headers.etag === "undefined" || entry.value.headers["last-modified"] === "undefined") {
-        return false;
-      }
-      return true;
-    },
-    group: opts.group || "nitro/handlers",
-    integrity: opts.integrity || hash([handler, opts])
-  };
-  const _cachedHandler = cachedFunction(
-    async (incomingEvent) => {
-      const variableHeaders = {};
-      for (const header of variableHeaderNames) {
-        variableHeaders[header] = incomingEvent.node.req.headers[header];
-      }
-      const reqProxy = cloneWithProxy(incomingEvent.node.req, {
-        headers: variableHeaders
-      });
-      const resHeaders = {};
-      let _resSendBody;
-      const resProxy = cloneWithProxy(incomingEvent.node.res, {
-        statusCode: 200,
-        writableEnded: false,
-        writableFinished: false,
-        headersSent: false,
-        closed: false,
-        getHeader(name) {
-          return resHeaders[name];
-        },
-        setHeader(name, value) {
-          resHeaders[name] = value;
-          return this;
-        },
-        getHeaderNames() {
-          return Object.keys(resHeaders);
-        },
-        hasHeader(name) {
-          return name in resHeaders;
-        },
-        removeHeader(name) {
-          delete resHeaders[name];
-        },
-        getHeaders() {
-          return resHeaders;
-        },
-        end(chunk, arg2, arg3) {
-          if (typeof chunk === "string") {
-            _resSendBody = chunk;
-          }
-          if (typeof arg2 === "function") {
-            arg2();
-          }
-          if (typeof arg3 === "function") {
-            arg3();
-          }
-          return this;
-        },
-        write(chunk, arg2, arg3) {
-          if (typeof chunk === "string") {
-            _resSendBody = chunk;
-          }
-          if (typeof arg2 === "function") {
-            arg2();
-          }
-          if (typeof arg3 === "function") {
-            arg3();
-          }
-          return this;
-        },
-        writeHead(statusCode, headers2) {
-          this.statusCode = statusCode;
-          if (headers2) {
-            for (const header in headers2) {
-              this.setHeader(header, headers2[header]);
-            }
-          }
-          return this;
-        }
-      });
-      const event = createEvent(reqProxy, resProxy);
-      event.fetch = (url, fetchOptions) => fetchWithEvent(event, url, fetchOptions, {
-        fetch: useNitroApp().localFetch
-      });
-      event.$fetch = (url, fetchOptions) => fetchWithEvent(event, url, fetchOptions, {
-        fetch: globalThis.$fetch
-      });
-      event.context = incomingEvent.context;
-      event.context.cache = {
-        options: _opts
-      };
-      const body = await handler(event) || _resSendBody;
-      const headers = event.node.res.getHeaders();
-      headers.etag = String(
-        headers.Etag || headers.etag || `W/"${hash(body)}"`
-      );
-      headers["last-modified"] = String(
-        headers["Last-Modified"] || headers["last-modified"] || (/* @__PURE__ */ new Date()).toUTCString()
-      );
-      const cacheControl = [];
-      if (opts.swr) {
-        if (opts.maxAge) {
-          cacheControl.push(`s-maxage=${opts.maxAge}`);
-        }
-        if (opts.staleMaxAge) {
-          cacheControl.push(`stale-while-revalidate=${opts.staleMaxAge}`);
-        } else {
-          cacheControl.push("stale-while-revalidate");
-        }
-      } else if (opts.maxAge) {
-        cacheControl.push(`max-age=${opts.maxAge}`);
-      }
-      if (cacheControl.length > 0) {
-        headers["cache-control"] = cacheControl.join(", ");
-      }
-      const cacheEntry = {
-        code: event.node.res.statusCode,
-        headers,
-        body
-      };
-      return cacheEntry;
-    },
-    _opts
-  );
-  return defineEventHandler(async (event) => {
-    if (opts.headersOnly) {
-      if (handleCacheHeaders(event, { maxAge: opts.maxAge })) {
-        return;
-      }
-      return handler(event);
-    }
-    const response = await _cachedHandler(event);
-    if (event.node.res.headersSent || event.node.res.writableEnded) {
-      return response.body;
-    }
-    if (handleCacheHeaders(event, {
-      modifiedTime: new Date(response.headers["last-modified"]),
-      etag: response.headers.etag,
-      maxAge: opts.maxAge
-    })) {
-      return;
-    }
-    event.node.res.statusCode = response.code;
-    for (const name in response.headers) {
-      const value = response.headers[name];
-      if (name === "set-cookie") {
-        event.node.res.appendHeader(
-          name,
-          splitCookiesString(value)
-        );
-      } else {
-        event.node.res.setHeader(name, value);
-      }
-    }
-    return response.body;
-  });
-}
-function cloneWithProxy(obj, overrides) {
-  return new Proxy(obj, {
-    get(target, property, receiver) {
-      if (property in overrides) {
-        return overrides[property];
-      }
-      return Reflect.get(target, property, receiver);
-    },
-    set(target, property, value, receiver) {
-      if (property in overrides) {
-        overrides[property] = value;
-        return true;
-      }
-      return Reflect.set(target, property, value, receiver);
-    }
-  });
-}
-const cachedEventHandler = defineCachedEventHandler;
-
-function hasReqHeader(event, name, includes) {
-  const value = getRequestHeader(event, name);
-  return value && typeof value === "string" && value.toLowerCase().includes(includes);
-}
-function isJsonRequest(event) {
-  if (hasReqHeader(event, "accept", "text/html")) {
-    return false;
-  }
-  return hasReqHeader(event, "accept", "application/json") || hasReqHeader(event, "user-agent", "curl/") || hasReqHeader(event, "user-agent", "httpie/") || hasReqHeader(event, "sec-fetch-mode", "cors") || event.path.startsWith("/api/") || event.path.endsWith(".json");
-}
-function normalizeError(error) {
-  const cwd = typeof process.cwd === "function" ? process.cwd() : "/";
-  const stack = (error.stack || "").split("\n").splice(1).filter((line) => line.includes("at ")).map((line) => {
-    const text = line.replace(cwd + "/", "./").replace("webpack:/", "").replace("file://", "").trim();
-    return {
-      text,
-      internal: line.includes("node_modules") && !line.includes(".cache") || line.includes("internal") || line.includes("new Promise")
-    };
-  });
-  const statusCode = error.statusCode || 500;
-  const statusMessage = error.statusMessage ?? (statusCode === 404 ? "Not Found" : "");
-  const message = error.message || error.toString();
-  return {
-    stack,
-    statusCode,
-    statusMessage,
-    message
-  };
-}
-function _captureError(error, type) {
-  console.error(`[nitro] [${type}]`, error);
-  useNitroApp().captureError(error, { tags: [type] });
-}
-function trapUnhandledNodeErrors() {
-  process.on(
-    "unhandledRejection",
-    (error) => _captureError(error, "unhandledRejection")
-  );
-  process.on(
-    "uncaughtException",
-    (error) => _captureError(error, "uncaughtException")
-  );
-}
-function joinHeaders(value) {
-  return Array.isArray(value) ? value.join(", ") : String(value);
-}
-function normalizeFetchResponse(response) {
-  if (!response.headers.has("set-cookie")) {
-    return response;
-  }
-  return new Response(response.body, {
-    status: response.status,
-    statusText: response.statusText,
-    headers: normalizeCookieHeaders(response.headers)
-  });
-}
-function normalizeCookieHeader(header = "") {
-  return splitCookiesString(joinHeaders(header));
-}
-function normalizeCookieHeaders(headers) {
-  const outgoingHeaders = new Headers();
-  for (const [name, header] of headers) {
-    if (name === "set-cookie") {
-      for (const cookie of normalizeCookieHeader(header)) {
-        outgoingHeaders.append("set-cookie", cookie);
-      }
-    } else {
-      outgoingHeaders.set(name, joinHeaders(header));
-    }
-  }
-  return outgoingHeaders;
-}
-
 const config = useRuntimeConfig();
 const _routeRulesMatcher = toRouteMatcher(
   createRouter({ routes: config.nitro.routeRules })
@@ -608,287 +848,12 @@ function getRouteRulesForPath(path) {
   return defu({}, ..._routeRulesMatcher.matchAll(path).reverse());
 }
 
-const script = `
-if (!window.__NUXT_DEVTOOLS_TIME_METRIC__) {
-  Object.defineProperty(window, '__NUXT_DEVTOOLS_TIME_METRIC__', {
-    value: {},
-    enumerable: false,
-    configurable: true,
-  })
-}
-window.__NUXT_DEVTOOLS_TIME_METRIC__.appInit = Date.now()
-`;
-
-const _Oe6P6fdX2O = (function(nitro) {
-  nitro.hooks.hook("render:html", (htmlContext) => {
-    htmlContext.head.push(`<script>${script}<\/script>`);
-  });
-});
-
-const rootDir = "C:/Users/reyan/OneDrive/Desktop/CAPSTONE/client";
-
-const appHead = {"meta":[{"name":"viewport","content":"width=device-width, initial-scale=1"},{"charset":"utf-8"}],"link":[],"style":[],"script":[],"noscript":[]};
-
-const appRootTag = "div";
-
-const appRootAttrs = {"id":"__nuxt"};
-
-const appTeleportTag = "div";
-
-const appTeleportAttrs = {"id":"teleports"};
-
-const appId = "nuxt-app";
-
-const devReducers = {
-  VNode: (data) => isVNode(data) ? { type: data.type, props: data.props } : void 0,
-  URL: (data) => data instanceof URL ? data.toString() : void 0
-};
-const asyncContext = getContext("nuxt-dev", { asyncContext: true, AsyncLocalStorage });
-const _CycJRjUjEX = (nitroApp) => {
-  const handler = nitroApp.h3App.handler;
-  nitroApp.h3App.handler = (event) => {
-    return asyncContext.callAsync({ logs: [], event }, () => handler(event));
-  };
-  onConsoleLog((_log) => {
-    const ctx = asyncContext.tryUse();
-    if (!ctx) {
-      return;
-    }
-    const rawStack = captureRawStackTrace();
-    if (!rawStack || rawStack.includes("runtime/vite-node.mjs")) {
-      return;
-    }
-    const trace = [];
-    let filename = "";
-    for (const entry of parseRawStackTrace(rawStack)) {
-      if (entry.source === globalThis._importMeta_.url) {
-        continue;
-      }
-      if (EXCLUDE_TRACE_RE.test(entry.source)) {
-        continue;
-      }
-      filename ||= entry.source.replace(withTrailingSlash(rootDir), "");
-      trace.push({
-        ...entry,
-        source: entry.source.startsWith("file://") ? entry.source.replace("file://", "") : entry.source
-      });
-    }
-    const log = {
-      ..._log,
-      // Pass along filename to allow the client to display more info about where log comes from
-      filename,
-      // Clean up file names in stack trace
-      stack: trace
-    };
-    ctx.logs.push(log);
-  });
-  nitroApp.hooks.hook("afterResponse", () => {
-    const ctx = asyncContext.tryUse();
-    if (!ctx) {
-      return;
-    }
-    return nitroApp.hooks.callHook("dev:ssr-logs", { logs: ctx.logs, path: ctx.event.path });
-  });
-  nitroApp.hooks.hook("render:html", (htmlContext) => {
-    const ctx = asyncContext.tryUse();
-    if (!ctx) {
-      return;
-    }
-    try {
-      const reducers = Object.assign(/* @__PURE__ */ Object.create(null), devReducers, ctx.event.context._payloadReducers);
-      htmlContext.bodyAppend.unshift(`<script type="application/json" data-nuxt-logs="${appId}">${stringify(ctx.logs, reducers)}<\/script>`);
-    } catch (e) {
-      const shortError = e instanceof Error && "toString" in e ? ` Received \`${e.toString()}\`.` : "";
-      console.warn(`[nuxt] Failed to stringify dev server logs.${shortError} You can define your own reducer/reviver for rich types following the instructions in https://nuxt.com/docs/api/composables/use-nuxt-app#payload.`);
-    }
-  });
-};
-const EXCLUDE_TRACE_RE = /\/node_modules\/(?:.*\/)?(?:nuxt|nuxt-nightly|nuxt-edge|nuxt3|consola|@vue)\/|core\/runtime\/nitro/;
-function onConsoleLog(callback) {
-  consola.addReporter({
-    log(logObj) {
-      callback(logObj);
-    }
-  });
-  consola.wrapConsole();
-}
-
-const plugins = [
-  _Oe6P6fdX2O,
-_CycJRjUjEX
-];
-
-const scheduledTasks = false;
-
-const tasks = {
-  
-};
-
-const __runningTasks__ = {};
-async function runTask(name, {
-  payload = {},
-  context = {}
-} = {}) {
-  if (__runningTasks__[name]) {
-    return __runningTasks__[name];
-  }
-  if (!(name in tasks)) {
-    throw createError({
-      message: `Task \`${name}\` is not available!`,
-      statusCode: 404
-    });
-  }
-  if (!tasks[name].resolve) {
-    throw createError({
-      message: `Task \`${name}\` is not implemented!`,
-      statusCode: 501
-    });
-  }
-  const handler = await tasks[name].resolve();
-  const taskEvent = { name, payload, context };
-  __runningTasks__[name] = handler.run(taskEvent);
-  try {
-    const res = await __runningTasks__[name];
-    return res;
-  } finally {
-    delete __runningTasks__[name];
-  }
-}
-
-function defineRenderHandler(handler) {
-  const runtimeConfig = useRuntimeConfig();
-  return eventHandler(async (event) => {
-    if (event.path === `${runtimeConfig.app.baseURL}favicon.ico`) {
-      setResponseHeader(event, "Content-Type", "image/x-icon");
-      return send(
-        event,
-        "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
-      );
-    }
-    const response = await handler(event);
-    if (!response) {
-      const _currentStatus = getResponseStatus(event);
-      setResponseStatus(event, _currentStatus === 200 ? 500 : _currentStatus);
-      return send(
-        event,
-        "No response returned from render handler: " + event.path
-      );
-    }
-    const nitroApp = useNitroApp();
-    await nitroApp.hooks.callHook("render:response", response, { event });
-    if (response.headers) {
-      setResponseHeaders(event, response.headers);
-    }
-    if (response.statusCode || response.statusMessage) {
-      setResponseStatus(event, response.statusCode, response.statusMessage);
-    }
-    return response.body;
-  });
-}
-
-const errorHandler = (async function errorhandler(error, event) {
-  const { stack, statusCode, statusMessage, message } = normalizeError(error);
-  const errorObject = {
-    url: event.path,
-    statusCode,
-    statusMessage,
-    message,
-    stack: statusCode !== 404 ? `<pre>${stack.map((i) => `<span class="stack${i.internal ? " internal" : ""}">${i.text}</span>`).join("\n")}</pre>` : "",
-    // TODO: check and validate error.data for serialisation into query
-    data: error.data
-  };
-  if (error.unhandled || error.fatal) {
-    const tags = [
-      "[nuxt]",
-      "[request error]",
-      error.unhandled && "[unhandled]",
-      error.fatal && "[fatal]",
-      Number(errorObject.statusCode) !== 200 && `[${errorObject.statusCode}]`
-    ].filter(Boolean).join(" ");
-    console.error(tags, errorObject.message + "\n" + stack.map((l) => "  " + l.text).join("  \n"));
-  }
-  if (event.handled) {
-    return;
-  }
-  setResponseStatus(event, errorObject.statusCode !== 200 && errorObject.statusCode || 500, errorObject.statusMessage);
-  if (isJsonRequest(event)) {
-    setResponseHeader(event, "Content-Type", "application/json");
-    return send(event, JSON.stringify(errorObject));
-  }
-  const reqHeaders = getRequestHeaders(event);
-  const isRenderingError = event.path.startsWith("/__nuxt_error") || !!reqHeaders["x-nuxt-error"];
-  const res = isRenderingError ? null : await useNitroApp().localFetch(
-    withQuery(joinURL(useRuntimeConfig(event).app.baseURL, "/__nuxt_error"), errorObject),
-    {
-      headers: { ...reqHeaders, "x-nuxt-error": "true" },
-      redirect: "manual"
-    }
-  ).catch(() => null);
-  if (!res) {
-    const { template } = await Promise.resolve().then(function () { return errorDev; }) ;
-    {
-      errorObject.description = errorObject.message;
-    }
-    if (event.handled) {
-      return;
-    }
-    setResponseHeader(event, "Content-Type", "text/html;charset=UTF-8");
-    return send(event, template(errorObject));
-  }
-  const html = await res.text();
-  if (event.handled) {
-    return;
-  }
-  for (const [header, value] of res.headers.entries()) {
-    setResponseHeader(event, header, value);
-  }
-  setResponseStatus(event, res.status && res.status !== 200 ? res.status : void 0, res.statusText);
-  return send(event, html);
-});
-
-const _lazy_shNhRb = () => Promise.resolve().then(function () { return amenities$1; });
-const _lazy_iGDm3k = () => Promise.resolve().then(function () { return auth$1; });
-const _lazy_eeSsuf = () => Promise.resolve().then(function () { return booking_post$1; });
-const _lazy_Q2n8af = () => Promise.resolve().then(function () { return getUserListings$1; });
-const _lazy_roCLCK = () => Promise.resolve().then(function () { return guestTypes$1; });
-const _lazy_BELuZj = () => Promise.resolve().then(function () { return _listingId__get$3; });
-const _lazy_YUVFdT = () => Promise.resolve().then(function () { return _listingId__get$1; });
-const _lazy_b8Ospo = () => Promise.resolve().then(function () { return listings_get$1; });
-const _lazy_yEOaV6 = () => Promise.resolve().then(function () { return listings_post$1; });
-const _lazy_TK3v0Z = () => Promise.resolve().then(function () { return logout$1; });
-const _lazy_8P8VHu = () => Promise.resolve().then(function () { return multerMiddleware; });
-const _lazy_iqyYiU = () => Promise.resolve().then(function () { return notification_post$1; });
-const _lazy_eIpIK0 = () => Promise.resolve().then(function () { return notifications_get$1; });
-const _lazy_MEH76d = () => Promise.resolve().then(function () { return placeTypes$1; });
-const _lazy_OfIB0i = () => Promise.resolve().then(function () { return _userId__get$1; });
-const _lazy_unyLXl = () => Promise.resolve().then(function () { return renderer$1; });
-
-const handlers = [
-  { route: '/api/amenities', handler: _lazy_shNhRb, lazy: true, middleware: false, method: undefined },
-  { route: '/api/auth', handler: _lazy_iGDm3k, lazy: true, middleware: false, method: undefined },
-  { route: '/api/booking', handler: _lazy_eeSsuf, lazy: true, middleware: false, method: "post" },
-  { route: '/api/getUserListings', handler: _lazy_Q2n8af, lazy: true, middleware: false, method: undefined },
-  { route: '/api/guestTypes', handler: _lazy_roCLCK, lazy: true, middleware: false, method: undefined },
-  { route: '/api/hostlistingview/:listingId', handler: _lazy_BELuZj, lazy: true, middleware: false, method: "get" },
-  { route: '/api/listing/:listingId', handler: _lazy_YUVFdT, lazy: true, middleware: false, method: "get" },
-  { route: '/api/listings', handler: _lazy_b8Ospo, lazy: true, middleware: false, method: "get" },
-  { route: '/api/listings', handler: _lazy_yEOaV6, lazy: true, middleware: false, method: "post" },
-  { route: '/api/logout', handler: _lazy_TK3v0Z, lazy: true, middleware: false, method: undefined },
-  { route: '/api/multerMiddleware', handler: _lazy_8P8VHu, lazy: true, middleware: false, method: undefined },
-  { route: '/api/notification', handler: _lazy_iqyYiU, lazy: true, middleware: false, method: "post" },
-  { route: '/api/notifications', handler: _lazy_eIpIK0, lazy: true, middleware: false, method: "get" },
-  { route: '/api/placeTypes', handler: _lazy_MEH76d, lazy: true, middleware: false, method: undefined },
-  { route: '/api/user/:userId', handler: _lazy_OfIB0i, lazy: true, middleware: false, method: "get" },
-  { route: '/__nuxt_error', handler: _lazy_unyLXl, lazy: true, middleware: false, method: undefined },
-  { route: '/**', handler: _lazy_unyLXl, lazy: true, middleware: false, method: undefined }
-];
-
 function createNitroApp() {
   const config = useRuntimeConfig();
   const hooks = createHooks();
   const captureError = (error, context = {}) => {
-    const promise = hooks.callHookParallel("error", error, context).catch((_err) => {
-      console.error("Error while capturing another error", _err);
+    const promise = hooks.callHookParallel("error", error, context).catch((error_) => {
+      console.error("Error while capturing another error", error_);
     });
     if (context.event && isEvent(context.event)) {
       const errors = context.event.context.nitro?.errors;
@@ -907,17 +872,17 @@ function createNitroApp() {
       return errorHandler(error, event);
     },
     onRequest: async (event) => {
-      await nitroApp.hooks.callHook("request", event).catch((error) => {
+      await nitroApp$1.hooks.callHook("request", event).catch((error) => {
         captureError(error, { event, tags: ["request"] });
       });
     },
     onBeforeResponse: async (event, response) => {
-      await nitroApp.hooks.callHook("beforeResponse", event, response).catch((error) => {
+      await nitroApp$1.hooks.callHook("beforeResponse", event, response).catch((error) => {
         captureError(error, { event, tags: ["request", "response"] });
       });
     },
     onAfterResponse: async (event, response) => {
-      await nitroApp.hooks.callHook("afterResponse", event, response).catch((error) => {
+      await nitroApp$1.hooks.callHook("afterResponse", event, response).catch((error) => {
         captureError(error, { event, tags: ["request", "response"] });
       });
     }
@@ -992,39 +957,122 @@ function createNitroApp() {
     localFetch,
     captureError
   };
-  for (const plugin of plugins) {
-    try {
-      plugin(app);
-    } catch (err) {
-      captureError(err, { tags: ["plugin"] });
-      throw err;
-    }
-  }
   return app;
 }
-const nitroApp = createNitroApp();
-const useNitroApp = () => nitroApp;
+function runNitroPlugins(nitroApp2) {
+  for (const plugin of plugins) {
+    try {
+      plugin(nitroApp2);
+    } catch (error) {
+      nitroApp2.captureError(error, { tags: ["plugin"] });
+      throw error;
+    }
+  }
+}
+const nitroApp$1 = createNitroApp();
+function useNitroApp() {
+  return nitroApp$1;
+}
+runNitroPlugins(nitroApp$1);
 
+function defineRenderHandler(render) {
+  const runtimeConfig = useRuntimeConfig();
+  return eventHandler(async (event) => {
+    const nitroApp = useNitroApp();
+    const ctx = { event, render, response: void 0 };
+    await nitroApp.hooks.callHook("render:before", ctx);
+    if (!ctx.response) {
+      if (event.path === `${runtimeConfig.app.baseURL}favicon.ico`) {
+        setResponseHeader(event, "Content-Type", "image/x-icon");
+        return send(
+          event,
+          "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
+        );
+      }
+      ctx.response = await ctx.render(event);
+      if (!ctx.response) {
+        const _currentStatus = getResponseStatus(event);
+        setResponseStatus(event, _currentStatus === 200 ? 500 : _currentStatus);
+        return send(
+          event,
+          "No response returned from render handler: " + event.path
+        );
+      }
+    }
+    await nitroApp.hooks.callHook("render:response", ctx.response, ctx);
+    if (ctx.response.headers) {
+      setResponseHeaders(event, ctx.response.headers);
+    }
+    if (ctx.response.statusCode || ctx.response.statusMessage) {
+      setResponseStatus(
+        event,
+        ctx.response.statusCode,
+        ctx.response.statusMessage
+      );
+    }
+    return ctx.response.body;
+  });
+}
+
+const r=Object.create(null),i=e=>globalThis.process?.env||globalThis._importMeta_.env||globalThis.Deno?.env.toObject()||globalThis.__env__||(e?r:globalThis),s=new Proxy(r,{get(e,o){return i()[o]??r[o]},has(e,o){const E=i();return o in E||o in r},set(e,o,E){const b=i(!0);return b[o]=E,!0},deleteProperty(e,o){if(!o)return !1;const E=i(!0);return delete E[o],!0},ownKeys(){const e=i(!0);return Object.keys(e)}}),t=typeof process<"u"&&process.env&&"development"||"",B=[["APPVEYOR"],["AWS_AMPLIFY","AWS_APP_ID",{ci:!0}],["AZURE_PIPELINES","SYSTEM_TEAMFOUNDATIONCOLLECTIONURI"],["AZURE_STATIC","INPUT_AZURE_STATIC_WEB_APPS_API_TOKEN"],["APPCIRCLE","AC_APPCIRCLE"],["BAMBOO","bamboo_planKey"],["BITBUCKET","BITBUCKET_COMMIT"],["BITRISE","BITRISE_IO"],["BUDDY","BUDDY_WORKSPACE_ID"],["BUILDKITE"],["CIRCLE","CIRCLECI"],["CIRRUS","CIRRUS_CI"],["CLOUDFLARE_PAGES","CF_PAGES",{ci:!0}],["CODEBUILD","CODEBUILD_BUILD_ARN"],["CODEFRESH","CF_BUILD_ID"],["DRONE"],["DRONE","DRONE_BUILD_EVENT"],["DSARI"],["GITHUB_ACTIONS"],["GITLAB","GITLAB_CI"],["GITLAB","CI_MERGE_REQUEST_ID"],["GOCD","GO_PIPELINE_LABEL"],["LAYERCI"],["HUDSON","HUDSON_URL"],["JENKINS","JENKINS_URL"],["MAGNUM"],["NETLIFY"],["NETLIFY","NETLIFY_LOCAL",{ci:!1}],["NEVERCODE"],["RENDER"],["SAIL","SAILCI"],["SEMAPHORE"],["SCREWDRIVER"],["SHIPPABLE"],["SOLANO","TDDIUM"],["STRIDER"],["TEAMCITY","TEAMCITY_VERSION"],["TRAVIS"],["VERCEL","NOW_BUILDER"],["VERCEL","VERCEL",{ci:!1}],["VERCEL","VERCEL_ENV",{ci:!1}],["APPCENTER","APPCENTER_BUILD_ID"],["CODESANDBOX","CODESANDBOX_SSE",{ci:!1}],["STACKBLITZ"],["STORMKIT"],["CLEAVR"],["ZEABUR"],["CODESPHERE","CODESPHERE_APP_ID",{ci:!0}],["RAILWAY","RAILWAY_PROJECT_ID"],["RAILWAY","RAILWAY_SERVICE_ID"],["DENO-DEPLOY","DENO_DEPLOYMENT_ID"],["FIREBASE_APP_HOSTING","FIREBASE_APP_HOSTING",{ci:!0}]];function p(){if(globalThis.process?.env)for(const e of B){const o=e[1]||e[0];if(globalThis.process?.env[o])return {name:e[0].toLowerCase(),...e[2]}}return globalThis.process?.env?.SHELL==="/bin/jsh"&&globalThis.process?.versions?.webcontainer?{name:"stackblitz",ci:!1}:{name:"",ci:!1}}const l=p(),d=l.name;function n(e){return e?e!=="false":!1}const I=globalThis.process?.platform||"",T=n(s.CI)||l.ci!==!1,R=n(globalThis.process?.stdout&&globalThis.process?.stdout.isTTY);n(s.DEBUG);const A=t==="test"||n(s.TEST);n(s.MINIMAL)||T||A||!R;const _=/^win/i.test(I);!n(s.NO_COLOR)&&(n(s.FORCE_COLOR)||(R||_)&&s.TERM!=="dumb"||T);const C=(globalThis.process?.versions?.node||"").replace(/^v/,"")||null;Number(C?.split(".")[0])||null;const y=globalThis.process||Object.create(null),c={versions:{}};new Proxy(y,{get(e,o){if(o==="env")return s;if(o in e)return e[o];if(o in c)return c[o]}});const L=globalThis.process?.release?.name==="node",a=!!globalThis.Bun||!!globalThis.process?.versions?.bun,D=!!globalThis.Deno,O=!!globalThis.fastly,S=!!globalThis.Netlify,N=!!globalThis.EdgeRuntime,P=globalThis.navigator?.userAgent==="Cloudflare-Workers",F=[[S,"netlify"],[N,"edge-light"],[P,"workerd"],[O,"fastly"],[D,"deno"],[a,"bun"],[L,"node"]];function G(){const e=F.find(o=>o[0]);if(e)return {name:e[1]}}const u=G();u?.name||"";
+
+const scheduledTasks = false;
+
+const tasks = {
+  
+};
+
+const __runningTasks__ = {};
+async function runTask(name, {
+  payload = {},
+  context = {}
+} = {}) {
+  if (__runningTasks__[name]) {
+    return __runningTasks__[name];
+  }
+  if (!(name in tasks)) {
+    throw createError({
+      message: `Task \`${name}\` is not available!`,
+      statusCode: 404
+    });
+  }
+  if (!tasks[name].resolve) {
+    throw createError({
+      message: `Task \`${name}\` is not implemented!`,
+      statusCode: 501
+    });
+  }
+  const handler = await tasks[name].resolve();
+  const taskEvent = { name, payload, context };
+  __runningTasks__[name] = handler.run(taskEvent);
+  try {
+    const res = await __runningTasks__[name];
+    return res;
+  } finally {
+    delete __runningTasks__[name];
+  }
+}
+
+const nitroApp = useNitroApp();
 const server = new Server(toNodeListener(nitroApp.h3App));
 function getAddress() {
   if (d === "stackblitz" || process.env.NITRO_NO_UNIX_SOCKET || process.versions.bun) {
     return 0;
   }
   const socketName = `worker-${process.pid}-${threadId}.sock`;
-  if (a) {
-    return join("\\\\.\\pipe\\nitro", socketName);
-  } else {
-    const socketDir = join(tmpdir(), "nitro");
-    mkdirSync(socketDir, { recursive: true });
-    return join(socketDir, socketName);
+  if (_) {
+    return join(String.raw`\\.\pipe\nitro`, socketName);
   }
+  const socketDir = join(tmpdir(), "nitro");
+  mkdirSync(socketDir, { recursive: true });
+  return join(socketDir, socketName);
 }
 const listenAddress = getAddress();
 server.listen(listenAddress, () => {
   const _address = server.address();
-  parentPort.postMessage({
+  parentPort?.postMessage({
     event: "listen",
-    address: typeof _address === "string" ? { socketPath: _address } : { host: "localhost", port: _address.port }
+    address: typeof _address === "string" ? { socketPath: _address } : { host: "localhost", port: _address?.port }
   });
 });
 nitroApp.router.get(
@@ -1057,17 +1105,17 @@ trapUnhandledNodeErrors();
 async function onShutdown(signal) {
   await nitroApp.hooks.callHook("close");
 }
-parentPort.on("message", async (msg) => {
+parentPort?.on("message", async (msg) => {
   if (msg && msg.event === "shutdown") {
     await onShutdown();
-    parentPort.postMessage({ event: "exit" });
+    parentPort?.postMessage({ event: "exit" });
   }
 });
 
 const _messages = { "appName": "Nuxt", "version": "", "statusCode": 500, "statusMessage": "Server error", "description": "An error occurred in the application and the page could not be served. If you are the application owner, check your server logs for details.", "stack": "" };
 const template$1 = (messages) => {
   messages = { ..._messages, ...messages };
-  return '<!DOCTYPE html><html lang="en"><head><title>' + messages.statusCode + " - " + messages.statusMessage + " | " + messages.appName + `</title><meta charset="utf-8"><meta content="width=device-width,initial-scale=1,minimum-scale=1" name="viewport"><style>.spotlight{background:linear-gradient(45deg, #00DC82 0%, #36E4DA 50%, #0047E1 100%);opacity:0.8;filter:blur(30vh);height:60vh;bottom:-40vh}*,:before,:after{box-sizing:border-box;border-width:0;border-style:solid;border-color:var(--un-default-border-color, #e5e7eb)}:before,:after{--un-content:""}html{line-height:1.5;-webkit-text-size-adjust:100%;-moz-tab-size:4;tab-size:4;font-family:ui-sans-serif,system-ui,sans-serif,"Apple Color Emoji","Segoe UI Emoji",Segoe UI Symbol,"Noto Color Emoji";font-feature-settings:normal;font-variation-settings:normal;-webkit-tap-highlight-color:transparent}body{margin:0;line-height:inherit}h1{font-size:inherit;font-weight:inherit}pre{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,Liberation Mono,Courier New,monospace;font-feature-settings:normal;font-variation-settings:normal;font-size:1em}h1,p,pre{margin:0}*,:before,:after{--un-rotate:0;--un-rotate-x:0;--un-rotate-y:0;--un-rotate-z:0;--un-scale-x:1;--un-scale-y:1;--un-scale-z:1;--un-skew-x:0;--un-skew-y:0;--un-translate-x:0;--un-translate-y:0;--un-translate-z:0;--un-pan-x: ;--un-pan-y: ;--un-pinch-zoom: ;--un-scroll-snap-strictness:proximity;--un-ordinal: ;--un-slashed-zero: ;--un-numeric-figure: ;--un-numeric-spacing: ;--un-numeric-fraction: ;--un-border-spacing-x:0;--un-border-spacing-y:0;--un-ring-offset-shadow:0 0 rgb(0 0 0 / 0);--un-ring-shadow:0 0 rgb(0 0 0 / 0);--un-shadow-inset: ;--un-shadow:0 0 rgb(0 0 0 / 0);--un-ring-inset: ;--un-ring-offset-width:0px;--un-ring-offset-color:#fff;--un-ring-width:0px;--un-ring-color:rgb(147 197 253 / .5);--un-blur: ;--un-brightness: ;--un-contrast: ;--un-drop-shadow: ;--un-grayscale: ;--un-hue-rotate: ;--un-invert: ;--un-saturate: ;--un-sepia: ;--un-backdrop-blur: ;--un-backdrop-brightness: ;--un-backdrop-contrast: ;--un-backdrop-grayscale: ;--un-backdrop-hue-rotate: ;--un-backdrop-invert: ;--un-backdrop-opacity: ;--un-backdrop-saturate: ;--un-backdrop-sepia: }.fixed{position:fixed}.left-0{left:0}.right-0{right:0}.z-10{z-index:10}.mb-6{margin-bottom:1.5rem}.mb-8{margin-bottom:2rem}.h-auto{height:auto}.min-h-screen{min-height:100vh}.flex{display:flex}.flex-1{flex:1 1 0%}.flex-col{flex-direction:column}.overflow-y-auto{overflow-y:auto}.rounded-t-md{border-top-left-radius:.375rem;border-top-right-radius:.375rem}.bg-black\\/5{background-color:#0000000d}.bg-white{--un-bg-opacity:1;background-color:rgb(255 255 255 / var(--un-bg-opacity))}.p-8{padding:2rem}.px-10{padding-left:2.5rem;padding-right:2.5rem}.pt-14{padding-top:3.5rem}.text-6xl{font-size:3.75rem;line-height:1}.text-xl{font-size:1.25rem;line-height:1.75rem}.text-black{--un-text-opacity:1;color:rgb(0 0 0 / var(--un-text-opacity))}.font-light{font-weight:300}.font-medium{font-weight:500}.leading-tight{line-height:1.25}.font-sans{font-family:ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica Neue,Arial,Noto Sans,sans-serif,"Apple Color Emoji","Segoe UI Emoji",Segoe UI Symbol,"Noto Color Emoji"}.antialiased{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}@media (prefers-color-scheme: dark){.dark\\:bg-black{--un-bg-opacity:1;background-color:rgb(0 0 0 / var(--un-bg-opacity))}.dark\\:bg-white\\/10{background-color:#ffffff1a}.dark\\:text-white{--un-text-opacity:1;color:rgb(255 255 255 / var(--un-text-opacity))}}@media (min-width: 640px){.sm\\:text-2xl{font-size:1.5rem;line-height:2rem}.sm\\:text-8xl{font-size:6rem;line-height:1}}</style><script>(function(){const t=document.createElement("link").relList;if(t&&t.supports&&t.supports("modulepreload"))return;for(const e of document.querySelectorAll('link[rel="modulepreload"]'))i(e);new MutationObserver(e=>{for(const r of e)if(r.type==="childList")for(const o of r.addedNodes)o.tagName==="LINK"&&o.rel==="modulepreload"&&i(o)}).observe(document,{childList:!0,subtree:!0});function s(e){const r={};return e.integrity&&(r.integrity=e.integrity),e.referrerPolicy&&(r.referrerPolicy=e.referrerPolicy),e.crossOrigin==="use-credentials"?r.credentials="include":e.crossOrigin==="anonymous"?r.credentials="omit":r.credentials="same-origin",r}function i(e){if(e.ep)return;e.ep=!0;const r=s(e);fetch(e.href,r)}})();<\/script></head><body class="font-sans antialiased bg-white px-10 pt-14 dark:bg-black text-black dark:text-white min-h-screen flex flex-col"><div class="fixed left-0 right-0 spotlight"></div><h1 class="text-6xl sm:text-8xl font-medium mb-6">` + messages.statusCode + '</h1><p class="text-xl sm:text-2xl font-light mb-8 leading-tight">' + messages.description + '</p><div class="bg-white rounded-t-md bg-black/5 dark:bg-white/10 flex-1 overflow-y-auto h-auto"><pre class="text-xl font-light leading-tight z-10 p-8">' + messages.stack + "</pre></div></body></html>";
+  return '<!DOCTYPE html><html lang="en"><head><title>' + messages.statusCode + " - " + messages.statusMessage + " | " + messages.appName + `</title><meta charset="utf-8"><meta content="width=device-width,initial-scale=1.0,minimum-scale=1.0" name="viewport"><style>.spotlight{background:linear-gradient(45deg,#00dc82,#36e4da 50%,#0047e1);bottom:-40vh;filter:blur(30vh);height:60vh;opacity:.8}*,:after,:before{border-color:var(--un-default-border-color,#e5e7eb);border-style:solid;border-width:0;box-sizing:border-box}:after,:before{--un-content:""}html{line-height:1.5;-webkit-text-size-adjust:100%;font-family:ui-sans-serif,system-ui,sans-serif,Apple Color Emoji,Segoe UI Emoji,Segoe UI Symbol,Noto Color Emoji;font-feature-settings:normal;font-variation-settings:normal;-moz-tab-size:4;tab-size:4;-webkit-tap-highlight-color:transparent}body{line-height:inherit;margin:0}h1{font-size:inherit;font-weight:inherit}pre{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,Liberation Mono,Courier New,monospace;font-feature-settings:normal;font-size:1em;font-variation-settings:normal}h1,p,pre{margin:0}*,:after,:before{--un-rotate:0;--un-rotate-x:0;--un-rotate-y:0;--un-rotate-z:0;--un-scale-x:1;--un-scale-y:1;--un-scale-z:1;--un-skew-x:0;--un-skew-y:0;--un-translate-x:0;--un-translate-y:0;--un-translate-z:0;--un-pan-x: ;--un-pan-y: ;--un-pinch-zoom: ;--un-scroll-snap-strictness:proximity;--un-ordinal: ;--un-slashed-zero: ;--un-numeric-figure: ;--un-numeric-spacing: ;--un-numeric-fraction: ;--un-border-spacing-x:0;--un-border-spacing-y:0;--un-ring-offset-shadow:0 0 transparent;--un-ring-shadow:0 0 transparent;--un-shadow-inset: ;--un-shadow:0 0 transparent;--un-ring-inset: ;--un-ring-offset-width:0px;--un-ring-offset-color:#fff;--un-ring-width:0px;--un-ring-color:rgba(147,197,253,.5);--un-blur: ;--un-brightness: ;--un-contrast: ;--un-drop-shadow: ;--un-grayscale: ;--un-hue-rotate: ;--un-invert: ;--un-saturate: ;--un-sepia: ;--un-backdrop-blur: ;--un-backdrop-brightness: ;--un-backdrop-contrast: ;--un-backdrop-grayscale: ;--un-backdrop-hue-rotate: ;--un-backdrop-invert: ;--un-backdrop-opacity: ;--un-backdrop-saturate: ;--un-backdrop-sepia: }.fixed{position:fixed}.left-0{left:0}.right-0{right:0}.z-10{z-index:10}.mb-6{margin-bottom:1.5rem}.mb-8{margin-bottom:2rem}.h-auto{height:auto}.min-h-screen{min-height:100vh}.flex{display:flex}.flex-1{flex:1 1 0%}.flex-col{flex-direction:column}.overflow-y-auto{overflow-y:auto}.rounded-t-md{border-top-left-radius:.375rem;border-top-right-radius:.375rem}.bg-black\\/5{background-color:#0000000d}.bg-white{--un-bg-opacity:1;background-color:rgb(255 255 255/var(--un-bg-opacity))}.p-8{padding:2rem}.px-10{padding-left:2.5rem;padding-right:2.5rem}.pt-14{padding-top:3.5rem}.text-6xl{font-size:3.75rem;line-height:1}.text-xl{font-size:1.25rem;line-height:1.75rem}.text-black{--un-text-opacity:1;color:rgb(0 0 0/var(--un-text-opacity))}.font-light{font-weight:300}.font-medium{font-weight:500}.leading-tight{line-height:1.25}.font-sans{font-family:ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica Neue,Arial,Noto Sans,sans-serif,Apple Color Emoji,Segoe UI Emoji,Segoe UI Symbol,Noto Color Emoji}.antialiased{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}@media (prefers-color-scheme:dark){.dark\\:bg-black{--un-bg-opacity:1;background-color:rgb(0 0 0/var(--un-bg-opacity))}.dark\\:bg-white\\/10{background-color:#ffffff1a}.dark\\:text-white{--un-text-opacity:1;color:rgb(255 255 255/var(--un-text-opacity))}}@media (min-width:640px){.sm\\:text-2xl{font-size:1.5rem;line-height:2rem}.sm\\:text-8xl{font-size:6rem;line-height:1}}</style><script>!function(){const e=document.createElement("link").relList;if(!(e&&e.supports&&e.supports("modulepreload"))){for(const e of document.querySelectorAll('link[rel="modulepreload"]'))r(e);new MutationObserver((e=>{for(const o of e)if("childList"===o.type)for(const e of o.addedNodes)"LINK"===e.tagName&&"modulepreload"===e.rel&&r(e)})).observe(document,{childList:!0,subtree:!0})}function r(e){if(e.ep)return;e.ep=!0;const r=function(e){const r={};return e.integrity&&(r.integrity=e.integrity),e.referrerPolicy&&(r.referrerPolicy=e.referrerPolicy),"use-credentials"===e.crossOrigin?r.credentials="include":"anonymous"===e.crossOrigin?r.credentials="omit":r.credentials="same-origin",r}(e);fetch(e.href,r)}}();<\/script></head><body class="antialiased bg-white dark:bg-black dark:text-white flex flex-col font-sans min-h-screen pt-14 px-10 text-black"><div class="fixed left-0 right-0 spotlight"></div><h1 class="font-medium mb-6 sm:text-8xl text-6xl">` + messages.statusCode + '</h1><p class="font-light leading-tight mb-8 sm:text-2xl text-xl">' + messages.description + '</p><div class="bg-black/5 bg-white dark:bg-white/10 flex-1 h-auto overflow-y-auto rounded-t-md"><pre class="font-light leading-tight p-8 text-xl z-10">' + messages.stack + "</pre></div></body></html>";
 };
 
 const errorDev = /*#__PURE__*/Object.freeze({
@@ -1075,10 +1123,10 @@ const errorDev = /*#__PURE__*/Object.freeze({
   template: template$1
 });
 
-const prisma$d = new PrismaClient();
+const prisma$e = new PrismaClient();
 const amenities = defineEventHandler(async (event) => {
   try {
-    const amenities = await prisma$d.amenity.findMany();
+    const amenities = await prisma$e.amenity.findMany();
     return amenities;
   } catch (error) {
     console.error("Error fetching amenities:", error);
@@ -1092,16 +1140,29 @@ const amenities$1 = /*#__PURE__*/Object.freeze({
   default: amenities
 });
 
-const prisma$c = new PrismaClient();
+const prisma$d = new PrismaClient();
 const SECRET_KEY = process.env.SECRET_KEY;
+const REGISTER_SECRET_KEY$1 = process.env.REGISTER_SECRET_KEY;
+const EMAIL_USER = process.env.EMAIL_USER;
+const EMAIL_PASSWORD = process.env.EMAIL_PASSWORD;
 const upload = multer({
   storage: multer.diskStorage({
     destination: (req, file, cb) => {
-      const uploadDir = path.join(process.cwd(), "public", "images", "profilePictures");
-      if (!fs.existsSync(uploadDir)) {
-        fs.mkdirSync(uploadDir, { recursive: true });
+      const uploadDirProfilePic = path.join(process.cwd(), "public", "images", "profilePictures");
+      const uploadDirDocument = path.join(process.cwd(), "public", "images", "documentPictures");
+      if (!fs.existsSync(uploadDirProfilePic)) {
+        fs.mkdirSync(uploadDirProfilePic, { recursive: true });
       }
-      cb(null, uploadDir);
+      if (!fs.existsSync(uploadDirDocument)) {
+        fs.mkdirSync(uploadDirDocument, { recursive: true });
+      }
+      if (file.fieldname === "profilePic") {
+        cb(null, uploadDirProfilePic);
+      } else if (file.fieldname === "document") {
+        cb(null, uploadDirDocument);
+      } else {
+        cb(new Error("Invalid file field name"));
+      }
     },
     filename: (req, file, cb) => {
       const sanitizedFilename = file.originalname.replace(/[^a-z0-9.]/gi, "_").toLowerCase();
@@ -1109,20 +1170,39 @@ const upload = multer({
     }
   })
 });
+const transporter = nodemailer.createTransport({
+  service: "gmail",
+  auth: {
+    user: EMAIL_USER,
+    pass: EMAIL_PASSWORD
+  }
+});
+const sendVerificationEmail = (email, token) => {
+  const verificationUrl = `${process.env.FRONTEND_URL}/verify-email?token=${token}`;
+  const mailOptions = {
+    from: EMAIL_USER,
+    to: email,
+    subject: "Email Verification",
+    text: `Click the link to verify your email: ${verificationUrl}`
+  };
+  return transporter.sendMail(mailOptions);
+};
 const auth = defineEventHandler(async (event) => {
   const { method } = event.req;
   if (method === "POST") {
     return new Promise((resolve, reject) => {
       upload.any()(event.req, event.res, async (err) => {
-        if (err)
-          return reject({ message: err.message });
+        if (err) return reject({ message: err.message });
         try {
           const body = event.req.body;
           const files = event.req.files || [];
           if (body.action === "login") {
-            const user = await prisma$c.user.findUnique({ where: { email: body.email } });
+            const user = await prisma$d.user.findUnique({ where: { email: body.email } });
             if (!user || !await bcrypt.compare(body.password, user.password)) {
               throw new Error("Invalid email or password");
+            }
+            if (!user.verified) {
+              throw new Error("Email is not verified");
             }
             const token = jwt.sign({ userId: user.userId }, SECRET_KEY, { expiresIn: "1h" });
             return resolve({ token, userId: user.userId, roleId: user.roleId });
@@ -1131,28 +1211,40 @@ const auth = defineEventHandler(async (event) => {
             if (body.password !== body.confirmPassword) {
               throw new Error("Passwords do not match");
             }
-            const existingUser = await prisma$c.user.findUnique({ where: { email: body.email } });
+            const existingUser = await prisma$d.user.findUnique({ where: { email: body.email } });
             if (existingUser) {
               throw new Error("Email already exists");
             }
             const hashedPassword = await bcrypt.hash(body.password, 10);
             const profilePic = files.find((file) => file.fieldname === "profilePic");
             const profilePicUrl = profilePic ? `/images/profilePictures/${profilePic.filename}` : null;
+            const document = files.find((file) => file.fieldname === "document");
+            const documentUrl = document ? `/images/documentPictures/${document.filename}` : null;
             if (!["1", "2"].includes(body.roleId)) {
               throw new Error("Invalid role");
             }
-            const user = await prisma$c.user.create({
+            const user = await prisma$d.user.create({
               data: {
                 name: body.name,
                 email: body.email,
                 password: hashedPassword,
+                phone: body.phone,
                 profilePic: profilePicUrl,
-                roleId: parseInt(body.roleId)
-                // Ensure roleId is an integer
+                document: documentUrl,
+                // Save the document URL
+                roleId: parseInt(body.roleId),
+                verified: false
+                // Mark the user as not verified
               }
             });
-            const token = jwt.sign({ userId: user.userId }, SECRET_KEY, { expiresIn: "1h" });
-            return resolve({ token, userId: user.userId });
+            const emailVerificationToken = jwt.sign({ userId: user.userId }, REGISTER_SECRET_KEY$1, { expiresIn: "1h" });
+            await prisma$d.user.update({
+              where: { userId: user.userId },
+              data: { verificationToken: emailVerificationToken }
+              // Set verification token
+            });
+            await sendVerificationEmail(user.email, emailVerificationToken);
+            return resolve({ message: "Registration successful. Please check your email to verify your account." });
           }
           throw new Error("Invalid action");
         } catch (error) {
@@ -1169,12 +1261,12 @@ const auth$1 = /*#__PURE__*/Object.freeze({
   default: auth
 });
 
-const prisma$b = new PrismaClient();
+const prisma$c = new PrismaClient();
 const booking_post = defineEventHandler(async (event) => {
   const body = await readBody(event);
   console.log(body);
   try {
-    const newBooking = await prisma$b.booking.create({
+    const newBooking = await prisma$c.booking.create({
       data: {
         userId: parseInt(body.userId, 10),
         listingId: parseInt(body.listingId, 10),
@@ -1183,7 +1275,7 @@ const booking_post = defineEventHandler(async (event) => {
         // Note: createdAt is now handled automatically by Prisma's @default(now())
       }
     });
-    await prisma$b.bookingHistory.create({
+    await prisma$c.bookingHistory.create({
       data: {
         bookingId: newBooking.bookingId,
         statusId: newBooking.statusId
@@ -1202,7 +1294,7 @@ const booking_post$1 = /*#__PURE__*/Object.freeze({
   default: booking_post
 });
 
-const prisma$a = new PrismaClient();
+const prisma$b = new PrismaClient();
 const getUserListings = defineEventHandler(async (event) => {
   const userId = event.req.headers["x-user-id"];
   if (!userId) {
@@ -1212,7 +1304,7 @@ const getUserListings = defineEventHandler(async (event) => {
     };
   }
   try {
-    const listings = await prisma$a.listing.findMany({
+    const listings = await prisma$b.listing.findMany({
       where: { userId: parseInt(userId) },
       include: {
         images: true
@@ -1234,10 +1326,10 @@ const getUserListings$1 = /*#__PURE__*/Object.freeze({
   default: getUserListings
 });
 
-const prisma$9 = new PrismaClient();
+const prisma$a = new PrismaClient();
 const guestTypes = defineEventHandler(async (event) => {
   try {
-    const guestTypes = await prisma$9.guestType.findMany();
+    const guestTypes = await prisma$a.guestType.findMany();
     return guestTypes;
   } catch (error) {
     console.error("Error fetching guest types:", error);
@@ -1251,12 +1343,12 @@ const guestTypes$1 = /*#__PURE__*/Object.freeze({
   default: guestTypes
 });
 
-const prisma$8 = new PrismaClient();
+const prisma$9 = new PrismaClient();
 const _listingId__get$2 = defineEventHandler(async (event) => {
   var _a, _b;
   try {
     const listingId = event.context.params.listingId;
-    const listing = await prisma$8.listing.findUnique({
+    const listing = await prisma$9.listing.findUnique({
       where: { listingId: parseInt(listingId) },
       // Ensure listingId is a number
       select: {
@@ -1319,7 +1411,7 @@ const _listingId__get$3 = /*#__PURE__*/Object.freeze({
   default: _listingId__get$2
 });
 
-const prisma$7 = new PrismaClient();
+const prisma$8 = new PrismaClient();
 const _listingId__get = defineEventHandler(async (event) => {
   var _a, _b;
   try {
@@ -1327,7 +1419,7 @@ const _listingId__get = defineEventHandler(async (event) => {
     if (!listingId) {
       return { statusCode: 400, body: { error: "Listing ID is required" } };
     }
-    const listing = await prisma$7.listing.findUnique({
+    const listing = await prisma$8.listing.findUnique({
       where: { listingId: parseInt(listingId, 10) },
       include: {
         user: {
@@ -1340,10 +1432,20 @@ const _listingId__get = defineEventHandler(async (event) => {
         },
         placeType: true,
         guestType: true,
-        images: true,
+        images: {
+          select: {
+            imageUrl: true
+          }
+        },
         amenities: {
           include: {
-            amenity: true
+            amenity: {
+              select: {
+                amenityName: true,
+                iconClass: true,
+                color: true
+              }
+            }
           }
         }
       }
@@ -1352,7 +1454,17 @@ const _listingId__get = defineEventHandler(async (event) => {
       return { statusCode: 404, body: { error: "Listing not found" } };
     }
     const flattenedListing = {
-      ...listing,
+      id: listing.id,
+      title: listing.title,
+      address: listing.address,
+      description: listing.description,
+      price: listing.price,
+      guests: listing.guests,
+      bedrooms: listing.bedrooms,
+      beds: listing.beds,
+      bathrooms: listing.bathrooms,
+      latitude: listing.latitude,
+      longitude: listing.longitude,
       placeType: ((_a = listing.placeType) == null ? void 0 : _a.placeTypeName) || "Unknown",
       guestType: ((_b = listing.guestType) == null ? void 0 : _b.guestTypeName) || "Unknown",
       images: listing.images.map((image) => ({ imageUrl: image.imageUrl })),
@@ -1368,7 +1480,7 @@ const _listingId__get = defineEventHandler(async (event) => {
         profilePic: listing.user.profilePic
       } : null
     };
-    return { statusCode: 200, body: flattenedListing };
+    return { statusCode: 200, body: { listing: flattenedListing } };
   } catch (error) {
     console.error("Error fetching listing:", error);
     return { statusCode: 500, body: { error: "Error fetching listing" } };
@@ -1380,10 +1492,10 @@ const _listingId__get$1 = /*#__PURE__*/Object.freeze({
   default: _listingId__get
 });
 
-const prisma$6 = new PrismaClient();
+const prisma$7 = new PrismaClient();
 const listings_get = defineEventHandler(async (event) => {
   try {
-    const listings = await prisma$6.listing.findMany({
+    const listings = await prisma$7.listing.findMany({
       select: {
         listingId: true,
         title: true,
@@ -1441,7 +1553,6 @@ const listings_get = defineEventHandler(async (event) => {
         })) || []
       };
     });
-    console.log("Listings fetched:", flattenedListings);
     return flattenedListings;
   } catch (error) {
     console.error("Error fetching listings:", error);
@@ -1470,7 +1581,7 @@ const multerMiddleware = /*#__PURE__*/Object.freeze({
   default: uploadMiddleware
 });
 
-const prisma$5 = new PrismaClient();
+const prisma$6 = new PrismaClient();
 const listings_post = defineEventHandler(async (event) => {
   await new Promise((resolve, reject) => {
     uploadMiddleware.array("images")(event.req, event.res, (err) => {
@@ -1511,14 +1622,14 @@ const listings_post = defineEventHandler(async (event) => {
       longitude: parseFloat(body.longitude),
       userId: parseInt(body.userId, 10)
     };
-    const newListing = await prisma$5.listing.create({ data: listing });
-    await prisma$5.image.createMany({
+    const newListing = await prisma$6.listing.create({ data: listing });
+    await prisma$6.image.createMany({
       data: imageUrls.map((url) => ({
         listingId: newListing.listingId,
         imageUrl: url.imageUrl
       }))
     });
-    await prisma$5.listingAmenity.createMany({
+    await prisma$6.listingAmenity.createMany({
       data: amenitiesIds.map((amenityId) => ({
         listingId: newListing.listingId,
         amenityId
@@ -1538,13 +1649,13 @@ const listings_post$1 = /*#__PURE__*/Object.freeze({
   default: listings_post
 });
 
-const prisma$4 = new PrismaClient();
+const prisma$5 = new PrismaClient();
 const logout = eventHandler(async (event) => {
   if (event.node.req.method === "POST") {
     try {
       const body = await event.request.json();
       if (body.token) {
-        await prisma$4.blacklistedToken.create({
+        await prisma$5.blacklistedToken.create({
           data: {
             token: body.token
           }
@@ -1573,7 +1684,7 @@ const logout$1 = /*#__PURE__*/Object.freeze({
   default: logout
 });
 
-const prisma$3 = new PrismaClient();
+const prisma$4 = new PrismaClient();
 const notification_post = defineEventHandler(async (event) => {
   try {
     const { hostId, bookerId, listingId, content } = await readBody(event);
@@ -1583,7 +1694,7 @@ const notification_post = defineEventHandler(async (event) => {
         message: "Host ID, Booker ID, Listing ID, and content are required"
       });
     }
-    const newNotification = await prisma$3.notification.create({
+    const newNotification = await prisma$4.notification.create({
       data: {
         hostId: parseInt(hostId, 10),
         bookerId: parseInt(bookerId, 10),
@@ -1607,25 +1718,32 @@ const notification_post$1 = /*#__PURE__*/Object.freeze({
   default: notification_post
 });
 
-const prisma$2 = new PrismaClient();
+const prisma$3 = new PrismaClient();
 const notifications_get = defineEventHandler(async (event) => {
   try {
     const { userId } = getQuery$1(event);
-    const notifications = await prisma$2.notification.findMany({
+    const notifications = await prisma$3.notification.findMany({
       where: {
         hostId: parseInt(userId, 10)
         // Ensure userId is an integer
       },
       orderBy: {
         dateCreated: "desc"
-        // Optional: Sort notifications by the creation date
       },
       select: {
         notificationId: true,
         content: true,
         dateCreated: true,
         bookerId: true,
-        listingId: true
+        listingId: true,
+        // Fetch listing details
+        listing: {
+          select: {
+            title: true,
+            address: true,
+            description: true
+          }
+        }
       }
     });
     return notifications;
@@ -1641,10 +1759,10 @@ const notifications_get$1 = /*#__PURE__*/Object.freeze({
   default: notifications_get
 });
 
-const prisma$1 = new PrismaClient();
+const prisma$2 = new PrismaClient();
 const placeTypes = defineEventHandler(async (event) => {
   try {
-    const placeTypes = await prisma$1.placeType.findMany();
+    const placeTypes = await prisma$2.placeType.findMany();
     return placeTypes;
   } catch (error) {
     console.error("Error fetching place types:", error);
@@ -1658,42 +1776,36 @@ const placeTypes$1 = /*#__PURE__*/Object.freeze({
   default: placeTypes
 });
 
-const prisma = new PrismaClient();
+const prisma$1 = new PrismaClient();
 const _userId__get = defineEventHandler(async (event) => {
   try {
     const userId = getRouterParam(event, "userId");
     if (!userId) {
       return { statusCode: 400, body: { error: "User ID is required" } };
     }
-    const user = await prisma.user.findUnique({
+    const user = await prisma$1.user.findUnique({
       where: { userId: parseInt(userId, 10) },
       select: {
         userId: true,
+        // Use "userId" as specified in the schema
         name: true,
         email: true,
         phone: true,
         roleId: true,
         profilePic: true,
+        document: true,
         dateJoined: true,
         role: {
           select: {
             roleName: true
           }
         }
-        // Exclude sensitive information like password
-        // Include other fields as needed
       }
     });
     if (!user) {
       return { statusCode: 404, body: { error: "User not found" } };
     }
-    const userResponse = {
-      ...user,
-      roleName: user.role.roleName,
-      role: void 0
-      // Remove the nested role object
-    };
-    return { statusCode: 200, body: userResponse };
+    return { statusCode: 200, body: user };
   } catch (error) {
     console.error("Error fetching user:", error);
     return { statusCode: 500, body: { error: "Error fetching user details" } };
@@ -1705,13 +1817,41 @@ const _userId__get$1 = /*#__PURE__*/Object.freeze({
   default: _userId__get
 });
 
+const prisma = new PrismaClient();
+const REGISTER_SECRET_KEY = process.env.REGISTER_SECRET_KEY;
+const verifyEmail = defineEventHandler(async (event) => {
+  const { token } = getQuery$1(event);
+  try {
+    const decoded = jwt.verify(token, REGISTER_SECRET_KEY);
+    const user = await prisma.user.findUnique({ where: { userId: decoded.userId } });
+    if (!user) {
+      throw new Error("User not found");
+    }
+    if (user.verified) {
+      return { message: "Your account is already verified. you will be auto directed to the home page. PLEASE WAIT." };
+    }
+    await prisma.user.update({
+      where: { userId: decoded.userId },
+      data: { verified: true, verificationToken: null }
+    });
+    return { message: "Email verified successfully. you will be auto directed to the home page. PLEASE WAIT." };
+  } catch (error) {
+    return { message: "Verification failed. The token may be invalid or expired." };
+  }
+});
+
+const verifyEmail$1 = /*#__PURE__*/Object.freeze({
+  __proto__: null,
+  default: verifyEmail
+});
+
 const Vue3 = version[0] === "3";
 
 function resolveUnref(r) {
   return typeof r === "function" ? r() : unref(r);
 }
 function resolveUnrefHeadInput(ref) {
-  if (ref instanceof Promise)
+  if (ref instanceof Promise || ref instanceof Date || ref instanceof RegExp)
     return ref;
   const root = resolveUnref(ref);
   if (!ref || !root)
@@ -1823,9 +1963,7 @@ const getSPARenderer = lazyCachedFunction(async () => {
   const renderToString = (ssrContext) => {
     const config = useRuntimeConfig(ssrContext.event);
     ssrContext.modules = ssrContext.modules || /* @__PURE__ */ new Set();
-    ssrContext.payload = {
-      serverRendered: false
-    };
+    ssrContext.payload.serverRendered = false;
     ssrContext.config = {
       public: config.public,
       app: config.app
@@ -1933,13 +2071,12 @@ const renderer = defineRenderHandler(async (event) => {
   }
   if (!isRenderingIsland || true) {
     const link = [];
-    for (const style in styles) {
-      const resource = styles[style];
+    for (const resource of Object.values(styles)) {
       if ("inline" in getQuery(resource.file)) {
         continue;
       }
       if (!isRenderingIsland || resource.file.includes("scoped") && !resource.file.includes("pages/")) {
-        link.push({ rel: "stylesheet", href: renderer.rendererContext.buildAssetsURL(resource.file) });
+        link.push({ rel: "stylesheet", href: renderer.rendererContext.buildAssetsURL(resource.file), crossorigin: "" });
       }
     }
     if (link.length) {
@@ -2063,7 +2200,7 @@ async function renderInlineStyles(usedModules) {
   const styleMap = await getSSRStyles();
   const inlinedStyles = /* @__PURE__ */ new Set();
   for (const mod of usedModules) {
-    if (mod in styleMap) {
+    if (mod in styleMap && styleMap[mod]) {
       for (const style of await styleMap[mod]()) {
         inlinedStyles.add(style);
       }
@@ -2113,7 +2250,7 @@ function splitPayload(ssrContext) {
 }
 function getServerComponentHTML(body) {
   const match = body[0].match(ROOT_NODE_REGEX);
-  return match ? match[1] : body[0];
+  return match?.[1] || body[0];
 }
 const SSR_SLOT_TELEPORT_MARKER = /^uid=([^;]*);slot=(.*)$/;
 const SSR_CLIENT_TELEPORT_MARKER = /^uid=([^;]*);client=(.*)$/;
@@ -2123,10 +2260,10 @@ function getSlotIslandResponse(ssrContext) {
     return void 0;
   }
   const response = {};
-  for (const slot in ssrContext.islandContext.slots) {
-    response[slot] = {
-      ...ssrContext.islandContext.slots[slot],
-      fallback: ssrContext.teleports?.[`island-fallback=${slot}`]
+  for (const [name, slot] of Object.entries(ssrContext.islandContext.slots)) {
+    response[name] = {
+      ...slot,
+      fallback: ssrContext.teleports?.[`island-fallback=${name}`]
     };
   }
   return response;
@@ -2136,10 +2273,10 @@ function getClientIslandResponse(ssrContext) {
     return void 0;
   }
   const response = {};
-  for (const clientUid in ssrContext.islandContext.components) {
-    const html = ssrContext.teleports?.[clientUid].replaceAll("<!--teleport start anchor-->", "") || "";
+  for (const [clientUid, component] of Object.entries(ssrContext.islandContext.components)) {
+    const html = ssrContext.teleports?.[clientUid]?.replaceAll("<!--teleport start anchor-->", "") || "";
     response[clientUid] = {
-      ...ssrContext.islandContext.components[clientUid],
+      ...component,
       html,
       slots: getComponentSlotTeleport(ssrContext.teleports ?? {})
     };
