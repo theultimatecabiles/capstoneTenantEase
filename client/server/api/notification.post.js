@@ -6,7 +6,7 @@ const prisma = new PrismaClient();
 export default defineEventHandler(async (event) => {
   try {
     // Extract required fields from the request body
-    const { hostId, bookerId, listingId, content } = await readBody(event);
+    const { hostId, bookerId, listingId, content, type } = await readBody(event);
 
     // Check if all required fields are provided
     if (!hostId || !bookerId || !listingId || !content) {
@@ -23,6 +23,7 @@ export default defineEventHandler(async (event) => {
         bookerId: parseInt(bookerId, 10),
         listingId: parseInt(listingId, 10),
         content,
+        type,
         // dateCreated is handled automatically by Prisma's @default(now())
       },
     });

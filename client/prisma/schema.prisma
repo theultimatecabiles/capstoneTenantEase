@@ -31,7 +31,8 @@ model User {
   messagesReceived   Message[]     @relation("ReceivedMessages")
   hostNotifications  Notification[] @relation("HostNotifications")
   bookerNotifications Notification[] @relation("BookerNotifications")
-  bookings           Booking[]
+  bookingsAsHost     Booking[]     @relation("HostBookings") // User as Host
+  bookingsAsBooker   Booking[]     @relation("BookerBookings") // User as Booker
   favorites          Favorite[]
   role               Role          @relation(fields: [roleId], references: [roleId])
 }
@@ -117,14 +118,16 @@ model Message {
 
 model Booking {
   bookingId   Int         @id @default(autoincrement())
-  userId      Int
+  hostId      Int
+  bookerId    Int
   listingId   Int
   bookingDate DateTime
   statusId    Int
   createdAt   DateTime    @default(now())
-  user        User        @relation(fields: [userId], references: [userId])
+  payments    Payment[]   // Define the one-to-many relation here
+  host        User        @relation("HostBookings", fields: [hostId], references: [userId])
+  booker      User        @relation("BookerBookings", fields: [bookerId], references: [userId])
   listing     Listing     @relation(fields: [listingId], references: [listingId])
-  payment     Payment?
   history     BookingHistory[]
   status      BookingStatus @relation(fields: [statusId], references: [statusId])
 }
@@ -137,15 +140,16 @@ model BookingStatus {
 }
 
 model Payment {
-  paymentId   Int         @id @default(autoincrement())
-  bookingId   Int         @unique
-  amount      Float
-  paymentDate DateTime
+  paymentId       Int         @id @default(autoincrement())
+  bookingId       Int         
+  amount          Float
+  paymentDate     DateTime
   paymentMethodId Int
-  statusId    Int
-  booking     Booking     @relation(fields: [bookingId], references: [bookingId])
-  paymentMethod PaymentMethod @relation(fields: [paymentMethodId], references: [methodId])
-  status      PaymentStatus   @relation(fields: [statusId], references: [statusId])
+  statusId        Int
+  nextPaymentDue  DateTime?
+  booking         Booking     @relation(fields: [bookingId], references: [bookingId])
+  paymentMethod   PaymentMethod @relation(fields: [paymentMethodId], references: [methodId])
+  status          PaymentStatus @relation(fields: [statusId], references: [statusId])
 }
 
 model PaymentMethod {
@@ -202,11 +206,11 @@ model Notification {
   listingId      Int
   content        String
   dateCreated    DateTime @default(now())
+  type           String   
 
   host           User     @relation("HostNotifications", fields: [hostId], references: [userId])
   booker         User     @relation("BookerNotifications", fields: [bookerId], references: [userId])
   listing        Listing  @relation(fields: [listingId], references: [listingId])
 }
-
 
 

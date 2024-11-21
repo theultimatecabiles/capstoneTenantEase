@@ -12,6 +12,30 @@ declare module "nitropack/types" {
     '/api/booking': {
       'post': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/booking.post').default>>>>
     }
+    '/api/booking/approve': {
+      'default': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/booking/approve').default>>>>
+    }
+    '/api/checkFirstPayment': {
+      'default': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/checkFirstPayment').default>>>>
+    }
+    '/api/getActiveBookings': {
+      'default': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/getActiveBookings').default>>>>
+    }
+    '/api/getHostBooking': {
+      'default': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/getHostBooking').default>>>>
+    }
+    '/api/getLatestPaymentDue': {
+      'default': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/getLatestPaymentDue').default>>>>
+    }
+    '/api/getPaymentByBookingId': {
+      'default': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/getPaymentByBookingId').default>>>>
+    }
+    '/api/getPayments': {
+      'default': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/getPayments').default>>>>
+    }
+    '/api/getUserBooking': {
+      'default': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/getUserBooking').default>>>>
+    }
     '/api/getUserListings': {
       'default': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/getUserListings').default>>>>
     }
@@ -43,6 +67,9 @@ declare module "nitropack/types" {
     '/api/placeTypes': {
       'default': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/placeTypes').default>>>>
     }
+    '/api/processPayment': {
+      'default': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/processPayment').default>>>>
+    }
     '/api/user/:userId': {
       'get': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/user/[userId].get').default>>>>
     }
@@ -50,7 +77,7 @@ declare module "nitropack/types" {
       'default': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/verifyEmail').default>>>>
     }
     '/__nuxt_error': {
-      'default': Simplify<Serialize<Awaited<ReturnType<typeof import('../../node_modules/.pnpm/nuxt@3.14.159_@parcel+watcher@2.5.0_@types+node@22.9.0_ioredis@5.4.1_magicast@0.3.5_rollup@4._kqv5bhnqop5odttpsywic5yyye/node_modules/nuxt/dist/core/runtime/nitro/renderer').default>>>>
+      'default': Simplify<Serialize<Awaited<ReturnType<typeof import('../../node_modules/.pnpm/nuxt@3.14.159_@parcel+watcher@2.5.0_@types+node@22.9.0_ioredis@5.4.1_magicast@0.3.5_rollup@4._us6y7is2fwu2rszzqhbaabsbhu/node_modules/nuxt/dist/core/runtime/nitro/renderer').default>>>>
     }
   }
 }

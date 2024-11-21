@@ -26,6 +26,13 @@ INSERT INTO role (roleId, roleName) VALUES
 (1, 'User'),
 (2, 'Host');
 
+INSERT INTO PaymentMethod (methodName) VALUES
+('PayPal'),
+('Cash on Hand');
+
+INSERT INTO paymentStatus (statusName) VALUES
+('Paid');
+
 
 forsendgrid
 JM7KUJ9816Y9ZY7J2NKCZEQ2

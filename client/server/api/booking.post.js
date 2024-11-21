@@ -8,22 +8,36 @@ export default defineEventHandler(async (event) => {
   console.log(body);
 
   try {
-    const newBooking = await prisma.booking.create({
-      data: {
-        userId: parseInt(body.userId, 10),
+    // Fetch the listing to get the hostId
+    const listing = await prisma.listing.findUnique({
+      where: {
         listingId: parseInt(body.listingId, 10),
-        bookingDate: new Date(body.bookingDate),
-        statusId: parseInt(body.statusId, 10),
-        // Note: createdAt is now handled automatically by Prisma's @default(now())
+      },
+      select: {
+        userId: true, // The userId field refers to the host (the one who added the listing)
       },
     });
 
-    // Optionally, you can create a booking history entry here
+    if (!listing) {
+      throw createError({ statusCode: 404, message: 'Listing not found' });
+    }
+
+    // Create the new booking
+    const newBooking = await prisma.booking.create({
+      data: {
+        hostId: listing.userId, // The user who added the listing is the host
+        bookerId: parseInt(body.userId, 10), // The user who made the booking is the booker
+        listingId: parseInt(body.listingId, 10),
+        bookingDate: new Date(body.bookingDate),
+        statusId: parseInt(body.statusId, 10),
+      },
+    });
+
+    // Optionally, create a booking history entry
     await prisma.bookingHistory.create({
       data: {
         bookingId: newBooking.bookingId,
         statusId: newBooking.statusId,
-        // You might want to add more fields here if necessary
       }
     });
 

@@ -80,6 +80,12 @@
             >
               Add Listing
             </a>
+            <router-link
+              to="/hostPayments"
+              class="block px-4 py-2 text-red-700 hover:bg-red-100"
+            >
+              Payments
+            </router-link>
             <a
               href="#"
               class="block px-4 py-2 text-red-700 hover:bg-red-100"
@@ -158,11 +164,18 @@
       </div>
     </div>
 
-    <div class="flex justify-start">
-      <button @click="closeNotificationModal" class="px-6 py-3 bg-red-600 text-white rounded-lg shadow hover:bg-red-700 focus:outline-none transition duration-200">
-        Close
-      </button>
-    </div>
+    <div class="flex justify-between items-center">
+  <button 
+    @click="rejectBooking" 
+    class="px-6 py-3 bg-red-600 text-white rounded-lg shadow hover:bg-red-700 focus:outline-none transition duration-200">
+    Reject
+  </button>
+  <button 
+    @click="approveBooking" 
+    class="px-6 py-3 bg-green-600 text-white rounded-lg shadow hover:bg-green-700 focus:outline-none transition duration-200 ml-auto">
+    Approve
+  </button>
+</div>
   </div>
 </div>
 
@@ -274,6 +287,15 @@ export default {
     toggleDocumentModal() {
       this.showDocumentModal = !this.showDocumentModal;
     },
+    async approveBooking() {
+      try {
+        await axios.put('/api/notification/approve', { notificationId: this.selectedNotificationId });
+        this.fetchNotifications();
+        this.closeNotificationModal();
+      } catch (error) {
+        console.error('Error approving booking:', error);
+      }
+    },  
     closeNotificationModal() {
       this.showNotificationModal = false;
       this.selectedBooker = null;

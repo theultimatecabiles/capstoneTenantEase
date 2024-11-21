@@ -180,7 +180,8 @@ async function handleReserve() {
       hostId: parseInt(hostId, 10),
       bookerId: parseInt(userId, 10),
       listingId: parseInt(listingId, 10),
-      content: 'You have a new booking request!'
+      content: 'You have a new booking request!',
+      type: 'newBookingRequest'
     });
 
     if (notificationResponse.status === 200) {

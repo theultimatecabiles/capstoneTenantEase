@@ -20,10 +20,17 @@
             v-if="showNotificationDropdown"
             class="absolute right-0 mt-2 w-60 bg-white border border-red-300 rounded-lg shadow-lg z-50"
           >
-            <div class="px-4 py-2 text-red-700">You have 3 new notifications</div>
-            <a href="#" class="block px-4 py-2 text-red-700 hover:bg-red-100">Notification 1</a>
-            <a href="#" class="block px-4 py-2 text-red-700 hover:bg-red-100">Notification 2</a>
-            <a href="#" class="block px-4 py-2 text-red-700 hover:bg-red-100">Notification 3</a>
+            <div class="px-4 py-2 text-red-700">
+              You have {{ notifications.length }} new notifications
+            </div>
+            <a
+              v-for="notification in notifications"
+              :key="notification.id"
+              href="#"
+              class="block px-4 py-2 text-red-700 hover:bg-red-100"
+            >
+              {{ notification.content }}
+            </a>
           </div>
         </div>
 
@@ -60,16 +67,16 @@
               Profile
             </router-link>
             <router-link
-              to="/bookings"
+              :to="{ path: '/userBooking', query: { userId: userId } }"
               class="block px-4 py-2 text-red-700 hover:bg-red-100"
             >
               My Bookings
             </router-link>
             <router-link
-              to="/favorites"
+              to="/userPayments"
               class="block px-4 py-2 text-red-700 hover:bg-red-100"
             >
-              Favorites
+              Track Payments
             </router-link>
             <a
               href="#"
@@ -86,6 +93,8 @@
 </template>
 
 <script>
+import axios from 'axios';
+
 export default {
   name: 'userHeader',
   data() {
@@ -93,6 +102,8 @@ export default {
       showDropdown: false,
       showNotificationDropdown: false,
       showMessageDropdown: false,
+      notifications: [], // Array to store notifications
+      userId: null, // Store userId
     };
   },
   methods: {
@@ -106,6 +117,18 @@ export default {
     toggleMessageDropdown() {
       this.showMessageDropdown = !this.showMessageDropdown;
       this.showNotificationDropdown = false;
+    },
+    async fetchNotifications() {
+      try {
+        const userId = localStorage.getItem('userId'); // Retrieve userId from local storage
+        if (!userId) {
+          throw new Error('User ID is not available');
+        }
+        const response = await axios.get(`/api/notifications?userId=${userId}`);
+        this.notifications = response.data;
+      } catch (error) {
+        console.error('Error fetching notifications:', error);
+      }
     },
     async logout() {
       try {
@@ -128,6 +151,10 @@ export default {
         console.error('Logout error:', error);
       }
     },
+  },
+  mounted() {
+    this.userId = localStorage.getItem('userId'); // Set userId when component is mounted
+    this.fetchNotifications(); // Fetch notifications when the component is mounted
   },
 };
 </script>
