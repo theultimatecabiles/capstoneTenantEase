@@ -2054,7 +2054,8 @@ const notifications_get = defineEventHandler(async (event) => {
         OR: [
           {
             bookerId: parseInt(userId, 10),
-            type: "bookingApproved"
+            type: "bookingApproved",
+            type: "PaymentDue"
             // Notification for booker
           },
           {

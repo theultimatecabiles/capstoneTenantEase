@@ -16,7 +16,8 @@ export default defineEventHandler(async (event) => {
         OR: [
           {
             bookerId: parseInt(userId, 10),
-            type: 'bookingApproved', // Notification for booker
+            type: 'bookingApproved',
+            type: 'PaymentDue', // Notification for booker
           },
           {
             hostId: parseInt(userId, 10),

@@ -55,7 +55,7 @@
         <!-- Proceed to Payment Button -->
         <div class="text-right mt-4">
           <button
-            v-if="booking.status.statusName === 'Booked'"
+            v-if="booking.status.statusName === 'Booked' || booking.status.statusName === 'Payment Due'"
             @click="openPaymentModal(booking)"
             class="bg-red-600 text-white px-4 py-2 rounded-md"
           >
@@ -84,6 +84,7 @@
 import { ref, onMounted } from "vue";
 import UserHeader from "~/components/userHeader.vue";
 import PaypalModal from "~/components/PaypalModal.vue";
+import axios from "axios";
 
 export default {
   components: {
@@ -126,12 +127,38 @@ export default {
         const data = await response.json();
 
         if (response.ok) {
-          console.log('Fetched bookings:', data.bookings); // Log the fetched bookings
           bookings.value = await Promise.all(data.bookings.map(async (booking) => {
             const paymentResponse = await fetch(`/api/getPaymentByBookingId?bookingId=${booking.bookingId}`);
             const paymentData = await paymentResponse.json();
             if (paymentData.success) {
               booking.latestPayment = paymentData.latestPayment;
+              const today = new Date();
+              const nextPaymentDue = new Date(booking.latestPayment.nextPaymentDue);
+              const timeDiff = nextPaymentDue - today;
+              const daysDiff = Math.ceil(timeDiff / (1000 * 60 * 60 * 24));
+              if (daysDiff <= 7) {
+                booking.status.statusName = "Payment Due";
+
+                // Ensure hostId, userId, and listingId are correctly defined
+                const hostId = booking.listing.hostId;
+                const listingId = booking.listing.listingId;
+
+                try {
+                  const notificationResponse = await axios.post('/api/notification', {
+                    hostId: parseInt(hostId, 10),
+                    bookerId: parseInt(userId, 10),
+                    listingId: parseInt(listingId, 10),
+                    content: 'Your Payment is due in 7 days. Please make a payment.',
+                    type: 'PaymentDue'
+                  });
+
+                  if (notificationResponse.status === 200) {
+                    console.log("Payment due notification sent successfully.");
+                  }
+                } catch (error) {
+                  console.error('Error sending payment due notification:', error);
+                }
+              }
             }
             return booking;
           }));

@@ -29,6 +29,7 @@
     "leaflet": "^1.9.4",
     "mitt": "^3.0.1",
     "multer": "1.4.5-lts.1",
+    "node-cron": "^3.0.3",
     "nodemailer": "^6.9.16",
     "nuxt": "^3.14.159",
     "postmark": "^4.0.5",
