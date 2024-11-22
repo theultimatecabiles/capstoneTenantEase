@@ -70,6 +70,9 @@ declare module "nitropack/types" {
     '/api/processPayment': {
       'default': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/processPayment').default>>>>
     }
+    '/api/updatelisting': {
+      'default': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/updatelisting').default>>>>
+    }
     '/api/user/:userId': {
       'get': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/user/[userId].get').default>>>>
     }

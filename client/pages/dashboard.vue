@@ -1,53 +1,52 @@
 <template>
-  <div>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <div class="background_container bg-cover bg-no-repeat">
     <!-- Add the Dash Header as the Header -->
     <dashHeader />
 
-    <div class="container mx-auto px-4 py-8">
+    <div class="bbackground_container py-8">
       <!-- Dashboard Content -->
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        <!-- Listings Overview -->
-        <div class="bg-white shadow-lg rounded-lg p-6">
-          <h2 class="text-xl font-semibold text-gray-700">Your Listings</h2>
-          <p class="text-gray-500 mt-2">Manage and edit your property listings here.</p>
+      <div class="flex justify-around gap-20 px-20">
+        <div class="w-full flex flex-col items-center text-center py-10 px-10 gap-10 bg-white rounded-lg">
+          <i class="fa-solid fa-clipboard fa-2xl"></i>
+          <span class="font-bold" >Listings</span>
+          <span>Manage and edit 
+            <br>
+            your property listings here</span>
           <router-link
             to="/listings"
-            class="mt-4 inline-block px-6 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition duration-300"
-          >
+            class="flex items-center  py-2 px-5  text-white rounded-lg bg-red-500 hover:bg-red-600 hover:shadow-gray-600 hover:shadow-lg transition duration-300 group">
             View Listings
           </router-link>
         </div>
 
-        <!-- Bookings Overview -->
-        <div class="bg-white shadow-lg rounded-lg p-6">
-          <h2 class="text-xl font-semibold text-gray-700">Bookings</h2>
-          <p class="text-gray-500 mt-2">Track your upcoming and past bookings.</p>
+        <div class="w-full flex flex-col items-center text-center py-10 px-10 gap-10 bg-white rounded-lg">
+          <i class="fa-solid fa-calendar fa-2xl"></i>
+          <span class="font-bold" >Bookings</span>
+          <span>Track your upcoming
+            <br>
+            and past bookings
+          </span>
           <router-link
             to="/bookings"
-            class="mt-4 inline-block px-6 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition duration-300"
-          >
+            class="flex items-center  py-2 px-5  text-white rounded-lg bg-red-500 hover:bg-red-600 hover:shadow-gray-600 hover:shadow-lg transition duration-300 group">
             View Bookings
           </router-link>
         </div>
 
-        <!-- Reviews Overview -->
-        <div class="bg-white shadow-lg rounded-lg p-6">
-          <h2 class="text-xl font-semibold text-gray-700">Reviews</h2>
-          <p class="text-gray-500 mt-2">Manage reviews and feedback from your guests.</p>
+        <div class="w-full flex flex-col items-center text-center py-10 px-10 gap-10 bg-white rounded-lg">
+          <i class="fa-solid fa-comment fa-2xl"></i>
+          <span class="font-bold" >Reviews</span>
+          <span>Manage reviews and feedback
+            <br>
+            from your guests
+          </span>
           <router-link
             to="/reviews"
-            class="mt-4 inline-block px-6 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition duration-300"
-          >
+            class="flex items-center  py-2 px-5  text-white rounded-lg bg-red-500 hover:bg-red-600 hover:shadow-gray-600 hover:shadow-lg transition duration-300 group">
             View Reviews
           </router-link>
         </div>
-      </div>
-
-      <!-- Analytics Section -->
-      <div class="mt-8 bg-white shadow-lg rounded-lg p-6">
-        <h2 class="text-xl font-semibold text-gray-700">Analytics</h2>
-        <p class="text-gray-500 mt-2">Get insights into your property's performance.</p>
-        <!-- You can add charts or other analytics-related components here -->
       </div>
     </div>
   </div>
@@ -56,26 +55,40 @@
 <script>
 // Importing the Header (DashHeader) component
 import dashHeader from '@/components/dashHeader.vue';
+import '@fortawesome/fontawesome-free/css/all.css';
 
 export default {
   name: 'Dashboard',
   components: {
-    dashHeader
-  }
+    dashHeader,
+  },
+  mounted() {
+  },
 };
+
 </script>
 
 <style scoped>
-/* Optional custom styling for the dashboard */
-.container {
-  max-width: 1200px;
-}
 
+/* Optional styling for text readability over the image */
 h2 {
   font-size: 1.25rem;
+  color: #333; /* Adjust color for better contrast with the background */
 }
 
 p {
   font-size: 0.875rem;
+  color: #555; /* Adjust color for better contrast with the background */
+}
+.background_container{
+  font-family:'Poppins', sans-serif;
+  background-image: url('../public/images/listingpictures/livingroom_bg.jpg');
+  background-size: cover;
+  background-repeat: no-repeat; 
+  background-position: center; 
+  height: 100vh; 
+  width: 100%; 
+  font-family: 'Poppins', sans-serif;
 }
 </style>
+

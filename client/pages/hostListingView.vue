@@ -105,7 +105,6 @@
 import { ref, onMounted, nextTick } from 'vue';
 import { useRoute } from 'vue-router';
 import { Carousel, Slide } from 'vue3-carousel';
-import { Map, TileLayer, Marker } from 'leaflet';
 import 'vue3-carousel/dist/carousel.css'; // Add carousel CSS
 
 // Import headers
@@ -148,14 +147,15 @@ function resetAutoplay() {
 // Initialize Leaflet map
 function initializeMap(lat, lng) {
   if (process.client) {
-    nextTick(() => {
-      const map = new Map('map').setView([lat, lng], 14);
+    import('leaflet').then(({ Map, TileLayer, Marker }) => {
+      nextTick(() => {
+        const map = new Map('map').setView([lat, lng], 14);
+        new TileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+          attribution: '&copy; OpenStreetMap contributors',
+        }).addTo(map);
 
-      new TileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '&copy; OpenStreetMap contributors',
-      }).addTo(map);
-
-      new Marker([lat, lng]).addTo(map);
+        new Marker([lat, lng]).addTo(map);
+      });
     });
   }
 }

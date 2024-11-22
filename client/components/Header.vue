@@ -97,6 +97,7 @@ export default {
     return {
       isModalOpen: false,
       listings: [], // Store all fetched listings
+      selectedTitle: '', // Track the selected listing title
     };
   },
   methods: {
@@ -117,13 +118,19 @@ export default {
     },
     selectListing(listing) {
       this.selectedTitle = listing.title; // Set input value to listing title
-      // Handle when a listing is selected from the dropdown
-      // Here you could also navigate to a listing detail page or perform another action
       this.listings = []; // Clear the dropdown after selection
+
+      // Use this.$router to navigate in the Options API
+      this.$router.push({
+        name: 'ListingView', 
+        query: { listingId: listing.listingId, hostid: listing.userId },
+      });
     },
   },
 };
 </script>
+
+
 
 <style scoped>
 .modal-overlay {

@@ -301,6 +301,7 @@ const _lazy_iqyYiU = () => Promise.resolve().then(function () { return notificat
 const _lazy_eIpIK0 = () => Promise.resolve().then(function () { return notifications_get$1; });
 const _lazy_MEH76d = () => Promise.resolve().then(function () { return placeTypes$1; });
 const _lazy_LZBetq = () => Promise.resolve().then(function () { return processPayment$1; });
+const _lazy_MeNHom = () => Promise.resolve().then(function () { return updatelisting$1; });
 const _lazy_OfIB0i = () => Promise.resolve().then(function () { return _userId__get$1; });
 const _lazy_N60n4A = () => Promise.resolve().then(function () { return verifyEmail$1; });
 const _lazy_gex9XZ = () => Promise.resolve().then(function () { return renderer$1; });
@@ -329,6 +330,7 @@ const handlers = [
   { route: '/api/notifications', handler: _lazy_eIpIK0, lazy: true, middleware: false, method: "get" },
   { route: '/api/placeTypes', handler: _lazy_MEH76d, lazy: true, middleware: false, method: undefined },
   { route: '/api/processPayment', handler: _lazy_LZBetq, lazy: true, middleware: false, method: undefined },
+  { route: '/api/updatelisting', handler: _lazy_MeNHom, lazy: true, middleware: false, method: undefined },
   { route: '/api/user/:userId', handler: _lazy_OfIB0i, lazy: true, middleware: false, method: "get" },
   { route: '/api/verifyEmail', handler: _lazy_N60n4A, lazy: true, middleware: false, method: undefined },
   { route: '/__nuxt_error', handler: _lazy_gex9XZ, lazy: true, middleware: false, method: undefined },
@@ -1141,10 +1143,10 @@ const errorDev = /*#__PURE__*/Object.freeze({
   template: template$1
 });
 
-const prisma$n = new PrismaClient();
+const prisma$o = new PrismaClient();
 const amenities = defineEventHandler(async (event) => {
   try {
-    const amenities = await prisma$n.amenity.findMany();
+    const amenities = await prisma$o.amenity.findMany();
     return amenities;
   } catch (error) {
     console.error("Error fetching amenities:", error);
@@ -1158,7 +1160,7 @@ const amenities$1 = /*#__PURE__*/Object.freeze({
   default: amenities
 });
 
-const prisma$m = new PrismaClient();
+const prisma$n = new PrismaClient();
 const SECRET_KEY = process.env.SECRET_KEY;
 const REGISTER_SECRET_KEY$1 = process.env.REGISTER_SECRET_KEY;
 const EMAIL_USER = process.env.EMAIL_USER;
@@ -1215,7 +1217,7 @@ const auth = defineEventHandler(async (event) => {
           const body = event.req.body;
           const files = event.req.files || [];
           if (body.action === "login") {
-            const user = await prisma$m.user.findUnique({ where: { email: body.email } });
+            const user = await prisma$n.user.findUnique({ where: { email: body.email } });
             if (!user || !await bcrypt.compare(body.password, user.password)) {
               throw new Error("Invalid email or password");
             }
@@ -1229,7 +1231,7 @@ const auth = defineEventHandler(async (event) => {
             if (body.password !== body.confirmPassword) {
               throw new Error("Passwords do not match");
             }
-            const existingUser = await prisma$m.user.findUnique({ where: { email: body.email } });
+            const existingUser = await prisma$n.user.findUnique({ where: { email: body.email } });
             if (existingUser) {
               throw new Error("Email already exists");
             }
@@ -1241,7 +1243,7 @@ const auth = defineEventHandler(async (event) => {
             if (!["1", "2"].includes(body.roleId)) {
               throw new Error("Invalid role");
             }
-            const user = await prisma$m.user.create({
+            const user = await prisma$n.user.create({
               data: {
                 name: body.name,
                 email: body.email,
@@ -1256,7 +1258,7 @@ const auth = defineEventHandler(async (event) => {
               }
             });
             const emailVerificationToken = jwt.sign({ userId: user.userId }, REGISTER_SECRET_KEY$1, { expiresIn: "1h" });
-            await prisma$m.user.update({
+            await prisma$n.user.update({
               where: { userId: user.userId },
               data: { verificationToken: emailVerificationToken }
               // Set verification token
@@ -1279,12 +1281,12 @@ const auth$1 = /*#__PURE__*/Object.freeze({
   default: auth
 });
 
-const prisma$l = new PrismaClient();
+const prisma$m = new PrismaClient();
 const booking_post = defineEventHandler(async (event) => {
   const body = await readBody(event);
   console.log(body);
   try {
-    const listing = await prisma$l.listing.findUnique({
+    const listing = await prisma$m.listing.findUnique({
       where: {
         listingId: parseInt(body.listingId, 10)
       },
@@ -1296,7 +1298,7 @@ const booking_post = defineEventHandler(async (event) => {
     if (!listing) {
       throw createError({ statusCode: 404, message: "Listing not found" });
     }
-    const newBooking = await prisma$l.booking.create({
+    const newBooking = await prisma$m.booking.create({
       data: {
         hostId: listing.userId,
         // The user who added the listing is the host
@@ -1307,7 +1309,7 @@ const booking_post = defineEventHandler(async (event) => {
         statusId: parseInt(body.statusId, 10)
       }
     });
-    await prisma$l.bookingHistory.create({
+    await prisma$m.bookingHistory.create({
       data: {
         bookingId: newBooking.bookingId,
         statusId: newBooking.statusId
@@ -1325,17 +1327,17 @@ const booking_post$1 = /*#__PURE__*/Object.freeze({
   default: booking_post
 });
 
-const prisma$k = new PrismaClient();
+const prisma$l = new PrismaClient();
 const approve = defineEventHandler(async (event) => {
   try {
     const { bookingId } = await readBody(event);
-    const updatedBooking = await prisma$k.booking.update({
+    const updatedBooking = await prisma$l.booking.update({
       where: { bookingId },
       // Use bookingId as the primary key
       data: { statusId: 2 }
       // Assuming 2 is the ID for "approved" status
     });
-    await prisma$k.notification.create({
+    await prisma$l.notification.create({
       data: {
         hostId: updatedBooking.hostId,
         // Provide the hostId
@@ -1359,14 +1361,14 @@ const approve$1 = /*#__PURE__*/Object.freeze({
   default: approve
 });
 
-const prisma$j = new PrismaClient();
+const prisma$k = new PrismaClient();
 const checkFirstPayment = defineEventHandler(async (event) => {
   try {
     const { bookingId } = getQuery$1(event);
     if (!bookingId) {
       return { success: false, message: "Booking ID is required." };
     }
-    const paymentExists = await prisma$j.payment.findFirst({
+    const paymentExists = await prisma$k.payment.findFirst({
       where: { bookingId: parseInt(bookingId) }
     });
     return { success: true, isFirstPayment: !paymentExists };
@@ -1381,14 +1383,14 @@ const checkFirstPayment$1 = /*#__PURE__*/Object.freeze({
   default: checkFirstPayment
 });
 
-const prisma$i = new PrismaClient();
+const prisma$j = new PrismaClient();
 const getActiveBookings = defineEventHandler(async (event) => {
   const userId = getHeaders(event)["user-id"] || getQuery$1(event).userId;
   if (!userId) {
     return { statusCode: 400, message: "User ID is required." };
   }
   try {
-    const bookings = await prisma$i.booking.findMany({
+    const bookings = await prisma$j.booking.findMany({
       where: {
         hostId: parseInt(userId, 10),
         // Filter by the host ID
@@ -1420,14 +1422,14 @@ const getActiveBookings$1 = /*#__PURE__*/Object.freeze({
   default: getActiveBookings
 });
 
-const prisma$h = new PrismaClient();
+const prisma$i = new PrismaClient();
 const getHostBooking = defineEventHandler(async (event) => {
   const userId = getHeaders(event)["user-id"] || getQuery$1(event).userId;
   if (!userId) {
     return { statusCode: 400, message: "User ID is required." };
   }
   try {
-    const bookings = await prisma$h.booking.findMany({
+    const bookings = await prisma$i.booking.findMany({
       where: {
         hostId: parseInt(userId, 10),
         // Filter by the host ID
@@ -1459,14 +1461,14 @@ const getHostBooking$1 = /*#__PURE__*/Object.freeze({
   default: getHostBooking
 });
 
-const prisma$g = new PrismaClient();
+const prisma$h = new PrismaClient();
 const getLatestPaymentDue = defineEventHandler(async (event) => {
   try {
     const { bookingId } = getQuery$1(event);
     if (!bookingId) {
       return { success: false, message: "Booking ID is required." };
     }
-    const latestPayment = await prisma$g.payment.findFirst({
+    const latestPayment = await prisma$h.payment.findFirst({
       where: { bookingId: parseInt(bookingId) },
       orderBy: { paymentId: "desc" }
     });
@@ -1486,14 +1488,14 @@ const getLatestPaymentDue$1 = /*#__PURE__*/Object.freeze({
   default: getLatestPaymentDue
 });
 
-const prisma$f = new PrismaClient();
+const prisma$g = new PrismaClient();
 const getPaymentByBookingId = defineEventHandler(async (event) => {
   try {
     const { bookingId } = getQuery$1(event);
     if (!bookingId) {
       return { success: false, message: "Booking ID is required." };
     }
-    const latestPayment = await prisma$f.payment.findFirst({
+    const latestPayment = await prisma$g.payment.findFirst({
       where: { bookingId: parseInt(bookingId) },
       orderBy: { paymentId: "desc" },
       include: {
@@ -1517,7 +1519,7 @@ const getPaymentByBookingId$1 = /*#__PURE__*/Object.freeze({
   default: getPaymentByBookingId
 });
 
-const prisma$e = new PrismaClient();
+const prisma$f = new PrismaClient();
 const getPayments = defineEventHandler(async (event) => {
   const { userId, type } = getQuery$1(event);
   if (!userId || !type) {
@@ -1526,7 +1528,7 @@ const getPayments = defineEventHandler(async (event) => {
   try {
     let payments;
     if (type === "host") {
-      payments = await prisma$e.payment.findMany({
+      payments = await prisma$f.payment.findMany({
         where: {
           booking: {
             listing: {
@@ -1545,7 +1547,7 @@ const getPayments = defineEventHandler(async (event) => {
         }
       });
     } else if (type === "user") {
-      payments = await prisma$e.payment.findMany({
+      payments = await prisma$f.payment.findMany({
         where: {
           booking: {
             bookerId: parseInt(userId, 10)
@@ -1572,7 +1574,7 @@ const getPayments = defineEventHandler(async (event) => {
     console.error("Error fetching payments:", error);
     return { success: false, message: "An error occurred while fetching payments." };
   } finally {
-    await prisma$e.$disconnect();
+    await prisma$f.$disconnect();
   }
 });
 
@@ -1581,14 +1583,14 @@ const getPayments$1 = /*#__PURE__*/Object.freeze({
   default: getPayments
 });
 
-const prisma$d = new PrismaClient();
+const prisma$e = new PrismaClient();
 const getUserBooking = defineEventHandler(async (event) => {
   const userId = getQuery$1(event).userId;
   if (!userId) {
     return { statusCode: 400, message: "User ID is required." };
   }
   try {
-    const bookings = await prisma$d.booking.findMany({
+    const bookings = await prisma$e.booking.findMany({
       where: {
         bookerId: parseInt(userId)
       },
@@ -1615,7 +1617,7 @@ const getUserBooking$1 = /*#__PURE__*/Object.freeze({
   default: getUserBooking
 });
 
-const prisma$c = new PrismaClient();
+const prisma$d = new PrismaClient();
 const getUserListings = defineEventHandler(async (event) => {
   const userId = event.req.headers["x-user-id"];
   if (!userId) {
@@ -1625,7 +1627,7 @@ const getUserListings = defineEventHandler(async (event) => {
     };
   }
   try {
-    const listings = await prisma$c.listing.findMany({
+    const listings = await prisma$d.listing.findMany({
       where: { userId: parseInt(userId) },
       include: {
         images: true
@@ -1647,10 +1649,10 @@ const getUserListings$1 = /*#__PURE__*/Object.freeze({
   default: getUserListings
 });
 
-const prisma$b = new PrismaClient();
+const prisma$c = new PrismaClient();
 const guestTypes = defineEventHandler(async (event) => {
   try {
-    const guestTypes = await prisma$b.guestType.findMany();
+    const guestTypes = await prisma$c.guestType.findMany();
     return guestTypes;
   } catch (error) {
     console.error("Error fetching guest types:", error);
@@ -1664,12 +1666,12 @@ const guestTypes$1 = /*#__PURE__*/Object.freeze({
   default: guestTypes
 });
 
-const prisma$a = new PrismaClient();
+const prisma$b = new PrismaClient();
 const _listingId__get$2 = defineEventHandler(async (event) => {
   var _a, _b;
   try {
     const listingId = event.context.params.listingId;
-    const listing = await prisma$a.listing.findUnique({
+    const listing = await prisma$b.listing.findUnique({
       where: { listingId: parseInt(listingId) },
       // Ensure listingId is a number
       select: {
@@ -1732,7 +1734,7 @@ const _listingId__get$3 = /*#__PURE__*/Object.freeze({
   default: _listingId__get$2
 });
 
-const prisma$9 = new PrismaClient();
+const prisma$a = new PrismaClient();
 const _listingId__get = defineEventHandler(async (event) => {
   var _a, _b;
   try {
@@ -1740,7 +1742,7 @@ const _listingId__get = defineEventHandler(async (event) => {
     if (!listingId) {
       return { statusCode: 400, body: { error: "Listing ID is required" } };
     }
-    const listing = await prisma$9.listing.findUnique({
+    const listing = await prisma$a.listing.findUnique({
       where: { listingId: parseInt(listingId, 10) },
       include: {
         user: {
@@ -1813,10 +1815,10 @@ const _listingId__get$1 = /*#__PURE__*/Object.freeze({
   default: _listingId__get
 });
 
-const prisma$8 = new PrismaClient();
+const prisma$9 = new PrismaClient();
 const listings_get = defineEventHandler(async (event) => {
   try {
-    const listings = await prisma$8.listing.findMany({
+    const listings = await prisma$9.listing.findMany({
       select: {
         listingId: true,
         title: true,
@@ -1902,7 +1904,7 @@ const multerMiddleware = /*#__PURE__*/Object.freeze({
   default: uploadMiddleware
 });
 
-const prisma$7 = new PrismaClient();
+const prisma$8 = new PrismaClient();
 const listings_post = defineEventHandler(async (event) => {
   await new Promise((resolve, reject) => {
     uploadMiddleware.array("images")(event.req, event.res, (err) => {
@@ -1943,14 +1945,14 @@ const listings_post = defineEventHandler(async (event) => {
       longitude: parseFloat(body.longitude),
       userId: parseInt(body.userId, 10)
     };
-    const newListing = await prisma$7.listing.create({ data: listing });
-    await prisma$7.image.createMany({
+    const newListing = await prisma$8.listing.create({ data: listing });
+    await prisma$8.image.createMany({
       data: imageUrls.map((url) => ({
         listingId: newListing.listingId,
         imageUrl: url.imageUrl
       }))
     });
-    await prisma$7.listingAmenity.createMany({
+    await prisma$8.listingAmenity.createMany({
       data: amenitiesIds.map((amenityId) => ({
         listingId: newListing.listingId,
         amenityId
@@ -1970,13 +1972,13 @@ const listings_post$1 = /*#__PURE__*/Object.freeze({
   default: listings_post
 });
 
-const prisma$6 = new PrismaClient();
+const prisma$7 = new PrismaClient();
 const logout = eventHandler(async (event) => {
   if (event.node.req.method === "POST") {
     try {
       const body = await event.request.json();
       if (body.token) {
-        await prisma$6.blacklistedToken.create({
+        await prisma$7.blacklistedToken.create({
           data: {
             token: body.token
           }
@@ -2005,7 +2007,7 @@ const logout$1 = /*#__PURE__*/Object.freeze({
   default: logout
 });
 
-const prisma$5 = new PrismaClient();
+const prisma$6 = new PrismaClient();
 const notification_post = defineEventHandler(async (event) => {
   try {
     const { hostId, bookerId, listingId, content, type } = await readBody(event);
@@ -2015,7 +2017,7 @@ const notification_post = defineEventHandler(async (event) => {
         message: "Host ID, Booker ID, Listing ID, and content are required"
       });
     }
-    const newNotification = await prisma$5.notification.create({
+    const newNotification = await prisma$6.notification.create({
       data: {
         hostId: parseInt(hostId, 10),
         bookerId: parseInt(bookerId, 10),
@@ -2040,14 +2042,14 @@ const notification_post$1 = /*#__PURE__*/Object.freeze({
   default: notification_post
 });
 
-const prisma$4 = new PrismaClient();
+const prisma$5 = new PrismaClient();
 const notifications_get = defineEventHandler(async (event) => {
   try {
     const { userId } = getQuery$1(event);
     if (!userId) {
       throw new Error("User ID is required");
     }
-    const notifications = await prisma$4.notification.findMany({
+    const notifications = await prisma$5.notification.findMany({
       where: {
         OR: [
           {
@@ -2085,10 +2087,10 @@ const notifications_get$1 = /*#__PURE__*/Object.freeze({
   default: notifications_get
 });
 
-const prisma$3 = new PrismaClient();
+const prisma$4 = new PrismaClient();
 const placeTypes = defineEventHandler(async (event) => {
   try {
-    const placeTypes = await prisma$3.placeType.findMany();
+    const placeTypes = await prisma$4.placeType.findMany();
     return placeTypes;
   } catch (error) {
     console.error("Error fetching place types:", error);
@@ -2102,7 +2104,7 @@ const placeTypes$1 = /*#__PURE__*/Object.freeze({
   default: placeTypes
 });
 
-const prisma$2 = new PrismaClient();
+const prisma$3 = new PrismaClient();
 const DEFAULT_PAYMENT_METHOD_ID = 1;
 const DEFAULT_STATUS_ID = 1;
 const processPayment = defineEventHandler(async (event) => {
@@ -2110,19 +2112,19 @@ const processPayment = defineEventHandler(async (event) => {
     const { bookingId, amount, nextPaymentDue } = await readBody(event);
     const paymentMethodId = DEFAULT_PAYMENT_METHOD_ID;
     const statusId = DEFAULT_STATUS_ID;
-    const paymentMethod = await prisma$2.paymentMethod.findUnique({
+    const paymentMethod = await prisma$3.paymentMethod.findUnique({
       where: { methodId: paymentMethodId }
     });
     if (!paymentMethod) {
       return { success: false, message: "Invalid payment method." };
     }
-    const paymentStatus = await prisma$2.paymentStatus.findUnique({
+    const paymentStatus = await prisma$3.paymentStatus.findUnique({
       where: { statusId }
     });
     if (!paymentStatus) {
       return { success: false, message: "Invalid payment status." };
     }
-    const payment = await prisma$2.payment.create({
+    const payment = await prisma$3.payment.create({
       data: {
         bookingId,
         amount,
@@ -2143,6 +2145,42 @@ const processPayment = defineEventHandler(async (event) => {
 const processPayment$1 = /*#__PURE__*/Object.freeze({
   __proto__: null,
   default: processPayment
+});
+
+const prisma$2 = new PrismaClient();
+const updatelisting = defineEventHandler(async (event) => {
+  try {
+    const body = await readBody(event);
+    const { listingId, title, address, price, guests, bedrooms, beds, bathrooms, amenities, images } = body;
+    const updatedListing = await prisma$2.listing.update({
+      where: { id: listingId },
+      data: {
+        title,
+        address,
+        price,
+        guests,
+        bedrooms,
+        beds,
+        bathrooms,
+        amenities: {
+          set: amenities.map((amenity) => ({ name: amenity }))
+        },
+        images: {
+          set: images.map((imageUrl) => ({ imageUrl }))
+        }
+      }
+    });
+    return updatedListing;
+  } catch (error) {
+    console.error("Error updating listing:", error);
+    event.res.statusCode = 500;
+    return { error: "Error updating listing" };
+  }
+});
+
+const updatelisting$1 = /*#__PURE__*/Object.freeze({
+  __proto__: null,
+  default: updatelisting
 });
 
 const prisma$1 = new PrismaClient();

@@ -36,15 +36,16 @@
               <p class="text-lg text-gray-600">{{ item.address }}</p>
             </div>
 
-            <!-- Action buttons -->
+           <!-- Action buttons -->
             <div class="flex justify-center space-x-2 mt-4">
               <button 
-                @click.prevent="openUpdateModal(item)"
+                @click.prevent="openUpdateModal(item, $event)"
                 class="btn bg-green-600 text-white hover:bg-green-700 focus:ring-4 focus:ring-green-200 transition duration-200 px-4 py-2 rounded-lg text-sm"
               >
                 <i class="fas fa-edit"></i>
               </button>
               <button 
+                @click.prevent="deleteListing(item, $event)"
                 class="btn bg-red-600 text-white hover:bg-red-700 focus:ring-4 focus:ring-red-200 transition duration-200 px-4 py-2 rounded-lg text-sm"
               >
                 <i class="fas fa-trash"></i>
@@ -67,6 +68,7 @@ import { ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router'; 
 import dashHeader from '@/components/dashHeader.vue';
 import UpdateListingModal from '@/components/UpdateListingModal.vue';
+import 'leaflet/dist/leaflet.css';
 
 const router = useRouter();
 const listing = ref([]);

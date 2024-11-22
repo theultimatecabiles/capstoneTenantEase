@@ -95,7 +95,6 @@
 import { ref, onMounted, nextTick } from 'vue';
 import { useRoute } from 'vue-router';
 import { Carousel, Slide } from 'vue3-carousel';
-import { Map, TileLayer, Marker } from 'leaflet';
 import 'vue3-carousel/dist/carousel.css';
 import { toast } from 'vue3-toastify';
 import 'vue3-toastify/dist/index.css';
@@ -105,7 +104,6 @@ import Header from '@/components/Header.vue';
 import UserHeader from '~/components/userHeader.vue';
 
 const route = useRoute();
-const userId = localStorage.getItem('userId');
 const listingId = route.query.listingId;
 const hostId = route.query.hostid;
 const listing = ref(null);
@@ -114,10 +112,17 @@ const currentIndex = ref(0);
 const carouselRef = ref(null);
 const isLoggedIn = ref(false);
 const bookingDate = ref(new Date());
+let userId = null;
+
+if (process.client) {
+  userId = localStorage.getItem('userId');
+}
 
 function checkLoginStatus() {
-  const token = localStorage.getItem('token');
-  isLoggedIn.value = !!token;
+  if (process.client) {
+    const token = localStorage.getItem('token');
+    isLoggedIn.value = !!token;
+  }
 }
 
 function prevImage() {
@@ -137,19 +142,23 @@ function resetAutoplay() {
 }
 
 function initializeMap(lat, lng) {
-  nextTick(() => {
-    const map = new Map('map').setView([lat, lng], 14);
-    new TileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      attribution: '&copy; OpenStreetMap contributors',
-    }).addTo(map);
+  if (process.client) {
+    import('leaflet').then(({ Map, TileLayer, Marker }) => {
+      nextTick(() => {
+        const map = new Map('map').setView([lat, lng], 14);
+        new TileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+          attribution: '&copy; OpenStreetMap contributors',
+        }).addTo(map);
 
-    new Marker([lat, lng]).addTo(map);
-  });
+        new Marker([lat, lng]).addTo(map);
+      });
+    });
+  }
 }
 
 onMounted(async () => {
   checkLoginStatus(); // Check login status on mount
-  const accessToken = localStorage.getItem('token');
+  const accessToken = process.client ? localStorage.getItem('token') : null;
   try {
     const response = await fetch(`/api/listing/${listingId}`, {
       headers: {
