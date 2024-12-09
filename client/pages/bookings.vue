@@ -102,7 +102,7 @@
               </p>
               <div v-if="item.booker.document" class="mt-4">
                 <p><strong>Booker Document:</strong></p>
-                <button @click="toggleDocumentModal(item.booker.document)" class="text-blue-600 hover:underline font-medium">
+                <button @click="toggleDocumentModal(item.booker.document)" class="text-red-600 hover:underline font-medium">
                   View Document
                 </button>
               </div>
@@ -170,6 +170,7 @@
 <script>
 import { ref, onMounted } from "vue";
 import axios from "axios"; // Import axios for making HTTP requests
+import 'vue3-toastify/dist/index.css';
 
 export default {
   setup() {

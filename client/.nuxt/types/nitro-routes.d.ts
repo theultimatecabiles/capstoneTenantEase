@@ -3,6 +3,15 @@ import type { Serialize, Simplify } from "nitropack/types";
 declare module "nitropack/types" {
   type Awaited<T> = T extends PromiseLike<infer U> ? Awaited<U> : T
   interface InternalApi {
+    '/api/admin/approveListing/:id': {
+      'post': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/admin/approveListing/[id].post').default>>>>
+    }
+    '/api/admin/listingsAdmin': {
+      'default': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/admin/listingsAdmin').default>>>>
+    }
+    '/api/admin/notifications': {
+      'get': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/admin/notifications.get').default>>>>
+    }
     '/api/amenities': {
       'default': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/amenities').default>>>>
     }
@@ -70,17 +79,23 @@ declare module "nitropack/types" {
     '/api/processPayment': {
       'default': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/processPayment').default>>>>
     }
+    '/api/seed': {
+      'default': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/seed').default>>>>
+    }
     '/api/updatelisting': {
       'default': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/updatelisting').default>>>>
     }
     '/api/user/:userId': {
       'get': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/user/[userId].get').default>>>>
     }
+    '/api/users': {
+      'get': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/users.get').default>>>>
+    }
     '/api/verifyEmail': {
       'default': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/verifyEmail').default>>>>
     }
     '/__nuxt_error': {
-      'default': Simplify<Serialize<Awaited<ReturnType<typeof import('../../node_modules/.pnpm/nuxt@3.14.159_@parcel+watcher@2.5.0_@types+node@22.9.0_ioredis@5.4.1_magicast@0.3.5_rollup@4._us6y7is2fwu2rszzqhbaabsbhu/node_modules/nuxt/dist/core/runtime/nitro/renderer').default>>>>
+      'default': Simplify<Serialize<Awaited<ReturnType<typeof import('../../node_modules/.pnpm/nuxt@3.14.1592_@parcel+watcher@2.5.0_@types+node@22.10.1_ioredis@5.4.1_magicast@0.3.5_rollup@_ci4gpr7yumfjwqvvbbtddk7pn4/node_modules/nuxt/dist/core/runtime/nitro/renderer').default>>>>
     }
   }
 }

@@ -3,6 +3,9 @@
     <div class="sticky top-0 bg-white z-10 p-4 shadow-md">
       <h2 class="text-2xl font-bold text-gray-800">Listings</h2>
     </div>
+    <div v-if="displayedListings.length === 0" class="text-center py-4">
+      No approved listings found.
+    </div>
     <div class="listing-bar-content">
       <ul class="space-y-4">
         <li
@@ -57,6 +60,7 @@
         </li>
       </ul>
     </div>
+
   </div>
 </template>
 
@@ -103,7 +107,6 @@ const showDetails = (listing) => {
 
 // Function to view a listing in the ListingView component
 const viewListing = (listing) => {
-  alert("Owner id: " + listing.userId + " listing ID: " + listing.listingId)
   router.push({ name: 'ListingView', query: { listingId: listing.listingId, hostid: listing.userId } });
 };
 

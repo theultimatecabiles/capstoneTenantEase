@@ -21,7 +21,9 @@ export default defineEventHandler(async (event) => {
             userId: true,
             name: true,
             email: true,
+            phone: true,
             profilePic: true,
+            dateJoined: true,
           },
         },
         placeType: true,
@@ -75,7 +77,9 @@ export default defineEventHandler(async (event) => {
         userId: listing.user.userId,
         name: listing.user.name,
         email: listing.user.email,
+        phone: listing.user.phone,
         profilePic: listing.user.profilePic,
+        dateJoined: listing.user.dateJoined,
       } : null,
     };
 

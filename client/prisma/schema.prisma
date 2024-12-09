@@ -31,12 +31,12 @@ model User {
   messagesReceived   Message[]     @relation("ReceivedMessages")
   hostNotifications  Notification[] @relation("HostNotifications")
   bookerNotifications Notification[] @relation("BookerNotifications")
-  bookingsAsHost     Booking[]     @relation("HostBookings") // User as Host
-  bookingsAsBooker   Booking[]     @relation("BookerBookings") // User as Booker
+  bookingsAsHost     Booking[]     @relation("HostBookings")
+  bookingsAsBooker   Booking[]     @relation("BookerBookings")
   favorites          Favorite[]
   role               Role          @relation(fields: [roleId], references: [roleId])
+  adminNotifications AdminNotification[]
 }
-
 
 model Role {
   roleId    Int    @id @default(autoincrement())
@@ -44,33 +44,42 @@ model Role {
   users     User[]
 }
 
+model ApprovalStatus {
+  statusId    Int       @id @default(autoincrement())
+  statusName  String    @unique
+  listings    Listing[]
+}
+
 model Listing {
-  listingId   Int         @id @default(autoincrement())
-  userId      Int
-  title       String
-  description String
-  address     String
-  price       Float
-  placeTypeId Int
-  guestTypeId Int
-  guests      Int
-  bedrooms    Int
-  beds        Int
-  bathrooms   Int
-  latitude    Float
-  longitude   Float
-  createdAt   DateTime    @default(now())
-  updatedAt   DateTime    @updatedAt
-  images      Image[]
-  reviews     Review[]
-  bookings    Booking[]
-  messages    Message[]
-  favorites   Favorite[]
-  notifications Notification[]
-  user        User        @relation(fields: [userId], references: [userId])
-  placeType   PlaceType   @relation(fields: [placeTypeId], references: [placeTypeId])
-  guestType   GuestType   @relation(fields: [guestTypeId], references: [guestTypeId])
-  amenities   ListingAmenity[]
+  listingId        Int            @id @default(autoincrement())
+  userId           Int
+  title            String
+  description      String
+  address          String
+  price            Float
+  placeTypeId      Int
+  guestTypeId      Int
+  guests           Int
+  bedrooms         Int
+  beds             Int
+  bathrooms        Int
+  latitude         Float
+  longitude        Float
+  createdAt        DateTime       @default(now())
+  updatedAt        DateTime       @updatedAt
+  isApproved       Boolean        @default(false)
+  approvalStatusId Int
+  images           Image[]
+  reviews          Review[]
+  bookings         Booking[]
+  messages         Message[]
+  favorites        Favorite[]
+  notifications    Notification[]
+  user             User           @relation(fields: [userId], references: [userId])
+  placeType        PlaceType      @relation(fields: [placeTypeId], references: [placeTypeId])
+  guestType        GuestType      @relation(fields: [guestTypeId], references: [guestTypeId])
+  amenities        ListingAmenity[]
+  approvalStatus   ApprovalStatus @relation(fields: [approvalStatusId], references: [statusId])
 }
 
 model PlaceType {
@@ -124,7 +133,7 @@ model Booking {
   bookingDate DateTime
   statusId    Int
   createdAt   DateTime    @default(now())
-  payments    Payment[]   // Define the one-to-many relation here
+  payments    Payment[]
   host        User        @relation("HostBookings", fields: [hostId], references: [userId])
   booker      User        @relation("BookerBookings", fields: [bookerId], references: [userId])
   listing     Listing     @relation(fields: [listingId], references: [listingId])
@@ -141,7 +150,7 @@ model BookingStatus {
 
 model Payment {
   paymentId       Int         @id @default(autoincrement())
-  bookingId       Int         
+  bookingId       Int
   amount          Float
   paymentDate     DateTime
   paymentMethodId Int
@@ -206,11 +215,19 @@ model Notification {
   listingId      Int
   content        String
   dateCreated    DateTime @default(now())
-  type           String   
-
+  type           String
   host           User     @relation("HostNotifications", fields: [hostId], references: [userId])
   booker         User     @relation("BookerNotifications", fields: [bookerId], references: [userId])
   listing        Listing  @relation(fields: [listingId], references: [listingId])
 }
 
+model AdminNotification {
+  notificationId Int      @id @default(autoincrement())
+  adminId        Int
+  content        String
+  dateCreated    DateTime @default(now())
+  type           String
+  user           User     @relation(fields: [adminId], references: [userId])
 
+  @@index([adminId])
+}

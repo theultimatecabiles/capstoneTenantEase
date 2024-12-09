@@ -9,16 +9,83 @@
       <p class="text-lg">Manage your apartment listings and make updates.</p>
     </div>
 
+    <!-- Filter Buttons -->
+    <div class="filter-buttons flex justify-center space-x-4 mb-8">
+      <div class="flex justify-center space-x-4">
+      <button 
+        @click="filterListings('all')" 
+        :class="['px-6 py-2 rounded-full focus:outline-none focus:ring-2 focus:ring-opacity-50 transition duration-300', 
+                 currentFilter === 'all' ? 'bg-red-500 text-white' : 'bg-gray-200 text-gray-700']"
+      >
+        All
+      </button>
+      <button 
+        @click="filterListings('pending')" 
+        :class="['px-6 py-2 rounded-full focus:outline-none focus:ring-2 focus:ring-opacity-50 transition duration-300', 
+                 currentFilter === 'pending' ? 'bg-yellow-500 text-white' : 'bg-gray-200 text-gray-700']"
+      >
+        Pending
+      </button>
+      <button 
+        @click="filterListings('approved')" 
+        :class="['px-6 py-2 rounded-full focus:outline-none focus:ring-2 focus:ring-opacity-50 transition duration-300', 
+                 currentFilter === 'approved' ? 'bg-green-500 text-white' : 'bg-gray-200 text-gray-700']"
+      >
+        Approved
+      </button>
+      <button 
+        @click="filterListings('rejected')" 
+        :class="['px-6 py-2 rounded-full focus:outline-none focus:ring-2 focus:ring-opacity-50 transition duration-300', 
+                 currentFilter === 'rejected' ? 'bg-red-500 text-white' : 'bg-gray-200 text-gray-700']"
+      >
+        Rejected
+      </button>
+    </div>
+
+    <!-- Add Listing Button -->
+    <button 
+        @click="openAddListingModal"
+        class="bg-gradient-to-r from-red-400 to-red-800 text-white px-6 py-3 rounded-full shadow-lg hover:shadow-xl transition duration-300"
+      >
+        + Add Listing
+      </button>
+    </div>
+
     <!-- Listing container -->
     <div class="listing-container px-6 py-12 mx-auto max-w-7xl">
       <!-- Listing details -->
-      <div v-if="listing && !loading" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+      <div v-if="filteredListings.length && !loading" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
         <div
-          v-for="item in listing"
+          v-for="item in filteredListings"
           :key="item.listingId"
           class="listing-card bg-white shadow-lg rounded-lg overflow-hidden transform transition-all duration-300 hover:scale-105 hover:shadow-xl"
           @click="viewListing(item)"  
         >
+        <div class="p-6 space-y-4">
+        <!-- ... (other listing details) -->
+        <div class="flex items-center">
+          <i :class="[
+            'fas fa-circle mr-2',
+            {
+              'text-yellow-500': item.approvalStatusId === 1,
+              'text-green-500': item.approvalStatusId === 2,
+              'text-red-500': item.approvalStatusId === 3,
+              'text-gray-500': !item.approvalStatusId
+            }
+          ]"></i>
+          <p :class="[
+            'text-lg',
+            {
+              'text-yellow-600': item.approvalStatusId === 1,
+              'text-green-600': item.approvalStatusId === 2,
+              'text-red-600': item.approvalStatusId === 3,
+              'text-gray-600': !item.approvalStatusId
+            }
+          ]">
+            Status: {{ capitalizeFirstLetter(item.approvalStatus?.statusName) || 'Unknown' }}
+          </p>
+        </div>
+      </div>
           <!-- Listing Image -->
           <img v-if="item.images && item.images.length > 0" :src="item.images[0].imageUrl" alt="Listing Image" class="w-full h-48 object-cover rounded-t-lg" />
 
@@ -54,8 +121,17 @@
           </div>
         </div>
       </div>
+      <div v-else-if="!loading" class="text-center text-gray-600">
+        No listings found for the selected filter.
+      </div>
     </div>
   </div>
+  
+  <!-- AddListingModal -->
+    <AddListingModal 
+      v-if="showAddListingModal" 
+      @close="closeAddListingModal"
+    />
   <UpdateListingModal 
     v-if="showModal" 
     :listing="selectedListing" 
@@ -64,11 +140,12 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, computed } from 'vue';
 import { useRouter } from 'vue-router'; 
 import dashHeader from '@/components/dashHeader.vue';
 import UpdateListingModal from '@/components/UpdateListingModal.vue';
 import 'leaflet/dist/leaflet.css';
+import AddListingModal from '@/components/AddListingModal.vue';
 
 const router = useRouter();
 const listing = ref([]);
@@ -76,6 +153,15 @@ const loading = ref(true);
 const error = ref(null);
 const showModal = ref(false);
 const selectedListing = ref(null);
+const currentFilter = ref('all');
+const showAddListingModal = ref(false);
+
+
+
+const capitalizeFirstLetter = (string) => {
+  if (!string) return '';
+  return string.charAt(0).toUpperCase() + string.slice(1).toLowerCase();
+};
 
 // Fetch listings and other data when component is mounted
 onMounted(async () => {
@@ -99,9 +185,42 @@ onMounted(async () => {
   }
 });
 
+// Filter listings based on status
+const filterListings = (status) => {
+  currentFilter.value = status;
+};
+
+// Computed property for filtered listings
+const filteredListings = computed(() => {
+  if (currentFilter.value === 'all') {
+    return listing.value;
+  }
+  return listing.value.filter(item => {
+    switch (currentFilter.value) {
+      case 'pending':
+        return item.approvalStatusId === 1;
+      case 'approved':
+        return item.approvalStatusId === 2;
+      case 'rejected':
+        return item.approvalStatusId === 3;
+      default:
+        return true;
+    }
+  });
+});
+
 // Function to handle viewing a listing
 const viewListing = (item) => {
   router.push({ name: 'hostListingView', query: { listingId: item.listingId } });
+};
+
+const openAddListingModal = () => {
+  showAddListingModal.value = true;
+};
+
+// Function to close the AddListingModal
+const closeAddListingModal = () => {
+  showAddListingModal.value = false;
 };
 
 // Open the update modal with the selected listing
@@ -125,6 +244,29 @@ const openUpdateModal = async (item, event) => {
 const closeUpdateModal = () => {
   showModal.value = false;
   selectedListing.value = null;
+};
+
+// Function to delete a listing
+const deleteListing = async (item, event) => {
+  event.stopPropagation();
+  if (confirm('Are you sure you want to delete this listing?')) {
+    try {
+      const response = await fetch(`/api/deleteListing/${item.listingId}`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (!response.ok) throw new Error('Failed to delete listing');
+
+      // Remove the deleted listing from the local state
+      listing.value = listing.value.filter(l => l.listingId !== item.listingId);
+    } catch (err) {
+      console.error('Error deleting listing:', err);
+      error.value = 'Failed to delete the listing.';
+    }
+  }
 };
 </script>
 

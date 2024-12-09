@@ -5,7 +5,8 @@ export default defineNuxtConfig({
 
   css: [
     '~/assets/css/main.css',
-    '@fortawesome/fontawesome-free/css/all.min.css'
+    '@fortawesome/fontawesome-free/css/all.min.css',
+    'leaflet-routing-machine/dist/leaflet-routing-machine.css',
   ],
 
   postcss: {

@@ -5,8 +5,21 @@ const prisma = new PrismaClient();
 
 export default defineEventHandler(async (event) => {
   try {
-    // Fetch listings with necessary relationships and fields, including userId
+    // Fetch only approved listings that do not have any active bookings
     const listings = await prisma.listing.findMany({
+      where: {
+        approvalStatusId: 2, // 2 represents 'approved'
+        bookings: {
+          none: {
+            // Exclude listings with active bookings
+            status: {
+              statusName: {
+                in: ['Booked', 'Upcoming'], // Replace with the actual statuses for active bookings
+              },
+            },
+          },
+        },
+      },
       select: {
         listingId: true,
         title: true,
@@ -21,7 +34,8 @@ export default defineEventHandler(async (event) => {
         longitude: true,
         createdAt: true,
         updatedAt: true,
-        userId: true, // Include userId in the selection
+        approvalStatusId: true,
+        userId: true,
         placeType: {
           select: {
             placeTypeName: true,
@@ -48,6 +62,11 @@ export default defineEventHandler(async (event) => {
             },
           },
         },
+        approvalStatus: {
+          select: {
+            statusName: true,
+          },
+        },
       },
     });
 
@@ -61,13 +80,12 @@ export default defineEventHandler(async (event) => {
         iconClass: item.amenity.iconClass,
         color: item.amenity.color,
       })) || [],
+      isApproved: listing.approvalStatus?.statusName === 'Approved',
     }));
-
-  
 
     return flattenedListings;
   } catch (error) {
-    console.error('Error fetching listings:', error); // Log error details
+    console.error('Error fetching listings:', error);
     event.res.statusCode = 500;
     event.res.end(JSON.stringify({ error: 'Error fetching listings' }));
   }

@@ -84,6 +84,39 @@
           <div id="map" class="map h-80 rounded-lg shadow-lg"></div>
         </div>
       </div>
+      
+      <!-- Host Information Section -->
+<div class="host-information mt-16 max-w-3xl mx-auto">
+  <div v-if="listing && listing.user" class="bg-white shadow-lg rounded-lg overflow-hidden">
+    <h2 class="text-2xl font-semibold bg-red-600 text-white py-4 px-6 text-center">Host</h2>
+    <div class="p-6 flex flex-col items-center space-y-6">
+      <img 
+        :src="listing.user.profilePic || '/default-profile-pic.png'" 
+        alt="Host Profile Picture" 
+        class="w-32 h-32 rounded-full object-cover border-4 border-red-200"
+      >
+      <div class="space-y-4 text-center">
+        <h3 class="text-2xl font-semibold text-gray-800">
+          Hosted by {{ listing.user.name || 'Name not available' }}
+        </h3>
+        <p class="text-gray-600">
+          Host since {{ new Date(listing.user.dateJoined).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }) }}
+        </p>
+        <p class="text-gray-600 flex items-center justify-center">
+          <i class="fas fa-envelope mr-3 text-red-500 w-6"></i>
+          {{ listing.user.email || 'Email not available' }}
+        </p>
+        <p class="text-gray-600 flex items-center justify-center">
+          <i class="fas fa-phone mr-3 text-red-500 w-6"></i>
+          {{ listing.user.phone || 'Phone not available' }}
+        </p>
+      </div>
+    </div>
+  </div>
+  <div v-else-if="listing && !listing.user" class="bg-white shadow-lg rounded-lg p-6 text-center">
+    <p class="text-gray-600">Host information not available</p>
+  </div>
+</div>
 
       <!-- Registration Modal -->
       <Modal v-if="showRegisterModal" @close="showRegisterModal = false" />

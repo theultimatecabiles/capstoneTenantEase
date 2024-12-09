@@ -36,15 +36,15 @@
 
         <div class="w-full flex flex-col items-center text-center py-10 px-10 gap-10 bg-white rounded-lg">
           <i class="fa-solid fa-comment fa-2xl"></i>
-          <span class="font-bold" >Reviews</span>
-          <span>Manage reviews and feedback
+          <span class="font-bold" >Track Payments</span>
+          <span>View and manage payments
             <br>
-            from your guests
+            from your renters
           </span>
           <router-link
-            to="/reviews"
+            to="/hostPayments"
             class="flex items-center  py-2 px-5  text-white rounded-lg bg-red-500 hover:bg-red-600 hover:shadow-gray-600 hover:shadow-lg transition duration-300 group">
-            View Reviews
+            View Payments
           </router-link>
         </div>
       </div>

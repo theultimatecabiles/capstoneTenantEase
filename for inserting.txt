@@ -1,3 +1,5 @@
+npx prisma db seed
+
 INSERT INTO bookingstatus (statusId, statusName) VALUES (1, 'Pending'), (2, 'Booked');
 
 INSERT INTO placetype (placeTypeid, placeTypeName) VALUES
@@ -23,8 +25,15 @@ INSERT INTO amenity (amenityId, amenityName, color, iconClass) VALUES
 (8, 'Own Workspace', '#FF9800', 'fas fa-laptop');
 
 INSERT INTO role (roleId, roleName) VALUES
-(1, 'User'),
-(2, 'Host');
+(1, 'Renter'),
+(2, 'Host'),
+(3, 'Admin');
+
+INSERT INTO ApprovalStatus (statusId, statusName)
+VALUES 
+(1, 'pending'),
+(2, 'approved'),
+(3, 'rejected');
 
 INSERT INTO PaymentMethod (methodName) VALUES
 ('PayPal'),
@@ -32,7 +41,6 @@ INSERT INTO PaymentMethod (methodName) VALUES
 
 INSERT INTO paymentStatus (statusName) VALUES
 ('Paid');
-
 
 forsendgrid
 JM7KUJ9816Y9ZY7J2NKCZEQ2

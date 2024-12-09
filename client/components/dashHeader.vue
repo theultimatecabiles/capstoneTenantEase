@@ -35,21 +35,7 @@
           </div>
         </div>
 
-        <!-- Message Icon (Font Awesome Envelope) -->
-        <div class="relative">
-          <i
-            @click="toggleMessageDropdown"
-            class="fa-solid fa-envelope text-2xl text-red-500 hover:text-red-600 cursor-pointer transition duration-300"
-          ></i>
-          <div
-            v-if="showMessageDropdown"
-            class="absolute right-0 mt-2 w-60 bg-white border border-red-300 rounded-lg shadow-lg z-1001"
-          >
-            <div class="px-4 py-2 text-red-700">You have 2 new messages</div>
-            <a href="#" class="block px-4 py-2 text-red-700 hover:bg-red-100">Message 1</a>
-            <a href="#" class="block px-4 py-2 text-red-700 hover:bg-red-100">Message 2</a>
-          </div>
-        </div>
+        
 
         <!-- Profile Icon (Font Awesome User) -->
         <div class="relative">

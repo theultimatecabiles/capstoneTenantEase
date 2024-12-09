@@ -4,42 +4,42 @@ import { defineEventHandler, createError } from 'h3';
 const prisma = new PrismaClient();
 
 export default defineEventHandler(async (event) => {
-  const userId = event.req.headers['x-user-id'];
-
-  if (!userId) {
-    throw createError({
-      statusCode: 401,
-      message: 'Unauthorized',
-    });
-  }
-
   try {
     const listings = await prisma.listing.findMany({
-      where: {
-        userId: parseInt(userId),
-      },
       include: {
         images: true,
+        user: {
+          select: {
+            name: true,
+            email: true,
+            phone: true,
+            profilePic: true,
+            document: true,
+          },
+        },
         approvalStatus: {
           select: {
             statusName: true,
           },
         },
+        placeType: true,
+        guestType: true,
       },
     });
 
-    // Map the listings to include status
+    // Map the listings to include a status field
     const mappedListings = listings.map(listing => ({
       ...listing,
-      status: listing.approvalStatus?.statusName || 'UNKNOWN',
+      status: listing.approvalStatus?.statusName?.toUpperCase() || 'UNKNOWN',
     }));
+
 
     return mappedListings;
   } catch (error) {
-    console.error('Error fetching user listings:', error);
-    throw createError({
+    console.error('Error fetching listings:', error);
+    return createError({
       statusCode: 500,
-      message: 'Error fetching user listings',
+      statusMessage: 'Internal Server Error',
     });
   }
 });

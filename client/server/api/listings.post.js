@@ -49,6 +49,7 @@ export default defineEventHandler(async (event) => {
       latitude: parseFloat(body.latitude),
       longitude: parseFloat(body.longitude),
       userId: parseInt(body.userId, 10),
+      approvalStatusId: 1,
     };
 
     // Insert the listing into the database
@@ -69,6 +70,26 @@ export default defineEventHandler(async (event) => {
         amenityId
       })),
     });
+
+    // Fetch the first admin user
+    const admin = await prisma.user.findFirst({
+      where: {
+        roleId: 3 
+      }
+    });
+
+    if (admin) {
+      // Create a notification for the admin
+      await prisma.adminNotification.create({
+        data: {
+          adminId: admin.userId,
+          content: `New listing "${newListing.title}" has been added and needs review.`,
+          type: 'NEW_LISTING',
+        },
+      });
+    } else {
+      console.warn('No admin user found to notify about the new listing.');
+    }
 
     // Respond with success message
     event.res.statusCode = 200;

@@ -49,8 +49,9 @@
             <div>
               <label for="roleId" class="block text-sm font-medium text-gray-700">Role</label>
               <select v-model="roleId" id="roleId" class="mt-1 block w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:ring-red-500 focus:border-red-500 sm:text-sm" required>
-                <option value="1">User</option>
+                <option value="1">Renter</option>
                 <option value="2">Host</option>
+                <option value="3">Admin</option>
               </select>
             </div>
             <div>
@@ -163,7 +164,17 @@ export default {
           if (this.isLogin) {
             localStorage.setItem('token', result.token);
             localStorage.setItem('userId', result.userId);
-            const redirectPath = result.roleId === 1 ? '/userDashboard' : '/dashboard';
+            let redirectPath;
+            if (result.roleId === 1) {
+              redirectPath = '/userDashboard';
+            } else if (result.roleId === 2) {
+              redirectPath = '/dashboard';
+            } else if (result.roleId === 3) {
+              redirectPath = '/admin';
+            } else {
+              // Default redirect if role is not recognized
+              redirectPath = '/';
+            }
             toast.success("Login successful! Redirecting...", {
               autoClose: 2000
             });
@@ -174,6 +185,7 @@ export default {
               window.location.href = redirectPath;
             }, 2000);
           } else {
+            // Registration success code (unchanged)
             this.isLogin = true;
             this.name = '';
             this.email = '';

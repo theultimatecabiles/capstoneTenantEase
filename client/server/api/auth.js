@@ -109,12 +109,12 @@ export default defineEventHandler(async (event) => {
             const document = files.find(file => file.fieldname === 'document');
             const documentUrl = document ? `/images/documentPictures/${document.filename}` : null;
 
-            if (!['1', '2'].includes(body.roleId)) {
+            if (!['1', '2','3'].includes(body.roleId)) {
               throw new Error('Invalid role');
             }
 
             // Create the user but don't verify yet
-            const user = await prisma.user.create({
+            const user = await prisma.user.create({ 
               data: {
                 name: body.name,
                 email: body.email,
@@ -126,6 +126,27 @@ export default defineEventHandler(async (event) => {
                 verified: false, // Mark the user as not verified
               },
             });
+
+            const role = await prisma.role.findUnique({
+              where: { roleId: parseInt(body.roleId) }
+            });
+
+            const admin = await prisma.user.findFirst({
+              where: { roleId: 3 } // Assuming roleId 3 is for admin
+            });
+
+            if (admin) {
+              // Create a notification for the admin
+              await prisma.adminNotification.create({
+                data: {
+                  adminId: admin.userId,
+                  content: `New ${role.roleName} registered: ${body.name}`,
+                  type: 'USER_REGISTRATION',
+                },
+              });
+            } else {
+              console.warn('No admin user found to notify about the new registration.');
+            }
 
             // Generate email verification token
             const emailVerificationToken = jwt.sign({ userId: user.userId }, REGISTER_SECRET_KEY, { expiresIn: '1h' });

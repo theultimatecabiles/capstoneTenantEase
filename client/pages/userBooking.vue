@@ -16,7 +16,10 @@
     </div>
 
     <div v-for="(booking, index) in bookings" :key="index" class="booking-container mt-6 mb-6 mx-auto max-w-4xl">
-      <div class="booking-card p-6 bg-white shadow-md rounded-lg relative">
+      <div 
+        @click="viewBookingDetails(booking.listing.listingId)"
+        class="booking-card p-6 bg-white shadow-md rounded-lg relative cursor-pointer hover:shadow-lg transition-shadow duration-300"
+      >
         <!-- Listing Information -->
         <div class="mb-4">
           <div class="flex justify-between items-start">
@@ -85,6 +88,8 @@ import { ref, onMounted } from "vue";
 import UserHeader from "~/components/userHeader.vue";
 import PaypalModal from "~/components/PaypalModal.vue";
 import axios from "axios";
+import { useRouter } from 'vue-router';
+
 
 export default {
   components: {
@@ -95,6 +100,7 @@ export default {
     const bookings = ref([]);
     const loading = ref(true);
     const error = ref(null);
+    const router = useRouter();
 
     const isPaymentModalOpen = ref(false);
     const paymentAmount = ref(0);
@@ -112,6 +118,11 @@ export default {
       selectedBookerId.value = booking.bookerId;
       selectedListingId.value = booking.listing.listingId;
       isPaymentModalOpen.value = true;
+    };
+
+    const viewBookingDetails = (listingId) => {
+      // Update this line to use the correct route name and parameters
+      router.push({ name: 'userListingView', query: { listingId: listingId } });
     };
 
     const fetchBookings = async () => {
@@ -190,6 +201,7 @@ export default {
       selectedBookerId,
       selectedListingId,
       openPaymentModal,
+      viewBookingDetails,
     };
   },
 };
